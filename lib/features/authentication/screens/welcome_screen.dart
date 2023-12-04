@@ -1,8 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../../common/widgets/buttons/outlined_text_button.dart';
-import '../../../common/widgets/buttons/text_button.dart';
+import '../../../common/widgets/buttons/base_button.dart';
 import '../../../common/widgets/texts.dart';
 import '../../../common/widgets/wrappers/content_wrapper.dart';
 import '../../../common/widgets/wrappers/scaffold_wrapper.dart';
@@ -39,7 +38,7 @@ class WelcomeScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
-            SandboxText(
+            CustomText(
               text: 'Welcome\nto Flutter Sandbox',
               style: Theme.of(context).textTheme.headlineLarge,
               textAlign: TextAlign.center,
@@ -47,7 +46,7 @@ class WelcomeScreen extends StatelessWidget {
             const SizedBox(
               height: 12.0,
             ),
-            const SandboxText(
+            const CustomText(
               text: 'This mobile app providing free flutter widgets and solutions. Sign in & up just show an example of authentication processing',
               textAlign: TextAlign.center,
               maxLines: 4,
@@ -66,21 +65,21 @@ class WelcomeScreen extends StatelessWidget {
             const SizedBox(
               height: 20.0,
             ),
-            SandboxOutlinedTextButton(
+            CustomBaseButton(
               content: 'Sign up',
               onCallback: () => _onSignUpHandler(context),
             ),
             const SizedBox(
               height: 10.0,
             ),
-            SandboxTextButton(
+            CustomBaseButton(
               content: 'Sign In',
               onCallback: () => _onSignInHandler(context),
             ),
             const SizedBox(
               height: 20.0,
             ),
-            SandboxRichText(
+            CustomRichText(
               span: TextSpan(
                 children: [
                   const TextSpan(

@@ -7,7 +7,7 @@ import '../app_bar.dart';
 /// You can use this widget under the basic [Scaffold] to have more control
 class ScaffoldWrapper extends StatelessWidget {
   final Widget child;
-  final SandboxAppBar? appBar;
+  final CustomAppBar? appBar;
   final Widget? navigationBar;
   final bool withSafeArea;
   final bool isDisabled;

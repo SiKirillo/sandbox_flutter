@@ -7,10 +7,13 @@ class SignInData {
     required this.password,
   });
 
+  static const emailKey = 'email';
+  static const passwordKey = 'password';
+
   Map<String, dynamic> toJson() {
     return {
-      'email': email,
-      'password': password,
+      emailKey: email,
+      passwordKey: password,
     };
   }
 }

@@ -7,13 +7,13 @@ class NetworkProvider with ChangeNotifier {
 
   bool get isConnected => _isConnected;
 
-  void update(bool isConnected) {
+  void update({bool? isConnected}) {
     LoggerService.logDebug('NetworkProvider -> update(isConnected: $isConnected)');
     if (_isConnected == isConnected) {
       return;
     }
 
-    _isConnected = isConnected;
+    _isConnected = isConnected ?? _isConnected;
     notifyListeners();
   }
 }

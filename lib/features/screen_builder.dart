@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../common/models/service/usecase_model.dart';
+import '../common/widgets/indicators/progress_indicator.dart';
 import '../common/widgets/navigation_bar.dart';
-import '../common/widgets/progress_indicators/progress_indicator.dart';
 import '../constants/images.dart';
 import '../injection_container.dart';
 import 'authentication/domain/bloc/auth_bloc.dart';
@@ -11,8 +11,8 @@ import 'authentication/domain/usecases/auth_auto_sign_in.dart';
 import 'authentication/domain/usecases/auth_init.dart';
 import 'home/screens/home_screen.dart';
 import 'authentication/screens/welcome_screen.dart';
-import 'home/screens/random_screen.dart';
-import 'home/screens/unknown_screen.dart';
+import 'home/screens/sandbox_screen.dart';
+import 'home/screens/profile_screen.dart';
 import 'splash_screen.dart';
 
 /// This is the core of the entire app architecture
@@ -159,7 +159,9 @@ class _ScreenBuilderState extends State<ScreenBuilder> with SingleTickerProvider
                         builder: (_, child) {
                           if (_isAuthenticationCompleted == false) {
                             return const Center(
-                              child: SandboxProgressIndicator(),
+                              child: CustomProgressIndicator(
+                                size: 30.0,
+                              ),
                             );
                           }
 
@@ -170,15 +172,15 @@ class _ScreenBuilderState extends State<ScreenBuilder> with SingleTickerProvider
                               physics: const NeverScrollableScrollPhysics(),
                               children: const [
                                 HomeScreen(),
-                                RandomScreen(),
-                                UnknownScreen(),
+                                SandboxScreen(),
+                                ProfileScreen(),
                               ],
                             ),
                           );
                         },
                       ),
                     ),
-                    SandboxNavigationBar(
+                    CustomNavigationBar(
                       items: const [
                         NavigationBarData(
                           label: HomeScreen.routeTabName,
@@ -186,14 +188,14 @@ class _ScreenBuilderState extends State<ScreenBuilder> with SingleTickerProvider
                           index: HomeScreen.routeTabNumber,
                         ),
                         NavigationBarData(
-                          label: RandomScreen.routeTabName,
-                          icon: Icon(Icons.radar),
-                          index: RandomScreen.routeTabNumber,
+                          label: SandboxScreen.routeTabName,
+                          icon: Icon(Icons.build),
+                          index: SandboxScreen.routeTabNumber,
                         ),
                         NavigationBarData(
-                          label: UnknownScreen.routeTabName,
-                          icon: Icon(Icons.access_alarms),
-                          index: UnknownScreen.routeTabNumber,
+                          label: ProfileScreen.routeTabName,
+                          icon: Icon(Icons.person),
+                          index: ProfileScreen.routeTabNumber,
                         ),
                       ],
                       onSelect: _onUpdateScreenHandler,

@@ -13,13 +13,19 @@ class SignUpData {
     this.lastName,
   });
 
+  static const emailKey = 'email';
+  static const passwordKey = 'password';
+  static const nicknameKey = 'nickname';
+  static const firstNameKey = 'first_name';
+  static const lastNameKey = 'last_name';
+
   Map<String, dynamic> toJson() {
     return {
-      'email': email,
-      'password': password,
-      'nickname': nickname,
-      'first_name': firstName,
-      'last_name': lastName,
+      emailKey: email,
+      passwordKey: password,
+      nicknameKey: nickname,
+      firstNameKey: firstName,
+      lastNameKey: lastName,
     };
   }
 }

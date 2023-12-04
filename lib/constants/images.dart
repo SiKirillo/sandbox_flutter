@@ -10,6 +10,8 @@ class ImageConstants {
 
   /// Service icons
   static const icClose = 'assets/icons/ic_close.png';
+  static const icProgress = 'assets/icons/ic_progress.png';
+  static const icWeather = 'assets/icons/ic_weather.png';
 
   /// Custom images
   static const imFunnyCat = 'assets/images/im_funny_cat.png';

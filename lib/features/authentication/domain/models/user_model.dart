@@ -1,25 +1,44 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 class UserData {
+  final String uid;
   final String email;
-  final String password;
-  final String nickname;
-  final String? firstName;
-  final String? lastName;
 
   const UserData({
+    required this.uid,
     required this.email,
-    required this.password,
-    required this.nickname,
-    this.firstName,
-    this.lastName,
   });
+
+  static const uidKey = 'uid';
+  static const emailKey = 'email';
+
+  factory UserData.firebase(User firebaseUser) {
+    return UserData(
+      uid: firebaseUser.uid,
+      email: firebaseUser.email!,
+    );
+  }
+
+  static UserData fromJson(Map<String, dynamic> json) {
+    return UserData(
+      uid: json[uidKey],
+      email: json[emailKey],
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
-      'email': email,
-      'password': password,
-      'nickname': nickname,
-      'first_name': firstName,
-      'last_name': lastName,
+      uidKey: uid,
+      emailKey: email,
     };
+  }
+
+  UserData copyWith({
+    String? email,
+  }) {
+    return UserData(
+      uid: uid,
+      email: email ?? this.email,
+    );
   }
 }

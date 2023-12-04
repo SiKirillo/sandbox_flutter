@@ -2,23 +2,35 @@ import 'package:flutter/material.dart';
 
 import '../services/logger_service.dart';
 
-enum ThemeStyleType {
-  light,
-  dark,
-}
-
 class ThemeProvider with ChangeNotifier {
-  ThemeStyleType _type = ThemeStyleType.light;
+  ThemeMode _mode = ThemeMode.system;
+  Brightness _brightness = Brightness.light;
 
-  ThemeStyleType get type => _type;
+  ThemeMode get mode => _mode;
+  bool get isDark => _mode == ThemeMode.dark || (_mode == ThemeMode.system && _brightness == Brightness.dark);
 
-  void update(ThemeStyleType type) {
-    LoggerService.logDebug('ThemeProvider -> update(type: $type)');
-    if (_type == type) {
-      return;
+  void init({required ThemeMode? mode, required Brightness? brightness}) {
+    LoggerService.logDebug('ThemeProvider -> init(mode: $mode, brightness: $brightness)');
+    _mode = mode ?? _mode;
+    _brightness = brightness ?? _brightness;
+  }
+
+  void update({ThemeMode? mode, Brightness? brightness}) {
+    LoggerService.logDebug('ThemeProvider -> update(mode: $mode, brightness: $brightness)');
+    bool isNeedNotify = false;
+
+    if (_mode != mode && mode != null) {
+      _mode = mode;
+      isNeedNotify = true;
     }
 
-    _type = type;
-    notifyListeners();
+    if (_brightness != brightness && brightness != null) {
+      _brightness = brightness;
+      isNeedNotify = true;
+    }
+
+    if (isNeedNotify) {
+      notifyListeners();
+    }
   }
 }

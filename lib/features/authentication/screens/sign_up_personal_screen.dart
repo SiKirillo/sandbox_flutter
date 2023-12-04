@@ -1,10 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../../common/models/in_app_toast_model.dart';
-import '../../../common/usecases/core_update_in_app_toast.dart';
-import '../../../common/widgets/buttons/text_button.dart';
-import '../../../common/widgets/in_app_elements/in_app_toast.dart';
+import '../../../common/services/in_app_toast/in_app_toast_provider.dart';
+import '../../../common/widgets/buttons/base_button.dart';
 import '../../../common/widgets/input_fields/input_validators.dart';
 import '../../../common/widgets/input_fields/text_input_field.dart';
 import '../../../common/widgets/texts.dart';
@@ -166,7 +164,7 @@ class _SignUpPersonalScreenState extends State<SignUpPersonalScreen> {
       });
     }
 
-    locator<CoreUpdateInAppToast>().call(null);
+    locator<InAppToastProvider>().clear();
   }
 
   Future<void> _onSignUpHandler() async {
@@ -196,8 +194,8 @@ class _SignUpPersonalScreenState extends State<SignUpPersonalScreen> {
 
     response.fold(
       (failure) {
-        locator<CoreUpdateInAppToast>().call(
-          InAppToastData.createFromFailure(
+        locator<InAppToastProvider>().addToast(
+          InAppToastData.failure(
             key: const ValueKey(SignUpPersonalScreen.routeName),
             failure: failure,
           ),
@@ -234,7 +232,7 @@ class _SignUpPersonalScreenState extends State<SignUpPersonalScreen> {
                 isOpaque: _isRequestInProgress,
                 child: Column(
                   children: [
-                    SandboxText(
+                    CustomText(
                       text: 'Sign up',
                       style: Theme.of(context).textTheme.headlineLarge,
                       textAlign: TextAlign.center,
@@ -242,7 +240,7 @@ class _SignUpPersonalScreenState extends State<SignUpPersonalScreen> {
                     const SizedBox(
                       height: 12.0,
                     ),
-                    SandboxRichText(
+                    CustomRichText(
                       span: TextSpan(
                         children: const [
                           TextSpan(
@@ -262,7 +260,7 @@ class _SignUpPersonalScreenState extends State<SignUpPersonalScreen> {
                     const SizedBox(
                       height: 24.0,
                     ),
-                    SandboxTextInputField(
+                    CustomTextInputField(
                       controller: _nicknameController,
                       focusNode: _nicknameFocusNode,
                       hintText: 'Nickname',
@@ -285,7 +283,7 @@ class _SignUpPersonalScreenState extends State<SignUpPersonalScreen> {
                     const SizedBox(
                       height: 12.0,
                     ),
-                    SandboxTextInputField(
+                    CustomTextInputField(
                       controller: _firstNameController,
                       focusNode: _firstNameFocusNode,
                       hintText: 'First name',
@@ -309,7 +307,7 @@ class _SignUpPersonalScreenState extends State<SignUpPersonalScreen> {
                     const SizedBox(
                       height: 12.0,
                     ),
-                    SandboxTextInputField(
+                    CustomTextInputField(
                       controller: _lastNameController,
                       focusNode: _lastNameFocusNode,
                       hintText: 'Last name',
@@ -338,10 +336,10 @@ class _SignUpPersonalScreenState extends State<SignUpPersonalScreen> {
               const SizedBox(
                 height: 24.0,
               ),
-              SandboxTextButton(
+              CustomBaseButton(
                 content: 'Let\'s Start!',
                 onCallback: _onSignUpHandler,
-                isDisabled: !_isButtonEnabled,
+                isBlocked: !_isButtonEnabled,
                 isProcessing: _isRequestInProgress,
               ),
               const SizedBox(
@@ -349,7 +347,7 @@ class _SignUpPersonalScreenState extends State<SignUpPersonalScreen> {
               ),
               OpacityWrapper(
                 isOpaque: _isRequestInProgress,
-                child: SandboxRichText(
+                child: CustomRichText(
                   span: TextSpan(
                     children: [
                       const TextSpan(

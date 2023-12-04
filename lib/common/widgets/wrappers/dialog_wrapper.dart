@@ -56,7 +56,7 @@ class DialogWrapper extends StatelessWidget {
     final labelContent = label is Widget
         ? label
         : label is String
-            ? SandboxText(
+            ? CustomText(
                 text: label!,
                 style: labelStyle ?? Theme.of(context).dialogTheme.titleTextStyle,
                 textAlign: TextAlign.center,
@@ -66,7 +66,7 @@ class DialogWrapper extends StatelessWidget {
     final descriptionContent = description is Widget
         ? description
         : description is String
-            ? SandboxText(
+            ? CustomText(
                 text: description!,
                 style: descriptionStyle,
                 textAlign: TextAlign.center,

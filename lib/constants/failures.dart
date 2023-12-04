@@ -1,7 +1,64 @@
 import '../common/models/service/failure_model.dart';
 
+enum AuthErrorType {
+  userNoFound,
+  userDisabled,
+  emailAlreadyInUse,
+  badCredentials,
+  none,
+}
+
+extension AuthErrorExtension on AuthErrorType {
+  static AuthFailure getErrorByCode(String code) {
+    switch (code) {
+      case 'user-not-found': {
+        return const AuthFailure(
+          message: 'No user found for that email',
+          type: AuthErrorType.userDisabled,
+        );
+      }
+
+      case 'user-disabled': {
+        return const AuthFailure(
+          message: 'Account disabled for that email',
+          type: AuthErrorType.userDisabled,
+        );
+      }
+
+      case 'email-already-in-use': {
+        return const AuthFailure(
+          message: 'Account already exists for that email',
+          type: AuthErrorType.emailAlreadyInUse,
+        );
+      }
+
+      case 'invalid-email': {
+        return const AuthFailure(
+          message: 'Wrong credentials',
+          type: AuthErrorType.badCredentials,
+        );
+      }
+
+      case 'wrong-password': {
+        return const AuthFailure(
+          message: 'Wrong credentials',
+          type: AuthErrorType.badCredentials,
+        );
+      }
+
+      default: {
+        return const AuthFailure(
+          message: 'Unknown failure',
+          type: AuthErrorType.none,
+        );
+      }
+    }
+  }
+}
+
 enum HttpErrorType {
   none,
+  badAuthTokens,
 }
 
 extension HttpErrorExtension on HttpErrorType {

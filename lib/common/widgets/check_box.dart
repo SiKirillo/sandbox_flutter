@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../../constants/colors.dart';
-import 'progress_indicators/progress_indicator.dart';
+import 'indicators/progress_indicator.dart';
 
-class SandboxCheckBox extends StatelessWidget {
+class CustomCheckBox extends StatelessWidget {
   final bool isChecked;
   final Function(bool) onCallback;
   final double size;
   final bool isProcessing;
 
-  const SandboxCheckBox({
+  const CustomCheckBox({
     Key? key,
     required this.isChecked,
     required this.onCallback,
@@ -35,12 +35,12 @@ class SandboxCheckBox extends StatelessWidget {
           borderRadius: BorderRadius.circular(4.0),
           border: !isProcessing && isChecked
               ? null
-              : Border.all(color: ColorConstants.light.black500),
+              : Border.all(color: ColorConstants.transparent),
         ),
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
           child: isProcessing
-              ? const SandboxProgressIndicator()
+              ? const CustomProgressIndicator()
               : SizedBox.square(
                   dimension: size,
                   child: const Icon(Icons.check),

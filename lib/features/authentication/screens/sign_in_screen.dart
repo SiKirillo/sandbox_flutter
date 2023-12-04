@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../../common/models/in_app_toast_model.dart';
-import '../../../common/usecases/core_update_in_app_toast.dart';
-import '../../../common/widgets/buttons/text_button.dart';
-import '../../../common/widgets/in_app_elements/in_app_toast.dart';
+import '../../../common/services/in_app_toast/in_app_toast_provider.dart';
+import '../../../common/widgets/buttons/base_button.dart';
 import '../../../common/widgets/input_fields/input_validators.dart';
 import '../../../common/widgets/input_fields/text_input_field.dart';
 import '../../../common/widgets/texts.dart';
@@ -117,7 +115,7 @@ class _SignInScreenState extends State<SignInScreen> {
       });
     }
 
-    locator<CoreUpdateInAppToast>().call(null);
+    locator<InAppToastProvider>().clear();
   }
 
   Future<void> _onLogInHandler() async {
@@ -142,8 +140,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
     response.fold(
       (failure) async {
-        locator<CoreUpdateInAppToast>().call(
-          InAppToastData.createFromFailure(
+        locator<InAppToastProvider>().addToast(
+          InAppToastData.failure(
             key: const ValueKey(SignInScreen.routeName),
             failure: failure,
           ),
@@ -180,7 +178,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 isOpaque: _isRequestInProgress,
                 child: Column(
                   children: [
-                    SandboxText(
+                    CustomText(
                       text: 'Sign in',
                       style: Theme.of(context).textTheme.headlineLarge,
                       textAlign: TextAlign.center,
@@ -188,7 +186,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(
                       height: 12.0,
                     ),
-                    SandboxRichText(
+                    CustomRichText(
                       span: TextSpan(
                         children: const [
                           TextSpan(
@@ -208,7 +206,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(
                       height: 24.0,
                     ),
-                    SandboxTextInputField(
+                    CustomTextInputField(
                       controller: _emailController,
                       focusNode: _emailFocusNode,
                       hintText: 'Email',
@@ -230,7 +228,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(
                       height: 12.0,
                     ),
-                    SandboxTextInputField(
+                    CustomTextInputField(
                       controller: _passwordController,
                       focusNode: _passwordFocusNode,
                       hintText: 'Password',
@@ -257,10 +255,10 @@ class _SignInScreenState extends State<SignInScreen> {
               const SizedBox(
                 height: 24.0,
               ),
-              SandboxTextButton(
+              CustomBaseButton(
                 content: 'Let\'s Start!',
                 onCallback: _onLogInHandler,
-                isDisabled: !_isButtonEnabled,
+                isBlocked: !_isButtonEnabled,
                 isProcessing: _isRequestInProgress,
               ),
               const SizedBox(
@@ -268,7 +266,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               OpacityWrapper(
                 isOpaque: _isRequestInProgress,
-                child: SandboxRichText(
+                child: CustomRichText(
                   span: TextSpan(
                     children: [
                       const TextSpan(

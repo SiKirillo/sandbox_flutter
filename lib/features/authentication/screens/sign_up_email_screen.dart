@@ -1,9 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../../common/usecases/core_update_in_app_toast.dart';
-import '../../../common/widgets/buttons/text_button.dart';
-import '../../../common/widgets/in_app_elements/in_app_toast.dart';
+import '../../../common/services/in_app_toast/in_app_toast_provider.dart';
+import '../../../common/widgets/buttons/base_button.dart';
 import '../../../common/widgets/input_fields/input_validators.dart';
 import '../../../common/widgets/input_fields/text_input_field.dart';
 import '../../../common/widgets/texts.dart';
@@ -168,7 +167,7 @@ class _SignUpEmailScreenState extends State<SignUpEmailScreen> {
       });
     }
 
-    locator<CoreUpdateInAppToast>().call(null);
+    locator<InAppToastProvider>().clear();
   }
 
   Future<void> _onContinueHandler() async {
@@ -223,7 +222,7 @@ class _SignUpEmailScreenState extends State<SignUpEmailScreen> {
                 isOpaque: _isRequestInProgress,
                 child: Column(
                   children: [
-                    SandboxText(
+                    CustomText(
                       text: 'Sign up',
                       style: Theme.of(context).textTheme.headlineLarge,
                       textAlign: TextAlign.center,
@@ -231,7 +230,7 @@ class _SignUpEmailScreenState extends State<SignUpEmailScreen> {
                     const SizedBox(
                       height: 12.0,
                     ),
-                    SandboxRichText(
+                    CustomRichText(
                       span: TextSpan(
                         children: const [
                           TextSpan(
@@ -251,7 +250,7 @@ class _SignUpEmailScreenState extends State<SignUpEmailScreen> {
                     const SizedBox(
                       height: 24.0,
                     ),
-                    SandboxTextInputField(
+                    CustomTextInputField(
                       controller: _emailController,
                       focusNode: _emailFocusNode,
                       hintText: 'Email',
@@ -274,7 +273,7 @@ class _SignUpEmailScreenState extends State<SignUpEmailScreen> {
                     const SizedBox(
                       height: 12.0,
                     ),
-                    SandboxTextInputField(
+                    CustomTextInputField(
                       controller: _passwordController,
                       focusNode: _passwordFocusNode,
                       hintText: 'Password',
@@ -302,7 +301,7 @@ class _SignUpEmailScreenState extends State<SignUpEmailScreen> {
                     const SizedBox(
                       height: 12.0,
                     ),
-                    SandboxTextInputField(
+                    CustomTextInputField(
                       controller: _confirmPasswordController,
                       focusNode: _confirmPasswordFocusNode,
                       hintText: 'Confirm',
@@ -330,10 +329,10 @@ class _SignUpEmailScreenState extends State<SignUpEmailScreen> {
               const SizedBox(
                 height: 24.0,
               ),
-              SandboxTextButton(
+              CustomBaseButton(
                 content: 'Continue',
                 onCallback: _onContinueHandler,
-                isDisabled: !_isButtonEnabled,
+                isBlocked: !_isButtonEnabled,
                 isProcessing: _isRequestInProgress,
               ),
               const SizedBox(
@@ -341,7 +340,7 @@ class _SignUpEmailScreenState extends State<SignUpEmailScreen> {
               ),
               OpacityWrapper(
                 isOpaque: _isRequestInProgress,
-                child: SandboxRichText(
+                child: CustomRichText(
                   span: TextSpan(
                     children: [
                       const TextSpan(

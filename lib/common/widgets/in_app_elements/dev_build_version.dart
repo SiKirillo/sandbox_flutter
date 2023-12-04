@@ -10,7 +10,7 @@ class DevBuildVersionBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: BannerPainter(
-        message: locator<DeviceService>().currentBuildMode().toStringLabel(),
+        message: locator<DeviceService>().currentBuildBanner(),
         textDirection: Directionality.of(context),
         layoutDirection: Directionality.of(context),
         location: BannerLocation.bottomEnd,

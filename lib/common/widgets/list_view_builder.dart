@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SandboxListViewBuilder extends StatelessWidget {
+class CustomListViewBuilder extends StatelessWidget {
   final ScrollController? controller;
   final int itemCount;
   final EdgeInsets padding;
@@ -11,7 +11,7 @@ class SandboxListViewBuilder extends StatelessWidget {
   final Widget Function(BuildContext, int) itemBuilder;
   final Widget Function(BuildContext, int)? separatorBuilder;
 
-  const SandboxListViewBuilder({
+  const CustomListViewBuilder({
     Key? key,
     this.controller,
     required this.itemCount,

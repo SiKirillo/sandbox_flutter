@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// It works as usual [Text] widget, but it's more controllable
 /// (you don't have to search all Text-s if you want to change something)
-class SandboxText extends StatelessWidget {
+class CustomText extends StatelessWidget {
   final String text;
   final TextStyle? style;
   final TextAlign textAlign;
@@ -15,7 +15,7 @@ class SandboxText extends StatelessWidget {
   /// This is custom solution for this
   final bool isVerticalCentered;
 
-  const SandboxText({
+  const CustomText({
     Key? key,
     required this.text,
     this.style,
@@ -69,7 +69,7 @@ class SandboxText extends StatelessWidget {
   }
 }
 
-class SandboxRichText extends StatelessWidget {
+class CustomRichText extends StatelessWidget {
   final InlineSpan span;
   final TextAlign textAlign;
   final bool softWrap;
@@ -77,7 +77,7 @@ class SandboxRichText extends StatelessWidget {
   final int? maxLines;
   final double? textScaleFactor;
 
-  const SandboxRichText({
+  const CustomRichText({
     Key? key,
     required this.span,
     this.textAlign = TextAlign.start,

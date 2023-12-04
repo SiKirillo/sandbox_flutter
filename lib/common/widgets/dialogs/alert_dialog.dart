@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 import '../../../constants/colors.dart';
 import '../texts.dart';
 
-class SandboxAlertDialog extends StatelessWidget {
+class CustomAlertDialog extends StatelessWidget {
   final String title;
   final dynamic content;
   final String cancelText, actionText;
   final VoidCallback onCancel, onAction;
   final bool isDisabled;
 
-  const SandboxAlertDialog({
+  const CustomAlertDialog({
     Key? key,
     required this.title,
     required this.content,
@@ -27,27 +27,27 @@ class SandboxAlertDialog extends StatelessWidget {
 
   Widget _buildMaterialDialog(BuildContext context) {
     return AlertDialog(
-      title: SandboxText(
+      title: CustomText(
         text: title,
         style: Theme.of(context).dialogTheme.titleTextStyle,
       ),
       content: content is Widget
           ? content
-          : SandboxText(
+          : CustomText(
               text: content!,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
       actions: [
         TextButton(
           onPressed: onCancel,
-          child: SandboxText(
+          child: CustomText(
             text: cancelText.toUpperCase(),
             maxLines: 1,
           ),
         ),
         TextButton(
           onPressed: onAction,
-          child: SandboxText(
+          child: CustomText(
             text: actionText.toUpperCase(),
             maxLines: 1,
           ),
@@ -61,33 +61,33 @@ class SandboxAlertDialog extends StatelessWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SandboxText(
+          CustomText(
             text: title,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'OpenSans',
               fontSize: 16.0,
               fontWeight: FontWeight.w600,
               height: 22.0 / 16.0,
-              color: ColorConstants.light.black500,
+              color: ColorConstants.transparent,
             ),
           ),
         ],
       ),
       content: content is Widget
           ? content
-          : SandboxText(
+          : CustomText(
               text: content!,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 fontFamily: 'OpenSans',
                 height: 18.0 / 13.0,
-                color: ColorConstants.light.black500.withOpacity(0.8),
+                color: ColorConstants.transparent,
               ),
               textAlign: TextAlign.center,
             ),
       actions: [
         TextButton(
           onPressed: onCancel,
-          child: SandboxText(
+          child: CustomText(
             text: cancelText,
             style: const TextStyle(
               fontFamily: 'OpenSans',
@@ -100,7 +100,7 @@ class SandboxAlertDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: onAction,
-          child: SandboxText(
+          child: CustomText(
             text: actionText,
             style: const TextStyle(
               fontFamily: 'OpenSans',

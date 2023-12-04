@@ -42,24 +42,4 @@ class CoreState {
       infoToastData: data,
     );
   }
-
-  CoreState updateSettings({CoreSettingsData? data}) {
-    return CoreState(
-      inAppNotificationData: inAppNotificationData,
-      inAppFailureData: inAppFailureData,
-      infoToastData: infoToastData,
-    );
-  }
-}
-
-class CoreSettingsData {
-  final ThemeStyleType? themeType;
-  final bool? isCharlesProxyEnabled;
-  final bool? isNetworkEnabled;
-
-  const CoreSettingsData({
-    this.themeType,
-    this.isCharlesProxyEnabled,
-    this.isNetworkEnabled,
-  });
 }

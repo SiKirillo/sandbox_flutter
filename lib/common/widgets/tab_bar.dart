@@ -3,38 +3,46 @@ import 'package:sandbox_flutter/common/extensions/iterables.dart';
 
 import 'texts.dart';
 
-/// You can only use string or widget in [SandboxTabBar].
-class SandboxTabBar extends StatefulWidget {
+/// You can only use string or widget in [CustomTabBar].
+class CustomTabBar extends StatefulWidget {
   final List<dynamic> tabs;
   final Function(int) onSelect;
-  final int selected;
-  final double height, padding;
+  final int initialIndex;
+  final double height, tabsIntent;
   final double indicatorHeight, indicatorPadding;
+  final EdgeInsets? padding;
 
-  const SandboxTabBar({
+  const CustomTabBar({
     Key? key,
     required this.tabs,
     required this.onSelect,
-    this.selected = 0,
+    this.initialIndex = 0,
     this.height = 26.0,
-    this.padding = 16.0,
+    this.tabsIntent = 16.0,
     this.indicatorHeight = 1.0,
     this.indicatorPadding = 4.0,
+    this.padding,
   })  : assert(tabs.length >= 1),
-        assert(selected >= 0 && selected < tabs.length),
-        assert(height >= 0 && padding >= 0),
+        assert(initialIndex >= 0 && initialIndex < tabs.length),
+        assert(height >= 0 && tabsIntent >= 0),
         assert(indicatorHeight >= 0 && indicatorPadding >= 0),
         super(key: key);
 
   static const animationDuration = Duration(milliseconds: 200);
 
   @override
-  State<SandboxTabBar> createState() => _SandboxTabBarState();
+  State<CustomTabBar> createState() => _CustomTabBarState();
 }
 
-class _SandboxTabBarState extends State<SandboxTabBar> {
+class _CustomTabBarState extends State<CustomTabBar> {
+  final _wrapperKey = GlobalKey();
+  final _contentKey = GlobalKey();
+
   late final _tabItemKeys = <GlobalKey>[];
+  late int _selectedIndex;
+
   bool _isInit = false;
+  bool _isScrollEnabled = false;
 
   double _indicatorHorizontalPosition = 0.0;
   double _indicatorWidth = 0.0;
@@ -43,9 +51,10 @@ class _SandboxTabBarState extends State<SandboxTabBar> {
   void initState() {
     super.initState();
     _tabItemKeys.addAll(widget.tabs.map((tab) => GlobalKey()));
+    _selectedIndex = widget.initialIndex;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _calculateIndicatorPosition(widget.selected);
+      _calculateIndicatorPosition(_selectedIndex);
       Future.delayed(const Duration(milliseconds: 50)).then((_) {
         setState(() {
           _isInit = true;
@@ -55,7 +64,7 @@ class _SandboxTabBarState extends State<SandboxTabBar> {
   }
 
   @override
-  void didUpdateWidget(SandboxTabBar oldWidget) {
+  void didUpdateWidget(CustomTabBar oldWidget) {
     if (widget.tabs.length > _tabItemKeys.length) {
       final delta = widget.tabs.length - _tabItemKeys.length;
       _tabItemKeys.addAll(List<GlobalKey>.generate(delta, (_) => GlobalKey()));
@@ -63,16 +72,21 @@ class _SandboxTabBarState extends State<SandboxTabBar> {
       _tabItemKeys.removeRange(widget.tabs.length, _tabItemKeys.length);
     }
 
+    WidgetsBinding.instance.addPostFrameCallback(_handleScrollStatus);
     super.didUpdateWidget(oldWidget);
   }
 
   void _onSelectTabHandler(int index) {
-    if (widget.selected == index) {
+    if (_selectedIndex == index) {
       return;
     }
 
-    widget.onSelect(index);
-    _calculateIndicatorPosition(index);
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    widget.onSelect(_selectedIndex);
+    _calculateIndicatorPosition(_selectedIndex);
   }
 
   void _calculateIndicatorPosition(int index) {
@@ -82,13 +96,29 @@ class _SandboxTabBarState extends State<SandboxTabBar> {
 
     double startPosition = 0.0;
     for (int i = 0; i < index; i++) {
-      startPosition += tabSizes[i] + widget.padding;
+      startPosition += tabSizes[i] + widget.tabsIntent;
     }
 
     setState(() {
       _indicatorHorizontalPosition = startPosition;
       _indicatorWidth = tabSizes[index];
     });
+  }
+
+  void _handleScrollStatus(_) {
+    final scrollerContext = _wrapperKey.currentContext;
+    final contentContext = _contentKey.currentContext;
+
+    if (scrollerContext == null || contentContext == null) {
+      return;
+    }
+
+    final isNotEnoughSpace = contentContext.size!.width > scrollerContext.size!.width;
+    if (mounted && _isScrollEnabled != isNotEnoughSpace) {
+      setState(() {
+        _isScrollEnabled = isNotEnoughSpace;
+      });
+    }
   }
 
   List<Widget> _buildTabsPanel() {
@@ -102,27 +132,36 @@ class _SandboxTabBarState extends State<SandboxTabBar> {
           key: _tabItemKeys[i],
           child: GestureDetector(
             onTap: () => _onSelectTabHandler(i),
-            child: tabContent is Widget
-                ? tabContent
-                : AnimatedDefaultTextStyle(
-                    duration: SandboxTabBar.animationDuration,
-                    style: widget.selected == i
-                        ? Theme.of(context).tabBarTheme.labelStyle!
-                        : Theme.of(context).tabBarTheme.unselectedLabelStyle!,
-                    child: SandboxText(
-                      text: widget.tabs[i],
-                    ),
-                  ),
+            child: _buildTabItem(
+              tabContent,
+              _selectedIndex == i,
+            ),
           ),
         ),
       );
 
       if (i + 1 < widget.tabs.length) {
-        formattedTabs.add(SizedBox(width: widget.padding));
+        formattedTabs.add(SizedBox(width: widget.tabsIntent));
       }
     }
 
     return formattedTabs;
+  }
+
+  Widget _buildTabItem(dynamic tab, bool isSelected) {
+    if (tab is Widget) {
+      return tab;
+    }
+
+    return AnimatedDefaultTextStyle(
+      duration: CustomTabBar.animationDuration,
+      style: isSelected
+          ? Theme.of(context).tabBarTheme.labelStyle!
+          : Theme.of(context).tabBarTheme.unselectedLabelStyle!,
+      child: CustomText(
+        text: tab,
+      ),
+    );
   }
 
   @override
@@ -130,26 +169,29 @@ class _SandboxTabBarState extends State<SandboxTabBar> {
     return SizedBox(
       height: widget.height,
       child: SingleChildScrollView(
+        key: _wrapperKey,
         scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        padding: widget.padding,
+        physics: _isScrollEnabled
+            ? const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics())
+            : const NeverScrollableScrollPhysics(),
         child: Stack(
           children: [
-            SizedBox(
-              height: widget.height - widget.indicatorPadding,
-              child: Row(
-                children: _buildTabsPanel(),
-              ),
-            ),
             AnimatedPositioned(
-              duration: _isInit
-                  ? SandboxTabBar.animationDuration
-                  : Duration.zero,
+              duration: _isInit ? CustomTabBar.animationDuration : Duration.zero,
               height: widget.indicatorHeight,
               bottom: 0.0,
               left: _indicatorHorizontalPosition,
               width: _indicatorWidth,
               child: Container(
                 color: Theme.of(context).tabBarTheme.indicatorColor,
+              ),
+            ),
+            SizedBox(
+              key: _contentKey,
+              height: widget.height - widget.indicatorPadding,
+              child: Row(
+                children: _buildTabsPanel(),
               ),
             ),
           ],

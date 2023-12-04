@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 
 import '../../constants/colors.dart';
 
-class SandboxSwitch extends StatelessWidget {
+class CustomSwitch extends StatelessWidget {
   final bool value;
   final Function(bool) onCallback;
   final Size size;
 
-  const SandboxSwitch({
+  const CustomSwitch({
     Key? key,
     required this.value,
     required this.onCallback,
@@ -21,9 +21,9 @@ class SandboxSwitch extends StatelessWidget {
       child: FittedBox(
         fit: BoxFit.cover,
         child: CupertinoSwitch(
-          activeColor: ColorConstants.light.green500,
-          trackColor: const Color(0xFF787880).withOpacity(0.32),
-          thumbColor: ColorConstants.light.white500,
+          activeColor: ColorConstants.transparent,
+          trackColor: ColorConstants.transparent,
+          thumbColor: ColorConstants.transparent,
           value: value,
           onChanged: onCallback,
         ),

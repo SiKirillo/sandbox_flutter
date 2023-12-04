@@ -1,12 +1,11 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
-import 'package:sandbox_flutter/common/bloc/core_bloc.dart';
 
 import '../../injection_container.dart';
-import '../models/in_app_failure_model.dart';
+import '../models/app_settings_model.dart';
 import '../models/service/failure_model.dart';
-import '../usecases/core_update_in_app_failure.dart';
 import '../usecases/core_update_settings.dart';
+import 'in_app_failures/in_app_failure_provider.dart';
 import 'logger_service.dart';
 
 class NetworkListenerService {
@@ -23,7 +22,7 @@ class NetworkListenerService {
       final isConnected = event != ConnectivityResult.none && event != ConnectivityResult.other && event != ConnectivityResult.bluetooth;
       if (_isConnected != isConnected) {
         _isConnected = isConnected;
-        locator<CoreUpdateSettings>().call(CoreSettingsData(
+        locator<CoreUpdateSettings>().call(AppSettingsData(
           isNetworkEnabled: isConnected,
         ));
       }
@@ -40,10 +39,14 @@ class NetworkListenerService {
     if (!isNetworkEnabled) {
       LoggerService.logDebug('FAILURE: NetworkListenerService -> checkNetworkConnection()');
       if (onErrorCallback != null) {
-        await locator<CoreUpdateInAppFailure>().call(InAppFailureData(
-          onError: onErrorCallback,
-          isImportant: true,
-        ));
+        locator<InAppFailureProvider>().addFailure(
+          InAppFailureData.network(
+            onError: onErrorCallback,
+          ),
+          options: const InAppFailureOptions(
+            type: InAppFailureTypeExtended.network,
+          ),
+        );
       }
     }
 

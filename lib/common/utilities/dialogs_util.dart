@@ -6,7 +6,7 @@ import '../../features/screen_builder.dart';
 /// This utility gives you more control than basic [showBottomSheet] and [showDialog] methods
 /// (you don't have to search all showDialog calls if you want to change something)
 class DialogsUtil {
-  static Future<T?> footprintShowBottomSheet<T>(
+  static Future<T?> showBottomSheetCustom<T>(
     Widget dialog, {
     BuildContext? context,
     bool withBarrierColor = true,
@@ -40,7 +40,7 @@ class DialogsUtil {
     );
   }
 
-  static Future<T?> footprintShowDialog<T>(
+  static Future<T?> showDialogCustom<T>(
     Widget dialog, {
     BuildContext? context,
     bool withBarrierColor = true,

@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show clampDouble;
-import 'package:sandbox_flutter/common/widgets/wrappers/scrollable_wrapper.dart';
 
 import 'progress_indicator.dart';
 
 /// This is custom implementation of basic progress indicator in scrollable widgets
-/// Based on [SandboxProgressIndicator] widget
+/// Based on [CustomProgressIndicator] widget
 /// To enable pull to refresh in [ScrollableWrapper] use this widget and select isAlwaysScrollable = true
 class SliverRefreshIndicator extends StatelessWidget {
   final Future<void> Function() onRefresh;
@@ -35,14 +34,14 @@ class SliverRefreshIndicator extends StatelessWidget {
           scale: scaleCurve.transform(percentageComplete),
           child: Opacity(
             opacity: opacityCurve.transform(percentageComplete),
-            child: SandboxProgressIndicator(size: size),
+            child: CustomProgressIndicator(size: size),
           ),
         );
       }
 
       case RefreshIndicatorMode.armed:
       case RefreshIndicatorMode.refresh: {
-        return SandboxProgressIndicator(size: size);
+        return CustomProgressIndicator(size: size);
       }
 
       case RefreshIndicatorMode.done: {
@@ -53,7 +52,7 @@ class SliverRefreshIndicator extends StatelessWidget {
           scale: scaleCurve.transform(percentageComplete),
           child: Opacity(
             opacity: opacityCurve.transform(percentageComplete),
-            child: SandboxProgressIndicator(size: size),
+            child: CustomProgressIndicator(size: size),
           ),
         );
       }

@@ -19,12 +19,12 @@ class NavigationBarData {
         assert(index >= 0);
 }
 
-class SandboxNavigationBar extends StatelessWidget {
+class CustomNavigationBar extends StatelessWidget {
   final List<NavigationBarData> items;
   final Function(int) onSelect;
   final int selected;
 
-  const SandboxNavigationBar({
+  const CustomNavigationBar({
     Key? key,
     required this.items,
     required this.onSelect,
@@ -105,8 +105,6 @@ class _NavigationBarItemState extends State<_NavigationBarItem> with SingleTicke
 
   @override
   Widget build(BuildContext context) {
-    final isDarkTheme = context.watch<ThemeProvider>().type == ThemeStyleType.dark;
-
     return AnimatedBuilder(
       animation: _animationController,
       builder: (_, child) {
@@ -125,10 +123,10 @@ class _NavigationBarItemState extends State<_NavigationBarItem> with SingleTicke
               children: [
                 _NavigationBarIcon(
                   animation: ColorTween(
-                    begin: isDarkTheme
-                        ? ColorConstants.light.blue300
-                        : ColorConstants.light.black500,
-                    end: ColorConstants.light.white500,
+                    begin: context.watch<ThemeProvider>().isDark
+                        ? ColorConstants.transparent
+                        : ColorConstants.transparent,
+                    end: ColorConstants.transparent,
                   ).animate(_animationController),
                   item: widget.item,
                   size: 24.0 + (_animationController.value * 4.0),
@@ -139,15 +137,15 @@ class _NavigationBarItemState extends State<_NavigationBarItem> with SingleTicke
                       fontSize: 12.0,
                       fontWeight: FontWeight.w400,
                       height: 14.0 / 12.0,
-                      color: isDarkTheme
-                          ? ColorConstants.light.blue300
-                          : ColorConstants.light.black500,
+                      color: context.watch<ThemeProvider>().isDark
+                          ? ColorConstants.transparent
+                          : ColorConstants.transparent,
                     ),
-                    end: TextStyle(
+                    end: const TextStyle(
                       fontSize: 13.0,
                       fontWeight: FontWeight.w500,
                       height: 14.0 / 13.0,
-                      color: ColorConstants.light.white500,
+                      color: ColorConstants.transparent,
                     ),
                   ).animate(_animationController),
                   item: widget.item,
@@ -224,7 +222,7 @@ class _NavigationBarLabel extends AnimatedWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SandboxText(
+    return CustomText(
       text: item.label,
       style: _animation.value,
       isVerticalCentered: false,

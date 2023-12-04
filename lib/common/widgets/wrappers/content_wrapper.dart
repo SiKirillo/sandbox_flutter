@@ -11,18 +11,20 @@ class ContentWrapper extends StatelessWidget {
   final bool withKeyboardResize;
 
   const ContentWrapper({
-    super.key,
+    Key? key,
     required this.child,
     this.padding = ContentWrapper.defaultPadding,
     this.withSafeAreaResize = true,
     this.withKeyboardResize = true,
-  });
+  }) : super(key: key);
 
   static const defaultPadding = EdgeInsets.all(SizeConstants.defaultPadding);
 
   @override
   Widget build(BuildContext context) {
-    final safeAreaInsets = withSafeAreaResize ? MediaQuery.of(context).viewPadding.top : 0.0;
+    final safeAreaInsets = withSafeAreaResize
+        ? MediaQuery.of(context).viewPadding.top
+        : 0.0;
     final keyboardInsets = withKeyboardResize
         ? MediaQuery.of(context).viewInsets.bottom
         : 0.0;

@@ -13,6 +13,15 @@ class CommonFailure extends Failure {
   }) : super(message);
 }
 
+class AuthFailure extends Failure {
+  final AuthErrorType type;
+
+  const AuthFailure({
+    required String message,
+    this.type = AuthErrorType.none,
+  }) : super(message);
+}
+
 class NetworkFailure extends Failure {
   const NetworkFailure() : super('No Internet connection');
 }

@@ -20,6 +20,14 @@ class UpdateAuthStatusEvent extends AuthBlocEvent {
   }) : super([authType]);
 }
 
+class UpdateTokensDataEvent extends AuthBlocEvent {
+  final TokensAuthData tokensData;
+
+  UpdateTokensDataEvent({
+    required this.tokensData,
+  }) : super([tokensData]);
+}
+
 class SignOutAuthEvent extends AuthBlocEvent {
   SignOutAuthEvent() : super();
 }

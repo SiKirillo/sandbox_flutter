@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class SandboxDivider extends StatelessWidget {
+class CustomDivider extends StatelessWidget {
   final double size, thickness, indent, endIndent;
   final Color? color;
 
-  const SandboxDivider({
+  const CustomDivider({
     Key? key,
     this.size = 1.0,
     this.thickness = 1.0,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../constants/sizes.dart';
 import '../app_bar.dart';
-import '../progress_indicators/sliver_refresh_indicator.dart';
+import '../indicators/sliver_refresh_indicator.dart';
 
 enum ScrollableWrapperType {
   expanded, /// fills all remaining space
@@ -11,10 +11,11 @@ enum ScrollableWrapperType {
 }
 
 /// You can use this widget under the basic [Scrollable] or [ListView] to have more control
+/// If you have something like animated widgets (size), call setState on the parent class after the animation is complete
 class ScrollableWrapper extends StatefulWidget {
   final ScrollController? controller;
   final Widget child;
-  final SandboxSliverAppBar? sliverAppBar;
+  final CustomSliverAppBar? sliverAppBar;
   final SliverRefreshIndicator? sliverRefreshIndicator;
   final ScrollableWrapperType type;
   final Axis direction;

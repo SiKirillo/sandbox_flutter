@@ -28,6 +28,6 @@ class AbstractSecureDatasource {
   }
   
   String _getStorageID(String key) {
-    return '$id.${locator<DeviceService>().currentBuildMode().toBuildSuffix()}$key';
+    return '$id.secure_storage.${locator<DeviceService>().currentBuildMode().toBuildSuffix()}.$key';
   }
 }

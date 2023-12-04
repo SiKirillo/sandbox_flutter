@@ -7,26 +7,31 @@ enum AuthStatusType {
 
 class AuthState {
   final UserData? userData;
+  final TokensAuthData? tokensData;
   final AuthStatusType authStatusType;
 
   const AuthState({
-    required this.authStatusType,
     required this.userData,
+    required this.tokensData,
+    required this.authStatusType,
   });
 
   factory AuthState.initial() {
     return const AuthState(
       userData: null,
+      tokensData: null,
       authStatusType: AuthStatusType.unauthenticated,
     );
   }
 
-  AuthState update({
+  AuthState copyWith({
     UserData? userData,
+    TokensAuthData? tokensData,
     AuthStatusType? authStatusType,
   }) {
     return AuthState(
       userData: userData ?? this.userData,
+      tokensData: tokensData ?? this.tokensData,
       authStatusType: authStatusType ?? this.authStatusType,
     );
   }

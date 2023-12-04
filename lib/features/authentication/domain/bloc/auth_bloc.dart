@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sandbox_flutter/features/authentication/domain/models/tokens_auth_model.dart';
 
 import '../../../../common/services/logger_service.dart';
 import '../models/user_model.dart';
@@ -10,14 +11,18 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
   AuthBloc(AuthState initialState) : super(initialState) {
     on<SignInEvent>((event, emit) {
-      emit(state.update(
+      emit(state.copyWith(
         userData: event.userData,
         authStatusType: AuthStatusType.authenticated,
       ));
     });
 
     on<UpdateAuthStatusEvent>((event, emit) {
-      emit(state.update(authStatusType: event.authType));
+      emit(state.copyWith(authStatusType: event.authType));
+    });
+
+    on<UpdateTokensDataEvent>((event, emit) {
+      emit(state.copyWith(tokensData: event.tokensData));
     });
 
     on<SignOutAuthEvent>((event, emit) {

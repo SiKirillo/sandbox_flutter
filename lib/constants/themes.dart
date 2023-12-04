@@ -2,304 +2,304 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import '../common/providers/theme_provider.dart';
 import 'colors.dart';
 
 class ThemeConstants {
-  static ThemeData getTheme(ThemeStyleType type) {
-    switch (type) {
-      case ThemeStyleType.light:
-      return ThemeData.lerp(ThemeData.light(), _lightTheme, 1.0);
-
-      case ThemeStyleType.dark:
-      return ThemeData.lerp(ThemeData.dark(), _darkTheme, 1.0);
-    }
-  }
+  static ThemeData get light => ThemeData.lerp(ThemeData.light(), _lightTheme, 1.0);
+  static ThemeData get dark => ThemeData.lerp(ThemeData.dark(), _darkTheme, 1.0);
 
   static final _lightTheme = ThemeData(
     fontFamily: Platform.isAndroid ? 'Roboto' : 'OpenSans',
     brightness: Brightness.light,
-    scaffoldBackgroundColor: ColorConstants.light.blue100,
-    canvasColor: ColorConstants.light.blue100,
+    scaffoldBackgroundColor: ColorConstants.light.bgScaffold,
+    canvasColor: ColorConstants.light.bgScaffold,
     appBarTheme: AppBarTheme(
-      backgroundColor: ColorConstants.light.blue200,
-      shadowColor: ColorConstants.light.blue200.withOpacity(0.6),
+      backgroundColor: ColorConstants.light.bgScaffold,
+      shadowColor: ColorConstants.light.bgScaffold.withOpacity(0.6),
       elevation: 0.0,
       titleTextStyle: TextStyle(
         fontSize: 16.0,
         fontWeight: FontWeight.w400,
         height: 18.0 / 16.0,
-        color: ColorConstants.light.black500,
+        color: ColorConstants.light.bgScaffold,
       ),
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: ColorConstants.light.blue400,
+      backgroundColor: ColorConstants.light.bgScaffold,
     ),
     tabBarTheme: TabBarTheme(
-      indicatorColor: ColorConstants.light.green500,
+      indicatorColor: ColorConstants.light.bgScaffold,
       labelStyle: TextStyle(
-        color: ColorConstants.light.green500,
+        color: ColorConstants.light.bgScaffold,
         fontSize: 14.0,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         height: 21.0 / 14.0,
       ),
       unselectedLabelStyle: TextStyle(
-        color: ColorConstants.light.green500,
+        color: ColorConstants.light.bgScaffold.withOpacity(0.6),
         fontSize: 14.0,
         fontWeight: FontWeight.w400,
         height: 21.0 / 14.0,
       ),
     ),
     bottomSheetTheme: BottomSheetThemeData(
-      backgroundColor: ColorConstants.light.black450,
+      backgroundColor: ColorConstants.light.bgScaffold,
     ),
     dialogTheme: DialogTheme(
-      backgroundColor: ColorConstants.light.black450,
+      backgroundColor: ColorConstants.light.bgScaffold,
       titleTextStyle: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.w700,
         height: 28.0 / 24.0,
-        color: ColorConstants.light.black500,
+        color: ColorConstants.light.bgScaffold,
       ),
     ),
-    textTheme: _getTextThemeByType(ThemeStyleType.light),
+    textTheme: _getTextThemeByType(ThemeMode.light),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       errorMaxLines: 3,
       helperMaxLines: 3,
       contentPadding: const EdgeInsets.all(16.0),
-      iconColor: ColorConstants.light.blue300,
-      fillColor: ColorConstants.light.blue100,
+      iconColor: ColorConstants.light.bgScaffold,
+      fillColor: ColorConstants.light.bgScaffold,
       labelStyle: TextStyle(
         fontSize: 16.0,
         fontWeight: FontWeight.w400,
         height: 21.0 / 16.0,
-        color: ColorConstants.light.black500,
+        color: ColorConstants.light.bgScaffold,
       ),
       hintStyle: TextStyle(
         fontSize: 16.0,
         fontWeight: FontWeight.w400,
         height: 21.0 / 16.0,
-        color: ColorConstants.light.black500.withOpacity(0.5),
+        color: ColorConstants.light.bgScaffold.withOpacity(0.5),
       ),
       errorStyle: TextStyle(
         fontSize: 14.0,
         fontWeight: FontWeight.w400,
         height: 21.0 / 14.0,
-        color: ColorConstants.light.red500,
+        color: ColorConstants.light.bgScaffold,
       ),
       helperStyle: TextStyle(
         fontSize: 13.0,
         height: 21.0 / 13.0,
         fontWeight: FontWeight.w400,
-        color: ColorConstants.light.black500.withOpacity(0.6),
+        color: ColorConstants.light.bgScaffold.withOpacity(0.6),
       ),
       border: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         borderSide: BorderSide(
           width: 1.0,
-          color: ColorConstants.light.blue300,
+          color: ColorConstants.light.bgScaffold,
         ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         borderSide: BorderSide(
           width: 1.0,
-          color: ColorConstants.light.blue300,
+          color: ColorConstants.light.bgScaffold,
         ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         borderSide: BorderSide(
           width: 1.0,
-          color: ColorConstants.light.blue300,
+          color: ColorConstants.light.bgScaffold,
         ),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         borderSide: BorderSide(
           width: 1.0,
-          color: ColorConstants.light.red500,
+          color: ColorConstants.light.bgScaffold,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         borderSide: BorderSide(
           width: 1.0,
-          color: ColorConstants.light.red500,
+          color: ColorConstants.light.bgScaffold,
         ),
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         borderSide: BorderSide(
           width: 1.0,
-          color: ColorConstants.light.grey100.withOpacity(0.6),
+          color: ColorConstants.light.bgScaffold.withOpacity(0.6),
         ),
       ),
     ),
     iconTheme: IconThemeData(
-      color: ColorConstants.light.blue300,
+      color: ColorConstants.light.bgScaffold,
     ),
     dividerTheme: DividerThemeData(
-      color: ColorConstants.light.divider,
+      color: ColorConstants.light.bgScaffold,
+    ),
+    indicatorColor: ColorConstants.light.bgScaffold,
+    listTileTheme: ListTileThemeData(
+      tileColor: ColorConstants.light.bgScaffold,
     ),
   );
 
   static final _darkTheme = ThemeData(
     fontFamily: Platform.isAndroid ? 'Roboto' : 'OpenSans',
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: ColorConstants.dark.blue400,
-    canvasColor: ColorConstants.dark.blue400,
+    scaffoldBackgroundColor: ColorConstants.dark.bgScaffold,
+    canvasColor: ColorConstants.dark.bgScaffold,
     appBarTheme: AppBarTheme(
-      backgroundColor: ColorConstants.dark.blue200,
-      shadowColor: ColorConstants.dark.blue200.withOpacity(0.6),
+      backgroundColor: ColorConstants.dark.bgScaffold,
+      shadowColor: ColorConstants.dark.bgScaffold.withOpacity(0.6),
       elevation: 0.0,
       titleTextStyle: TextStyle(
         fontSize: 16.0,
         fontWeight: FontWeight.w400,
         height: 18.0 / 16.0,
-        color: ColorConstants.dark.black500,
+        color: ColorConstants.dark.bgScaffold,
       ),
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: ColorConstants.dark.grey200,
+      backgroundColor: ColorConstants.dark.bgScaffold,
     ),
     tabBarTheme: TabBarTheme(
-      indicatorColor: ColorConstants.dark.green500,
+      indicatorColor: ColorConstants.dark.bgScaffold,
       labelStyle: TextStyle(
-        color: ColorConstants.dark.green500,
+        color: ColorConstants.dark.bgScaffold,
         fontSize: 14.0,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         height: 21.0 / 14.0,
       ),
       unselectedLabelStyle: TextStyle(
-        color: ColorConstants.dark.green500,
+        color: ColorConstants.dark.bgScaffold.withOpacity(0.6),
         fontSize: 14.0,
         fontWeight: FontWeight.w400,
         height: 21.0 / 14.0,
       ),
     ),
     bottomSheetTheme: BottomSheetThemeData(
-      backgroundColor: ColorConstants.dark.black450,
+      backgroundColor: ColorConstants.dark.bgScaffold,
     ),
     dialogTheme: DialogTheme(
-      backgroundColor: ColorConstants.dark.black450,
+      backgroundColor: ColorConstants.dark.bgScaffold,
       titleTextStyle: TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.w700,
         height: 28.0 / 24.0,
-        color: ColorConstants.dark.black500,
+        color: ColorConstants.dark.bgScaffold,
       ),
     ),
-    textTheme: _getTextThemeByType(ThemeStyleType.dark),
+    textTheme: _getTextThemeByType(ThemeMode.dark),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       errorMaxLines: 3,
       helperMaxLines: 3,
       contentPadding: const EdgeInsets.all(16.0),
-      iconColor: ColorConstants.dark.blue300,
-      fillColor: ColorConstants.dark.blue400,
+      iconColor: ColorConstants.dark.bgScaffold,
+      fillColor: ColorConstants.dark.bgScaffold,
       labelStyle: TextStyle(
         fontSize: 16.0,
         fontWeight: FontWeight.w400,
         height: 21.0 / 16.0,
-        color: ColorConstants.dark.white500,
+        color: ColorConstants.dark.bgScaffold,
       ),
       hintStyle: TextStyle(
         fontSize: 16.0,
         fontWeight: FontWeight.w400,
         height: 21.0 / 16.0,
-        color: ColorConstants.dark.white500.withOpacity(0.5),
+        color: ColorConstants.dark.bgScaffold.withOpacity(0.5),
       ),
       errorStyle: TextStyle(
         fontSize: 14.0,
         fontWeight: FontWeight.w400,
         height: 21.0 / 14.0,
-        color: ColorConstants.dark.red500,
+        color: ColorConstants.dark.bgScaffold,
       ),
       helperStyle: TextStyle(
         fontSize: 13.0,
         height: 21.0 / 13.0,
         fontWeight: FontWeight.w400,
-        color: ColorConstants.dark.white500.withOpacity(0.6),
+        color: ColorConstants.dark.bgScaffold.withOpacity(0.6),
       ),
       border: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         borderSide: BorderSide(
           width: 1.0,
-          color: ColorConstants.dark.blue300,
+          color: ColorConstants.dark.bgScaffold,
         ),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         borderSide: BorderSide(
           width: 1.0,
-          color: ColorConstants.dark.blue300,
+          color: ColorConstants.dark.bgScaffold,
         ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         borderSide: BorderSide(
           width: 1.0,
-          color: ColorConstants.dark.blue300,
+          color: ColorConstants.dark.bgScaffold,
         ),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         borderSide: BorderSide(
           width: 1.0,
-          color: ColorConstants.dark.red500,
+          color: ColorConstants.dark.bgScaffold,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         borderSide: BorderSide(
           width: 1.0,
-          color: ColorConstants.dark.red500,
+          color: ColorConstants.dark.bgScaffold,
         ),
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         borderSide: BorderSide(
           width: 1.0,
-          color: ColorConstants.dark.grey100.withOpacity(0.6),
+          color: ColorConstants.dark.bgScaffold.withOpacity(0.6),
         ),
       ),
     ),
     iconTheme: IconThemeData(
-      color: ColorConstants.dark.blue300,
+      color: ColorConstants.dark.bgScaffold,
     ),
     dividerTheme: DividerThemeData(
-      color: ColorConstants.dark.divider,
+      color: ColorConstants.dark.bgScaffold,
+    ),
+    indicatorColor: ColorConstants.dark.bgScaffold,
+    listTileTheme: ListTileThemeData(
+      tileColor: ColorConstants.dark.bgScaffold,
     ),
   );
 
-  static TextTheme _getTextThemeByType(ThemeStyleType type) {
+  static TextTheme _getTextThemeByType(ThemeMode mode) {
     return TextTheme(
       /// Only for headline labels
       headlineLarge: TextStyle(
         fontSize: 28.0,
         fontWeight: FontWeight.w700,
         height: 33.0 / 28.0,
-        color: type == ThemeStyleType.light
-            ? ColorConstants.light.black500
-            : ColorConstants.dark.white500,
+        color: mode == ThemeMode.light
+            ? ColorConstants.light.bgScaffold
+            : ColorConstants.dark.bgScaffold,
       ),
       headlineMedium: TextStyle(
         fontSize: 21.0,
         fontWeight: FontWeight.w700,
         height: 25.0 / 21.0,
-        color: type == ThemeStyleType.light
-            ? ColorConstants.light.black500
-            : ColorConstants.dark.white500,
+        color: mode == ThemeMode.light
+            ? ColorConstants.light.bgScaffold
+            : ColorConstants.dark.bgScaffold,
       ),
       headlineSmall: TextStyle(
         fontSize: 18.0,
         fontWeight: FontWeight.w700,
         height: 21.0 / 18.0,
-        color: type == ThemeStyleType.light
-            ? ColorConstants.light.black500
-            : ColorConstants.dark.white500,
+        color: mode == ThemeMode.light
+            ? ColorConstants.light.bgScaffold
+            : ColorConstants.dark.bgScaffold,
       ),
 
       /// Default texts
@@ -307,25 +307,25 @@ class ThemeConstants {
         fontSize: 16.0,
         fontWeight: FontWeight.w400,
         height: 21.0 / 16.0,
-        color: type == ThemeStyleType.light
-            ? ColorConstants.light.black500
-            : ColorConstants.dark.white500,
+        color: mode == ThemeMode.light
+            ? ColorConstants.light.bgScaffold
+            : ColorConstants.dark.bgScaffold,
       ),
       bodyMedium: TextStyle(
         fontSize: 14.0,
         fontWeight: FontWeight.w400,
         height: 21.0 / 14.0,
-        color: type == ThemeStyleType.light
-            ? ColorConstants.light.black500
-            : ColorConstants.dark.white500,
+        color: mode == ThemeMode.light
+            ? ColorConstants.light.bgScaffold
+            : ColorConstants.dark.bgScaffold,
       ),
       bodySmall: TextStyle(
         fontSize: 13.0,
         fontWeight: FontWeight.w400,
         height: 21.0 / 13.0,
-        color: type == ThemeStyleType.light
-            ? ColorConstants.light.black500
-            : ColorConstants.dark.white500,
+        color: mode == ThemeMode.light
+            ? ColorConstants.light.bgScaffold
+            : ColorConstants.dark.bgScaffold,
       ),
 
       /// Service texts
@@ -333,17 +333,17 @@ class ThemeConstants {
         fontSize: 16.0,
         fontWeight: FontWeight.w500,
         height: 18.0 / 16.0,
-        color: type == ThemeStyleType.light
-            ? ColorConstants.light.black500
-            : ColorConstants.dark.white500,
+        color: mode == ThemeMode.light
+            ? ColorConstants.light.bgScaffold
+            : ColorConstants.dark.bgScaffold,
       ),
       displaySmall: TextStyle(
         fontSize: 13.0,
         fontWeight: FontWeight.w400,
         height: 18.0 / 13.0,
-        color: type == ThemeStyleType.light
-            ? ColorConstants.light.black500
-            : ColorConstants.dark.white500,
+        color: mode == ThemeMode.light
+            ? ColorConstants.light.bgScaffold
+            : ColorConstants.dark.bgScaffold,
       ),
     );
   }

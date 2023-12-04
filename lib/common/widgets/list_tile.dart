@@ -3,25 +3,21 @@ import 'package:flutter/material.dart';
 import '../../constants/sizes.dart';
 import 'texts.dart';
 
-enum TileAxisAlignment {
-  start,
-  bottom,
-  center,
-}
-
-class SandboxListTile extends StatelessWidget {
+class CustomListTile extends StatelessWidget {
   final String title;
   final String? subtitle;
   final Widget? leading, trailing;
   final VoidCallback? onCallback;
   final double height;
   final TextStyle? titleStyle, subtitleStyle;
-  final double descriptionPadding, leadingPadding;
-  final TileAxisAlignment contentAlignment;
+  final EdgeInsets padding;
+  final double descriptionIndent, leadingIndent;
+  final MainAxisAlignment descriptionAlignment;
+  final CrossAxisAlignment contentAlignment;
   final Color? backgroundColor;
   final bool isDisabled;
 
-  const SandboxListTile({
+  const CustomListTile({
     Key? key,
     required this.title,
     this.subtitle,
@@ -31,29 +27,33 @@ class SandboxListTile extends StatelessWidget {
     this.height = SizeConstants.defaultListTileSize,
     this.titleStyle,
     this.subtitleStyle,
-    this.descriptionPadding = 4.0,
-    this.leadingPadding = 16.0,
-    this.contentAlignment = TileAxisAlignment.center,
+    this.padding = const EdgeInsets.all(8.0),
+    this.descriptionIndent = 4.0,
+    this.leadingIndent = 16.0,
+    this.descriptionAlignment = MainAxisAlignment.center,
+    this.contentAlignment = CrossAxisAlignment.center,
     this.backgroundColor,
     this.isDisabled = false,
   })  : assert(height >= 0),
-        assert(descriptionPadding >= 0 && leadingPadding >= 0),
+        assert(descriptionIndent >= 0 && leadingIndent >= 0),
         super(key: key);
 
-  Widget _buildDescriptionWidget() {
+  Widget _buildDescriptionWidget(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.values[contentAlignment.index],
+      mainAxisAlignment: descriptionAlignment,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        SandboxText(
+        CustomText(
           text: title,
+          style: titleStyle,
         ),
         if (subtitle != null) ...[
           SizedBox(
-            height: descriptionPadding,
+            height: descriptionIndent,
           ),
-          SandboxText(
+          CustomText(
             text: subtitle!,
+            style: subtitleStyle,
           ),
         ],
       ],
@@ -65,10 +65,12 @@ class SandboxListTile extends StatelessWidget {
     return AbsorbPointer(
       absorbing: isDisabled,
       child: Container(
-        constraints: BoxConstraints(
-          minHeight: height,
+        height: height,
+        padding: padding,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(4.0)),
+          color: backgroundColor ?? Theme.of(context).listTileTheme.tileColor,
         ),
-        color: backgroundColor,
         child: Row(
           children: <Widget>[
             Expanded(
@@ -76,19 +78,16 @@ class SandboxListTile extends StatelessWidget {
                 onTap: onCallback,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.values[contentAlignment.index],
+                  crossAxisAlignment: contentAlignment,
                   children: <Widget>[
                     if (leading != null) ...[
                       leading!,
                       SizedBox(
-                        width: leadingPadding,
+                        width: leadingIndent,
                       ),
                     ],
                     Expanded(
-                      child: Container(
-                        color: Colors.transparent,
-                        child: _buildDescriptionWidget(),
-                      ),
+                      child: _buildDescriptionWidget(context),
                     ),
                   ],
                 ),

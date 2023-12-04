@@ -11,12 +11,13 @@ import 'common/models/service/usecase_model.dart';
 import 'common/providers/charles_provider.dart';
 import 'common/providers/network_provider.dart';
 import 'common/services/device_service.dart';
+import 'common/services/firebase_service.dart';
+import 'common/services/in_app_failures/in_app_failure_provider.dart';
+import 'common/services/in_app_notifications/in_app_notification_provider.dart';
 import 'common/services/navigation_service.dart';
 import 'common/usecases/core_init.dart';
 import 'common/providers/theme_provider.dart';
 import 'common/widgets/in_app_elements/dev_build_version.dart';
-import 'common/widgets/in_app_elements/in_app_failure.dart';
-import 'common/widgets/in_app_elements/in_app_notification.dart';
 import 'constants/themes.dart';
 import 'features/authentication/domain/bloc/auth_bloc.dart';
 import 'features/authentication/domain/models/sign_in_model.dart';
@@ -24,8 +25,8 @@ import 'features/authentication/screens/sign_up_email_screen.dart';
 import 'features/authentication/screens/sign_in_screen.dart';
 import 'features/authentication/screens/sign_up_personal_screen.dart';
 import 'features/home/screens/home_screen.dart';
-import 'features/home/screens/random_screen.dart';
-import 'features/home/screens/unknown_screen.dart';
+import 'features/home/screens/sandbox_screen.dart';
+import 'features/home/screens/profile_screen.dart';
 import 'features/screen_builder.dart';
 import 'injection_container.dart';
 
@@ -42,6 +43,7 @@ Future<void> main() async {
   initLocator();
   await Future.wait([
     locator<DeviceService>().init(),
+    locator<FirebaseService>().init(),
     AbstractSharedPreferencesDatasource.init(),
   ]);
 
@@ -73,7 +75,9 @@ class _SandboxAppState extends State<SandboxApp> {
         builder: (context, _) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            theme: ThemeConstants.getTheme(context.watch<ThemeProvider>().type),
+            theme: ThemeConstants.light,
+            darkTheme: ThemeConstants.dark,
+            themeMode: context.watch<ThemeProvider>().mode,
             localizationsDelegates: const [
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
@@ -112,14 +116,14 @@ class _SandboxAppState extends State<SandboxApp> {
                     const HomeScreen(),
                   );
 
-                case RandomScreen.routeName:
+                case SandboxScreen.routeName:
                   return NavigationService.getPageRoute(
-                    const RandomScreen(),
+                    const SandboxScreen(),
                   );
 
-                case UnknownScreen.routeName:
+                case ProfileScreen.routeName:
                   return NavigationService.getPageRoute(
-                    const UnknownScreen(),
+                    const ProfileScreen(),
                   );
               }
 
@@ -147,6 +151,9 @@ class _SandboxAppState extends State<SandboxApp> {
                           Positioned.fill(
                             child: screen,
                           ),
+                        const SafeArea(
+                          child: InAppNotificationBackground(),
+                        ),
                         const Positioned.fill(
                           child: InAppFailureBackground(),
                         ),
@@ -156,9 +163,6 @@ class _SandboxAppState extends State<SandboxApp> {
                             right: 0.0,
                             child: DevBuildVersionBackground(),
                           ),
-                        const SafeArea(
-                          child: InAppNotificationBackground(),
-                        ),
                       ],
                     ),
                   ),

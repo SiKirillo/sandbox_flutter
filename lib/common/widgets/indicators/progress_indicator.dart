@@ -2,14 +2,16 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../constants/images.dart';
+
 /// This is custom implementation of basic progress indicator
 /// You can replace [CircularProgressIndicator] with another widget
-class SandboxProgressIndicator extends StatefulWidget {
+class CustomProgressIndicator extends StatefulWidget {
   final double size;
   final double? progressValue;
   final Color? color;
 
-  const SandboxProgressIndicator({
+  const CustomProgressIndicator({
     Key? key,
     this.size = 20.0,
     this.progressValue,
@@ -19,10 +21,10 @@ class SandboxProgressIndicator extends StatefulWidget {
         super(key: key);
 
   @override
-  State<SandboxProgressIndicator> createState() => _SandboxProgressIndicatorState();
+  State<CustomProgressIndicator> createState() => _CustomProgressIndicatorState();
 }
 
-class _SandboxProgressIndicatorState extends State<SandboxProgressIndicator> with SingleTickerProviderStateMixin {
+class _CustomProgressIndicatorState extends State<CustomProgressIndicator> with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override
@@ -52,9 +54,9 @@ class _SandboxProgressIndicatorState extends State<SandboxProgressIndicator> wit
       },
       child: SizedBox.square(
         dimension: widget.size,
-        child: CircularProgressIndicator(
-          color: widget.color,
-          strokeWidth: 2.0,
+        child: Image.asset(
+          ImageConstants.icProgress,
+          color: widget.color ?? Theme.of(context).indicatorColor,
         ),
       ),
     );

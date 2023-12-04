@@ -1,20 +1,18 @@
 import 'package:get_it/get_it.dart';
+import 'package:sandbox_flutter/features/authentication/domain/services/auth_service.dart';
 
 import 'common/bloc/core_bloc.dart';
 import 'common/datasources/core_preferences_storage.dart';
 import 'common/providers/charles_provider.dart';
 import 'common/providers/network_provider.dart';
 import 'common/services/device_service.dart';
+import 'common/services/firebase_service.dart';
 import 'common/services/logger_service.dart';
 import 'common/services/network_listener_service.dart';
 import 'common/usecases/core_init.dart';
-import 'common/usecases/core_update_in_app_failure.dart';
-import 'common/usecases/core_update_in_app_notification.dart';
-import 'common/usecases/core_update_in_app_toast.dart';
 import 'common/usecases/core_update_settings.dart';
 import 'common/providers/theme_provider.dart';
 import 'features/authentication/domain/bloc/auth_bloc.dart';
-import 'features/authentication/domain/datasources/auth_remote_datasource.dart';
 import 'features/authentication/domain/usecases/auth_auto_sign_in.dart';
 import 'features/authentication/domain/usecases/auth_init.dart';
 import 'features/authentication/domain/usecases/auth_sign_in.dart';
@@ -54,6 +52,9 @@ void _initCore() {
 
   /// Services
   locator.registerLazySingleton(
+    () => FirebaseService(),
+  );
+  locator.registerLazySingleton(
     () => DeviceService(),
   );
   locator.registerLazySingleton(
@@ -70,21 +71,6 @@ void _initCore() {
       corePreferencesStorage: locator<CorePreferencesStorage>(),
       themeProvider: locator<ThemeProvider>(),
       charlesProvider: locator<CharlesProvider>(),
-    ),
-  );
-  locator.registerLazySingleton(
-    () => CoreUpdateInAppNotification(
-      coreBloc: locator<CoreBloc>(),
-    ),
-  );
-  locator.registerLazySingleton(
-    () => CoreUpdateInAppFailure(
-      coreBloc: locator<CoreBloc>(),
-    ),
-  );
-  locator.registerLazySingleton(
-    () => CoreUpdateInAppToast(
-      coreBloc: locator<CoreBloc>(),
     ),
   );
   locator.registerLazySingleton(
@@ -106,9 +92,9 @@ void _initAuth() {
     ),
   );
 
-  /// Datasources
+  /// Services
   locator.registerLazySingleton(
-    () => AuthRemoteDataSource(),
+    () => AuthService(),
   );
 
   /// Usecases
@@ -122,16 +108,14 @@ void _initAuth() {
     () => AuthSignIn(
       networkListenerService: locator<NetworkListenerService>(),
       authBloc: locator<AuthBloc>(),
-      authRemoteDataSource: locator<AuthRemoteDataSource>(),
-      coreUpdateInAppFailure: locator<CoreUpdateInAppFailure>(),
+      authService: locator<AuthService>(),
     ),
   );
   locator.registerLazySingleton(
     () => AuthSignUp(
       networkListenerService: locator<NetworkListenerService>(),
       authBloc: locator<AuthBloc>(),
-      authRemoteDataSource: locator<AuthRemoteDataSource>(),
-      coreUpdateInAppFailure: locator<CoreUpdateInAppFailure>(),
+      authService: locator<AuthService>(),
     ),
   );
   locator.registerLazySingleton(
@@ -142,7 +126,6 @@ void _initAuth() {
   locator.registerLazySingleton(
     () => AuthInit(
       networkListenerService: locator<NetworkListenerService>(),
-      coreUpdateInAppFailure: locator<CoreUpdateInAppFailure>(),
     ),
   );
 }

@@ -1,9 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../providers/theme_provider.dart';
-import '../models/in_app_failure_model.dart';
-import '../models/in_app_notification_model.dart';
-import '../models/in_app_toast_model.dart';
+import '../services/in_app_failures/in_app_failure_provider.dart';
+import '../services/in_app_notifications/in_app_notification_provider.dart';
+import '../services/in_app_toast/in_app_toast_provider.dart';
 import '../services/logger_service.dart';
 
 part 'core_events.dart';

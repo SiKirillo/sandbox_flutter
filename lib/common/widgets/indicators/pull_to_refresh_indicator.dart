@@ -3,17 +3,18 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show clampDouble;
-import 'package:sandbox_flutter/common/widgets/progress_indicators/progress_indicator.dart';
+
+import 'progress_indicator.dart';
 
 /// This is custom implementation of pull to refresh progress indicator
 /// You must place this widget into some scrollable widget
 /// Based on Android [RefreshIndicator] widget
-class SandboxPullToRefreshIndicator extends StatelessWidget {
+class CustomPullToRefreshIndicator extends StatelessWidget {
   final Future<void> Function() onRefresh;
   final double size;
   final Widget child;
 
-  const SandboxPullToRefreshIndicator({
+  const CustomPullToRefreshIndicator({
     Key? key,
     required this.onRefresh,
     this.size = 30.0,
@@ -70,12 +71,12 @@ class _DirectionalScrollPhysics extends ScrollPhysics {
 }
 
 enum _RefreshIndicatorMode {
-  drag, // Pointer is down.
-  armed, // Dragged far enough that an up event will run the onRefresh callback.
-  snap, // Animating to the indicator's final "displacement".
-  refresh, // Running the refresh callback.
-  done, // Animating the indicator's fade-out after refreshing.
-  canceled, // Animating the indicator's fade-out after not arming.
+  drag, /// Pointer is down.
+  armed, /// Dragged far enough that an up event will run the onRefresh callback.
+  snap, /// Animating to the indicator's final "displacement".
+  refresh, /// Running the refresh callback.
+  done, /// Animating the indicator's fade-out after refreshing.
+  canceled, /// Animating the indicator's fade-out after not arming.
 }
 
 class _FootprintRefreshIndicator extends StatefulWidget {
@@ -414,7 +415,7 @@ class _FootprintRefreshIndicatorState extends State<_FootprintRefreshIndicator> 
                     builder: (context, child) {
                       return Opacity(
                         opacity: _valueOpacity.value,
-                        child: SandboxProgressIndicator(size: widget.size),
+                        child: CustomProgressIndicator(size: widget.size),
                       );
                     },
                   ),

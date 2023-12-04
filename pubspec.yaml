@@ -14,6 +14,7 @@ dependencies:
 
   # Style
   swipeable_page_route: ^0.3.0
+  animated_size_and_fade: ^3.0.1
 
   # State
   flutter_bloc: ^8.1.2
@@ -27,10 +28,16 @@ dependencies:
   connectivity_plus: ^3.0.3
 
   # Firebase
+  firebase_core: ^2.9.0
+  firebase_auth: ^4.4.0
+  cloud_firestore: ^4.5.0
+  firebase_analytics: ^10.1.5
+  firebase_crashlytics: ^3.1.0
 
   # Global - Services
   get_it: ^7.2.0
   package_info_plus: ^3.0.3
+  device_info_plus: ^9.0.2
 
   # Other
   dartz: ^0.10.1

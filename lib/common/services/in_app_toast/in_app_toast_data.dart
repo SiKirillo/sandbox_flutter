@@ -1,64 +1,57 @@
-import 'package:flutter/material.dart';
-
-import 'service/failure_model.dart';
+part of 'in_app_toast_provider.dart';
 
 enum InAppToastType {
-  info,
+  warning,
   network,
 }
 
 class InAppToastData {
   final int id;
-  final ValueKey key;
-  final String message;
+  final ValueKey<String> key;
   final InAppToastType type;
+  final String message;
 
   const InAppToastData({
     required this.id,
     required this.key,
+    required this.type,
     required this.message,
-    this.type = InAppToastType.info,
   });
 
   factory InAppToastData.create({
-    required ValueKey key,
+    required ValueKey<String> key,
     required String message,
   }) {
     return InAppToastData(
       id: DateTime.now().hashCode,
       key: key,
+      type: InAppToastType.warning,
       message: message,
-      type: InAppToastType.info,
     );
   }
 
-  factory InAppToastData.createFromFailure({
-    required ValueKey key,
+  factory InAppToastData.failure({
+    required ValueKey<String> key,
     required Failure failure,
   }) {
-    if (failure is HTTPFailure) {
-      return InAppToastData(
-        id: DateTime.now().hashCode,
-        key: key,
-        message: failure.comment ?? failure.message,
-        type: InAppToastType.info,
-      );
-    }
-
     if (failure is NetworkFailure) {
       return InAppToastData(
         id: DateTime.now().hashCode,
         key: key,
-        message: failure.message,
         type: InAppToastType.network,
+        message: failure.message,
       );
     }
 
     return InAppToastData(
       id: DateTime.now().hashCode,
       key: key,
+      type: InAppToastType.warning,
       message: failure.message,
-      type: InAppToastType.info,
     );
+  }
+
+  bool isSameToast(InAppToastData? compare) {
+    return id == compare?.id && key == compare?.key && type == compare?.type && message == compare?.message;
   }
 }

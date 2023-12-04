@@ -3,22 +3,73 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../../features/authentication/domain/bloc/auth_bloc.dart';
+import '../../../features/authentication/domain/datasources/auth_secure_storage.dart';
+import '../../../features/authentication/domain/usecases/auth_refresh_tokens.dart';
+import '../../../features/authentication/domain/usecases/auth_sign_out.dart';
 import '../../../injection_container.dart';
-import '../../bloc/core_bloc.dart';
 import '../../providers/charles_provider.dart';
 import '../../services/device_service.dart';
 import '../../services/logger_service.dart';
 import '../../../constants/failures.dart';
 import 'failure_model.dart';
+import 'usecase_model.dart';
 
 /// Abstract model of http request model based on [Dio] client
-abstract class RemoteDatasource {
+abstract class AbstractRemoteDatasource {
+  static final _servicesWithoutToken = <String>[
+    "${_url()}/auth/no_token",
+  ];
+
   static Dio _client() {
     final client = Dio(BaseOptions(
       receiveDataWhenStatusError: true,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
     ));
+
+    /// If you want to use interceptors
+    // client.interceptors.clear();
+    // client.interceptors.add(
+    //   QueuedInterceptorsWrapper(
+    //     onRequest: (options, handler) async {
+    //       /// Add the access token to the request header
+    //       final tokensData = locator<AuthBloc>().state.tokensData ?? await locator<AuthSecureStorage>().readTokensData();
+    //       if (tokensData == null) {
+    //         return handler.next(options);
+    //       }
+    //
+    //       if (options.path == "${_url()}/auth/refresh-token") {
+    //         options.headers['Authorization'] = 'Bearer ${tokensData.refreshToken}';
+    //       } else {
+    //         options.headers['Authorization'] = 'Bearer ${tokensData.accessToken}';
+    //       }
+    //
+    //       return handler.next(options);
+    //     },
+    //     onError: (error, handler) async {
+    //       if (error.requestOptions.path == "${_url()}/auth/refresh-token") {
+    //         await locator<AuthSignOut>().call(NoParams());
+    //         return handler.reject(error);
+    //       } else if (error.response?.statusCode == 401 && !_servicesWithoutToken.contains(error.requestOptions.path)) {
+    //         /// If a 401 response is received, refresh the access token
+    //         await locator<AuthRefreshTokens>().call(null);
+    //
+    //         /// Update the request header with the new access token
+    //         await Future.delayed(const Duration(milliseconds: 100));
+    //         final tokensData = locator<AuthBloc>().state.tokensData ?? await locator<AuthSecureStorage>().readTokensData();
+    //         if (tokensData?.accessToken != null) {
+    //           error.requestOptions.headers['Authorization'] = 'Bearer ${tokensData?.accessToken}';
+    //         }
+    //
+    //         /// Repeat the request with the updated header
+    //         return handler.resolve(await client.fetch(error.requestOptions));
+    //       }
+    //
+    //       return handler.next(error);
+    //     },
+    //   ),
+    // );
 
     /// If you want to enable Charles Proxy:
     /// You can set constant true value to listen http requests or add switch button somewhere in the app
@@ -26,9 +77,7 @@ abstract class RemoteDatasource {
     if (locator<DeviceService>().currentBuildMode() == BuildMode.dev) {
       if (locator<CharlesProvider>().isEnabled) {
         (client.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate = (client) {
-          if (!Platform.isAndroid) {
-            client.findProxy = (uri) => 'PROXY localhost:8888;';
-          }
+          client.findProxy = (uri) => locator<DeviceService>().isPhysicalDevice ? 'PROXY ${locator<CharlesProvider>().proxyIP};' : 'DIRECT';
           client.badCertificateCallback = (cert, host, port) => Platform.isAndroid;
           return client;
         };
@@ -46,6 +95,32 @@ abstract class RemoteDatasource {
       default:
         return 'https://www.google.com/';
     }
+  }
+
+  Future<Either<Failure, T>> requestWithAuthTokensHandler<T>({
+    required Future<Either<Failure, T>> Function(dynamic tokensData) onRequest,
+  }) async {
+    final response = await onRequest(null);
+    return response.fold(
+      (failure) async {
+        if (failure is HTTPFailure && failure.type == HttpErrorType.badAuthTokens) {
+          /// Update auth tokens
+          // final refreshResponse = await locator<AuthRefreshTokens>().call(NoParams());
+          // return refreshResponse.fold(
+          //   (failure) {
+          //     return Left(failure);
+          //   },
+          //   (result) async {
+          //     return await onRequest(result);
+          //   },
+          // );
+        }
+        return Left(failure);
+      },
+      (result) {
+        return Right(result);
+      },
+    );
   }
 
   Future<Either<Failure, T>> get<T>({
@@ -85,7 +160,7 @@ abstract class RemoteDatasource {
   Future<Either<Failure, T>> post<T>({
     required String requestURL,
     Map<String, dynamic>? queryParameters,
-    Map<String, dynamic>? body,
+    dynamic body,
     String? bearer,
     String? authToken,
     required Either<Failure, T> Function(Response) onResponse,
@@ -122,7 +197,7 @@ abstract class RemoteDatasource {
   Future<Either<Failure, T>> put<T>({
     required String requestURL,
     Map<String, dynamic>? queryParameters,
-    Map<String, dynamic>? body,
+    dynamic body,
     String? bearer,
     String? authToken,
     required Either<Failure, T> Function(Response) onResponse,
@@ -159,7 +234,7 @@ abstract class RemoteDatasource {
   Future<Either<Failure, T>> patch<T>({
     required String requestURL,
     Map<String, dynamic>? queryParameters,
-    Map<String, dynamic>? body,
+    dynamic body,
     String? bearer,
     String? authToken,
     required Either<Failure, T> Function(Response) onResponse,
