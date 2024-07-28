@@ -8,10 +8,10 @@ class CustomAnimatedSizeAndFade extends StatelessWidget {
   final Duration duration;
 
   const CustomAnimatedSizeAndFade({
-    Key? key,
+    super.key,
     required this.child,
     this.duration = StyleConstants.defaultAnimationDuration,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

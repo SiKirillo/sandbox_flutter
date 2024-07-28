@@ -10,7 +10,7 @@ class SandboxScreen extends StatefulWidget {
   static const routeTabNumber = 1;
   static const routeTabName = 'Sandbox';
 
-  const SandboxScreen({Key? key}) : super(key: key);
+  const SandboxScreen({super.key});
 
   @override
   State<SandboxScreen> createState() => _SandboxScreenState();

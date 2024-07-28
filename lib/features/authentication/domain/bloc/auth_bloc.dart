@@ -9,7 +9,7 @@ part 'auth_events.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthBlocEvent, AuthState> {
-  AuthBloc(AuthState initialState) : super(initialState) {
+  AuthBloc(super.initialState) {
     on<SignInEvent>((event, emit) {
       emit(state.copyWith(
         userData: event.userData,

@@ -21,7 +21,7 @@ class DialogWrapper extends StatelessWidget {
   final bool isHidden;
 
   const DialogWrapper({
-    Key? key,
+    super.key,
     required this.child,
     this.label,
     this.description,
@@ -41,8 +41,7 @@ class DialogWrapper extends StatelessWidget {
     this.isHidden = false,
   })  : assert(label is String || label is Widget || label == null),
         assert(description is String || description is Widget || description == null),
-        assert(contentIndent >= 0),
-        super(key: key);
+        assert(contentIndent >= 0);
 
   static const _onShowDuration = Duration(milliseconds: 200);
   static const _onHideDuration = Duration(milliseconds: 250);

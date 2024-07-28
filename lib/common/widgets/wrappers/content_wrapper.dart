@@ -11,12 +11,12 @@ class ContentWrapper extends StatelessWidget {
   final bool withKeyboardResize;
 
   const ContentWrapper({
-    Key? key,
+    super.key,
     required this.child,
     this.padding = ContentWrapper.defaultPadding,
     this.withSafeAreaResize = true,
     this.withKeyboardResize = true,
-  }) : super(key: key);
+  });
 
   static const defaultPadding = EdgeInsets.all(SizeConstants.defaultPadding);
 

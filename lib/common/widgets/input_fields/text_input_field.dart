@@ -33,7 +33,7 @@ class CustomTextInputField extends StatefulWidget {
   final VoidCallback? onClear;
 
   const CustomTextInputField({
-    Key? key,
+    super.key,
     required this.controller,
     this.labelText,
     this.hintText,
@@ -67,8 +67,7 @@ class CustomTextInputField extends StatefulWidget {
     this.onFocusChange,
     this.onClear,
   })  : assert(maxLength >= 0),
-        assert(maxLines >= 1),
-        super(key: key);
+        assert(maxLines >= 1);
 
   @override
   State<CustomTextInputField> createState() => _CustomTextInputFieldState();
@@ -541,7 +540,7 @@ class _InputFieldLabelText extends StatefulWidget {
   final bool isOnTopPosition;
 
   const _InputFieldLabelText({
-    Key? key,
+    super.key,
     required this.labelText,
     required this.isLabelShownOnTop,
     required this.isOptionalField,
@@ -554,7 +553,7 @@ class _InputFieldLabelText extends StatefulWidget {
     required this.textStyle,
     required this.onTap,
     required this.isOnTopPosition,
-  }) : super(key: key);
+  });
 
   @override
   State<_InputFieldLabelText> createState() => _InputFieldLabelTextState();
@@ -677,7 +676,7 @@ class _InputFieldBackgroundText extends StatefulWidget {
   final VoidCallback onTap;
 
   const _InputFieldBackgroundText({
-    Key? key,
+    super.key,
     required this.hintText,
     required this.isOptionalField,
     required this.isFieldEmpty,
@@ -688,7 +687,7 @@ class _InputFieldBackgroundText extends StatefulWidget {
     required this.duration,
     required this.textStyle,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   State<_InputFieldBackgroundText> createState() => _InputFieldBackgroundTextState();

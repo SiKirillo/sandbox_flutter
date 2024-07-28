@@ -21,7 +21,7 @@ import 'sign_up_email_screen.dart';
 class SignInScreen extends StatefulWidget {
   static const routeName = '/sign-in';
 
-  const SignInScreen({Key? key}) : super(key: key);
+  const SignInScreen({super.key});
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();

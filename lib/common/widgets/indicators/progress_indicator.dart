@@ -12,13 +12,12 @@ class CustomProgressIndicator extends StatefulWidget {
   final Color? color;
 
   const CustomProgressIndicator({
-    Key? key,
+    super.key,
     this.size = 20.0,
     this.progressValue,
     this.color,
   })  : assert(size >= 0),
-        assert(progressValue == null || progressValue >= 0),
-        super(key: key);
+        assert(progressValue == null || progressValue >= 0);
 
   @override
   State<CustomProgressIndicator> createState() => _CustomProgressIndicatorState();

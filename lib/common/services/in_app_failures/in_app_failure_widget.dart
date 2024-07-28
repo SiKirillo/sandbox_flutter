@@ -1,7 +1,7 @@
 part of 'in_app_failure_provider.dart';
 
 class InAppFailureBackground extends StatefulWidget {
-  const InAppFailureBackground({Key? key}) : super(key: key);
+  const InAppFailureBackground({super.key});
 
   @override
   State<InAppFailureBackground> createState() => _InAppFailureBackgroundState();
@@ -80,13 +80,10 @@ class _InAppFailureBackgroundState extends State<InAppFailureBackground> {
     _inAppFailureProvider.clear();
   }
 
-  Future<bool> _onWillPopCallback() async {
-    if (_isRequestInProgress) {
-      return false;
+  void _onPopInvokedCallback(bool value) {
+    if (value) {
+      _onGoBackHandler();
     }
-
-    _onGoBackHandler();
-    return true;
   }
 
   Widget _buildFailureWidget(InAppFailureProvider provider) {
@@ -152,8 +149,9 @@ class _InAppFailureBackgroundState extends State<InAppFailureBackground> {
   @override
   Widget build(BuildContext context) {
     final inAppFailureProvider = context.watch<InAppFailureProvider>();
-    return WillPopScope(
-      onWillPop: _onWillPopCallback,
+    return PopScope(
+      canPop: !_isRequestInProgress,
+      onPopInvoked: _onPopInvokedCallback,
       child: AnimatedSwitcher(
         duration: StyleConstants.defaultAnimationDuration,
         child: inAppFailureProvider.isShowing

@@ -23,9 +23,9 @@ class SignUpPersonalScreen extends StatefulWidget {
   final SignInData signInData;
 
   const SignUpPersonalScreen({
-    Key? key,
+    super.key,
     required this.signInData,
-  }) : super(key: key);
+  });
 
   @override
   State<SignUpPersonalScreen> createState() => _SignUpPersonalScreenState();

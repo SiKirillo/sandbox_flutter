@@ -14,7 +14,7 @@ import 'sign_up_email_screen.dart';
 import 'sign_in_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+  const WelcomeScreen({super.key});
 
   void _onSignUpHandler(BuildContext context) {
     Navigator.of(context).pushNamed(SignUpEmailScreen.routeName);
@@ -30,7 +30,6 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return ScaffoldWrapper(
       child: ContentWrapper(
         padding: ContentWrapper.defaultPadding.copyWith(

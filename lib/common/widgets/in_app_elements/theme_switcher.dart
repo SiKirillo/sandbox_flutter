@@ -7,7 +7,7 @@ import '../../providers/theme_provider.dart';
 import '../../usecases/core_update_settings.dart';
 
 class ThemeSwitcherBackground extends StatelessWidget {
-  const ThemeSwitcherBackground({Key? key}) : super(key: key);
+  const ThemeSwitcherBackground({super.key});
 
   @override
   Widget build(BuildContext context) {

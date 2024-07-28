@@ -16,7 +16,7 @@ class CustomText extends StatelessWidget {
   final bool isVerticalCentered;
 
   const CustomText({
-    Key? key,
+    super.key,
     required this.text,
     this.style,
     this.textAlign = TextAlign.start,
@@ -26,8 +26,7 @@ class CustomText extends StatelessWidget {
     this.textScaleFactor,
     this.isVerticalCentered = true,
   })  : assert(maxLines == null || maxLines >= 0),
-        assert(textScaleFactor == null || textScaleFactor >= 0),
-        super(key: key);
+        assert(textScaleFactor == null || textScaleFactor >= 0);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,7 @@ class CustomText extends StatelessWidget {
         textAlign: textAlign,
         softWrap: softWrap,
         overflow: overflow,
-        textScaleFactor: textScaleFactor ?? MediaQuery.of(context).textScaleFactor,
+        textScaler: textScaleFactor != null ? TextScaler.linear(textScaleFactor!) : MediaQuery.textScalerOf(context),
         maxLines: maxLines,
       );
     }
@@ -61,7 +60,7 @@ class CustomText extends StatelessWidget {
           textAlign: textAlign,
           softWrap: softWrap,
           overflow: overflow,
-          textScaleFactor: textScaleFactor ?? MediaQuery.of(context).textScaleFactor,
+          textScaler: textScaleFactor != null ? TextScaler.linear(textScaleFactor!) : MediaQuery.textScalerOf(context),
           maxLines: maxLines,
         ),
       ),
@@ -78,7 +77,7 @@ class CustomRichText extends StatelessWidget {
   final double? textScaleFactor;
 
   const CustomRichText({
-    Key? key,
+    super.key,
     required this.span,
     this.textAlign = TextAlign.start,
     this.softWrap = true,
@@ -86,8 +85,7 @@ class CustomRichText extends StatelessWidget {
     this.maxLines,
     this.textScaleFactor,
   })  : assert(maxLines == null || maxLines >= 0),
-        assert(textScaleFactor == null || textScaleFactor >= 0),
-        super(key: key);
+        assert(textScaleFactor == null || textScaleFactor >= 0);
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +95,7 @@ class CustomRichText extends StatelessWidget {
       textAlign: textAlign,
       softWrap: softWrap,
       overflow: overflow,
-      textScaleFactor: textScaleFactor ?? MediaQuery.of(context).textScaleFactor,
+      textScaler: textScaleFactor != null ? TextScaler.linear(textScaleFactor!) : TextScaler.noScaling,
       maxLines: maxLines,
     );
   }

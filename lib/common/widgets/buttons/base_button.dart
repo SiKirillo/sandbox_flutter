@@ -19,7 +19,7 @@ class CustomBaseButton extends StatelessWidget {
   final bool withShadow;
 
   const CustomBaseButton({
-    Key? key,
+    super.key,
     required this.content,
     required this.onCallback,
     this.height = SizeConstants.defaultButtonHeight,
@@ -33,8 +33,7 @@ class CustomBaseButton extends StatelessWidget {
     this.isBlocked = false,
     this.isProcessing = false,
     this.withShadow = true,
-  })  : assert(content is Widget || content is String),
-        super(key: key);
+  })  : assert(content is Widget || content is String);
 
   TextStyle? _getTextButtonStyle(BuildContext context) {
     final buttonTextStyle = textStyle?.copyWith(

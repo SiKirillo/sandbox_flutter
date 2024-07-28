@@ -13,13 +13,12 @@ class CustomWarningDialog extends StatefulWidget {
   final Function()? buttonCallback;
 
   const CustomWarningDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.content,
     this.buttonText,
     this.buttonCallback,
-  })  : assert(content is Widget || content is String),
-        super(key: key);
+  })  : assert(content is Widget || content is String);
 
   @override
   State<CustomWarningDialog> createState() => _CustomWarningDialogState();

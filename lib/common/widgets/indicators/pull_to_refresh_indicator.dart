@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -15,12 +17,11 @@ class CustomPullToRefreshIndicator extends StatelessWidget {
   final Widget child;
 
   const CustomPullToRefreshIndicator({
-    Key? key,
+    super.key,
     required this.onRefresh,
     this.size = 30.0,
     required this.child,
-  })  : assert(size >= 0),
-        super(key: key);
+  })  : assert(size >= 0);
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +53,8 @@ class _DirectionalScrollPhysics extends ScrollPhysics {
 
   const _DirectionalScrollPhysics({
     this.isInverted = false,
-    ScrollPhysics? parent = const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-  }) : super(parent: parent);
+    super.parent = const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+  });
 
   @override
   _DirectionalScrollPhysics applyTo(ScrollPhysics? ancestor) {
@@ -87,14 +88,14 @@ class _FootprintRefreshIndicator extends StatefulWidget {
   final Widget child;
 
   const _FootprintRefreshIndicator({
-    Key? key,
+    super.key,
     required this.onRefresh,
     this.size = 30.0,
     this.displacement = 40.0,
     this.edgeOffset = 0.0,
     this.triggerMode = RefreshIndicatorTriggerMode.onEdge,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   State<_FootprintRefreshIndicator> createState() => _FootprintRefreshIndicatorState();

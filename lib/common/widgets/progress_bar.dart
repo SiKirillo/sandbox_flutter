@@ -9,11 +9,10 @@ class CustomProgressBar extends StatefulWidget {
   final bool withCustomGradient;
 
   const CustomProgressBar({
-    Key? key,
+    super.key,
     required this.ratio,
     this.withCustomGradient = false,
-  })  : assert(ratio >= 0.0),
-        super(key: key);
+  })  : assert(ratio >= 0.0);
 
   @override
   State<CustomProgressBar> createState() => _CustomProgressBarState();

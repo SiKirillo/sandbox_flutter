@@ -8,8 +8,8 @@ class DeviceService {
   late final PackageInfo _packageInfo;
   late final bool _isPhysicalDevice;
 
-  static const _devPackageName = 'com.samarlandsoft.sandbox_flutter.dev';
-  static const _prodPackageName = 'com.samarlandsoft.sandbox_flutter';
+  static const _testPackageSuffix = '.test';
+  static const _devPackageSuffix = '.dev';
 
   String get packageName => _packageInfo.packageName;
   bool get isPhysicalDevice => _isPhysicalDevice;
@@ -30,13 +30,15 @@ class DeviceService {
   }
 
   BuildMode currentBuildMode() {
-    switch (_packageInfo.packageName) {
-      case _prodPackageName:
-        return BuildMode.prod;
-
-      default:
-        return BuildMode.dev;
+    if (_packageInfo.packageName.contains(_devPackageSuffix)) {
+      return BuildMode.dev;
     }
+
+    if (_packageInfo.packageName.contains(_testPackageSuffix)) {
+      return BuildMode.staging;
+    }
+
+    return BuildMode.prod;
   }
 
   String currentBuildBanner() {
@@ -46,6 +48,7 @@ class DeviceService {
 
 enum BuildMode {
   dev,
+  staging,
   prod,
 }
 
@@ -54,6 +57,9 @@ extension BuildModeExtension on BuildMode {
     switch (this) {
       case BuildMode.prod:
         return 'Production';
+
+      case BuildMode.staging:
+        return 'Test';
 
       default:
         return 'Dev';
@@ -64,6 +70,9 @@ extension BuildModeExtension on BuildMode {
     switch (this) {
       case BuildMode.prod:
         return 'prod';
+
+      case BuildMode.staging:
+        return 'test';
 
       default:
         return 'dev';

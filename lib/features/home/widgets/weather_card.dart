@@ -5,7 +5,7 @@ import '../../../constants/colors.dart';
 import '../../../constants/images.dart';
 
 class WeatherCard extends StatelessWidget {
-  const WeatherCard({Key? key}) : super(key: key);
+  const WeatherCard({super.key});
 
   @override
   Widget build(BuildContext context) {

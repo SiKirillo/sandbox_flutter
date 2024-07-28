@@ -7,12 +7,11 @@ class OpacityWrapper extends StatelessWidget {
   final Widget child;
 
   const OpacityWrapper({
-    Key? key,
+    super.key,
     required this.isOpaque,
     this.opacity = 0.5,
     required this.child,
-  })  : assert(opacity >= 0.0 && opacity <= 1.0),
-        super(key: key);
+  })  : assert(opacity >= 0.0 && opacity <= 1.0);
 
   @override
   Widget build(BuildContext context) {

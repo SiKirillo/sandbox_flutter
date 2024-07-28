@@ -10,13 +10,12 @@ class CustomCheckBox extends StatelessWidget {
   final bool isProcessing;
 
   const CustomCheckBox({
-    Key? key,
+    super.key,
     required this.isChecked,
     required this.onCallback,
     this.size = 20.0,
     this.isProcessing = false,
-  })  : assert(size >= 0),
-        super(key: key);
+  })  : assert(size >= 0);
 
   void _onPressedHandler() {
     if (!isProcessing) {

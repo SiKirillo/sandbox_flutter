@@ -24,7 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onBackCallback;
 
   const CustomAppBar({
-    Key? key,
+    super.key,
     this.content,
     this.leading,
     this.actions,
@@ -38,8 +38,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.withShape = false,
     this.isDisabled = false,
     this.onBackCallback,
-  })  : assert(content is String || content is Widget || content == null),
-        super(key: key);
+  })  : assert(content is String || content is Widget || content == null);
 
   static Widget? buildContentWidget(dynamic content, BuildContext context) {
     assert(content is String || content is Widget || content == null);
@@ -183,7 +182,7 @@ class CustomSliverAppBar extends StatefulWidget implements PreferredSizeWidget {
   final VoidCallback? onBackCallback;
 
   const CustomSliverAppBar({
-    Key? key,
+    super.key,
     this.content,
     this.leading,
     this.actions,
@@ -200,8 +199,7 @@ class CustomSliverAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.isBlocked = false,
     this.onBackCallback,
   })  : assert(content is String || content is Widget || content == null),
-        assert(flexibleSize != null || flexibleContentKey != null),
-        super(key: key);
+        assert(flexibleSize != null || flexibleContentKey != null);
 
   @override
   State<CustomSliverAppBar> createState() => _CustomSliverAppBarState();

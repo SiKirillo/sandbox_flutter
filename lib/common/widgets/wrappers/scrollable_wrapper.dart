@@ -26,7 +26,7 @@ class ScrollableWrapper extends StatefulWidget {
   final bool isAlwaysScrollable;
 
   const ScrollableWrapper({
-    Key? key,
+    super.key,
     this.controller,
     required this.child,
     this.sliverAppBar,
@@ -38,7 +38,7 @@ class ScrollableWrapper extends StatefulWidget {
     this.padding = ScrollableWrapper.defaultPadding,
     this.isScrollEnabled = true,
     this.isAlwaysScrollable = false,
-  }) : super(key: key);
+  });
 
   static const defaultPadding = EdgeInsets.symmetric(
     vertical: SizeConstants.defaultPadding,

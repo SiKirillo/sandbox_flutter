@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_declarations
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show clampDouble;
 
@@ -11,11 +13,10 @@ class SliverRefreshIndicator extends StatelessWidget {
   final double size;
 
   const SliverRefreshIndicator({
-    Key? key,
+    super.key,
     required this.onRefresh,
     this.size = 30.0,
-  })  : assert(size >= 0),
-        super(key: key);
+  })  : assert(size >= 0);
 
   final _kActivityIndicatorRadius = 14.0;
   final _kActivityIndicatorMargin = 16.0;

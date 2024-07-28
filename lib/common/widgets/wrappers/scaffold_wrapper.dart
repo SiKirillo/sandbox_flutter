@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../bloc/core_bloc.dart';
+import '../../services/in_app_failures/in_app_failure_provider.dart';
 import '../app_bar.dart';
 
 /// You can use this widget under the basic [Scaffold] to have more control
@@ -13,42 +13,31 @@ class ScaffoldWrapper extends StatelessWidget {
   final bool isDisabled;
 
   const ScaffoldWrapper({
-    Key? key,
+    super.key,
     required this.child,
     this.appBar,
     this.navigationBar,
     this.withSafeArea = false,
     this.isDisabled = false,
-  }) : super(key: key);
-
-  Future<bool> _onWillPopCallback() async {
-    return false;
-  }
+  });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CoreBloc, CoreState>(
-      buildWhen: (prev, current) {
-        return prev.inAppFailureData != current.inAppFailureData;
-      },
-      builder: (_, state) {
-        return WillPopScope(
-          onWillPop: isDisabled || state.inAppFailureData != null ? _onWillPopCallback : null,
-          child: AbsorbPointer(
-            absorbing: isDisabled,
-            child: Scaffold(
-              appBar: appBar,
-              bottomNavigationBar: navigationBar,
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              body: SafeArea(
-                top: withSafeArea,
-                child: child,
-              ),
-              resizeToAvoidBottomInset: false,
-            ),
+    return PopScope(
+      canPop: isDisabled || context.watch<InAppFailureProvider>().isShowing ? false : true,
+      child: AbsorbPointer(
+        absorbing: isDisabled,
+        child: Scaffold(
+          appBar: appBar,
+          bottomNavigationBar: navigationBar,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: SafeArea(
+            top: withSafeArea,
+            child: child,
           ),
-        );
-      },
+          resizeToAvoidBottomInset: false,
+        ),
+      ),
     );
   }
 }

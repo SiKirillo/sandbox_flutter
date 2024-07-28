@@ -6,12 +6,12 @@ class CustomAnimatedSwitcher extends StatelessWidget {
   final Widget child;
 
   const CustomAnimatedSwitcher({
-    Key? key,
+    super.key,
     required this.valueKey,
     required this.previousIndex,
     required this.currentIndex,
     required this.child,
-  }) : super(key: key);
+  });
 
   static const animationDuration = Duration(milliseconds: 200);
 

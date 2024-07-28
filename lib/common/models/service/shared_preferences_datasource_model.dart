@@ -25,22 +25,22 @@ class AbstractSharedPreferencesDatasource {
 
   Future<void> write(String key, dynamic value) async {
     switch (value.runtimeType) {
-      case String: {
+      case const (String): {
         await _preferences.setString(_getStorageID(key), value) ;
         break;
       }
 
-      case int: {
+      case const (int): {
         await _preferences.setInt(_getStorageID(key), value) ;
         break;
       }
 
-      case double: {
+      case const (double): {
         await _preferences.setDouble(_getStorageID(key), value) ;
         break;
       }
 
-      case bool: {
+      case const (bool): {
         await _preferences.setBool(_getStorageID(key), value) ;
         break;
       }

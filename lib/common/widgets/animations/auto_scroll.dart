@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 class CustomAutoScroll extends StatefulWidget {
   const CustomAutoScroll({
-    Key? key,
+    super.key,
     required this.child,
     this.velocity = defaultVelocity,
     this.delayBefore = defaultPauseDuration,
     this.pauseBetween = defaultPauseDuration,
     this.pauseOnBounce = defaultPauseDuration,
-  }) : super(key: key);
+  });
 
   static const defaultVelocity = Velocity(pixelsPerSecond: Offset(20, 0));
   static const defaultPauseDuration = Duration(milliseconds: 1000);

@@ -8,9 +8,9 @@ class SplashScreen extends StatefulWidget {
   final VoidCallback onFinish;
 
   const SplashScreen({
-    Key? key,
+    super.key,
     required this.onFinish,
-  }) : super(key: key);
+  });
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();

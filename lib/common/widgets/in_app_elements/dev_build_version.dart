@@ -4,7 +4,7 @@ import '../../../injection_container.dart';
 import '../../services/device_service.dart';
 
 class DevBuildVersionBackground extends StatelessWidget {
-  const DevBuildVersionBackground({Key? key}) : super(key: key);
+  const DevBuildVersionBackground({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -25,13 +25,12 @@ class CustomNavigationBar extends StatelessWidget {
   final int selected;
 
   const CustomNavigationBar({
-    Key? key,
+    super.key,
     required this.items,
     required this.onSelect,
     this.selected = 0,
   })  : assert(items.length >= 1),
-        assert(selected >= 0),
-        super(key: key);
+        assert(selected >= 0);
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +59,11 @@ class _NavigationBarItem extends StatefulWidget {
   final bool isSelected;
 
   const _NavigationBarItem({
-    Key? key,
+    super.key,
     required this.item,
     required this.onSelect,
     required this.isSelected,
-  }) : super(key: key);
+  });
 
   @override
   State<_NavigationBarItem> createState() => _NavigationBarItemState();
@@ -165,11 +164,11 @@ class _NavigationBarIcon extends AnimatedWidget {
   final double size;
 
   const _NavigationBarIcon({
-    Key? key,
+    super.key,
     required this.animation,
     required this.item,
     required this.size,
-  }) : super(key: key, listenable: animation);
+  }) : super(listenable: animation);
 
   Animation get _animation => listenable as Animation<Color?>;
 
@@ -213,10 +212,10 @@ class _NavigationBarLabel extends AnimatedWidget {
   final NavigationBarData item;
 
   const _NavigationBarLabel({
-    Key? key,
+    super.key,
     required this.animation,
     required this.item,
-  }) : super(key: key, listenable: animation);
+  }) : super(listenable: animation);
 
   Animation get _animation => listenable as Animation<TextStyle?>;
 

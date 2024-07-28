@@ -4,9 +4,9 @@ class InAppToastBackground extends StatefulWidget {
   final double margin;
 
   const InAppToastBackground({
-    required Key? key,
+    required super.key,
     this.margin = 16.0,
-  }) : super(key: key);
+  });
 
   @override
   State<InAppToastBackground> createState() => _InAppToastBackgroundState();
@@ -132,12 +132,11 @@ class InAppToastBody extends StatelessWidget {
   final double margin;
 
   const InAppToastBody({
-    Key? key,
+    super.key,
     required this.toast,
     required this.isShowing,
     this.margin = 16.0,
-  })  : assert(toast is InAppToastData || toast is String || toast == null),
-        super(key: key);
+  })  : assert(toast is InAppToastData || toast is String || toast == null);
 
   Widget _buildInfoBody(BuildContext context) {
     if (toast is InAppToastData) {

@@ -21,7 +21,7 @@ class ScreenBuilder extends StatefulWidget {
   static const routeName = '/';
   static final globalKey = GlobalKey();
 
-  const ScreenBuilder({Key? key}) : super(key: key);
+  const ScreenBuilder({super.key});
 
   @override
   State<ScreenBuilder> createState() => _ScreenBuilderState();

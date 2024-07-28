@@ -17,18 +17,18 @@ class GifsBuilderService extends StatefulWidget {
   final Function(Object?)? onError;
 
   const GifsBuilderService({
-    Key? key,
+    super.key,
     this.controller,
     required this.provider,
     this.frameRate = GifsBuilderService.defaultFrameRate,
     this.filterQuality = FilterQuality.low,
     this.onLoading,
     this.onError,
-  }) : super(key: key);
+  });
 
   GifsBuilderService.asset(
     String asset, {
-    Key? key,
+    super.key,
     this.controller,
     this.frameRate = GifsBuilderService.defaultFrameRate,
     this.filterQuality = FilterQuality.low,
@@ -36,31 +36,28 @@ class GifsBuilderService extends StatefulWidget {
     this.onError,
     String? package,
     AssetBundle? bundle,
-  }) : provider = AssetImage(asset, package: package, bundle: bundle),
-       super(key: key);
+  }) : provider = AssetImage(asset, package: package, bundle: bundle);
 
   GifsBuilderService.network(
     String url, {
-    Key? key,
+    super.key,
     this.controller,
     this.frameRate = GifsBuilderService.defaultFrameRate,
     this.filterQuality = FilterQuality.low,
     this.onLoading,
     this.onError,
     Map<String, String>? headers,
-  }) : provider = NetworkImage(url, headers: headers),
-       super(key: key);
+  }) : provider = NetworkImage(url, headers: headers);
 
   GifsBuilderService.memory(
     Uint8List bytes, {
-    Key? key,
+    super.key,
     this.controller,
     this.frameRate = GifsBuilderService.defaultFrameRate,
     this.filterQuality = FilterQuality.low,
     this.onLoading,
     this.onError,
-  }) : provider = MemoryImage(bytes),
-       super(key: key);
+  }) : provider = MemoryImage(bytes);
 
   static const defaultFrameRate = 30;
 

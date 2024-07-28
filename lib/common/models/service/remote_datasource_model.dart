@@ -143,7 +143,7 @@ abstract class AbstractRemoteDatasource {
               )
             : null,
       );
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return Left(_handleResponseErrors(requestURL, e));
     }
 
@@ -180,7 +180,7 @@ abstract class AbstractRemoteDatasource {
               )
             : null,
       );
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return Left(_handleResponseErrors(requestURL, e));
     }
 
@@ -217,7 +217,7 @@ abstract class AbstractRemoteDatasource {
               )
             : null,
       );
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return Left(_handleResponseErrors(requestURL, e));
     }
 
@@ -254,7 +254,7 @@ abstract class AbstractRemoteDatasource {
               )
             : null,
       );
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return Left(_handleResponseErrors(requestURL, e));
     }
 
@@ -289,7 +289,7 @@ abstract class AbstractRemoteDatasource {
               )
             : null,
       );
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       return Left(_handleResponseErrors(requestURL, e));
     }
 
@@ -309,7 +309,7 @@ abstract class AbstractRemoteDatasource {
 
   /// This method calls if something in request was wrong
   /// Your project may have a different error structure
-  static HTTPFailure _handleResponseErrors(String url, DioError exception) {
+  static HTTPFailure _handleResponseErrors(String url, DioException exception) {
     int? errorCode;
     String? errorType;
     String? errorMessage;

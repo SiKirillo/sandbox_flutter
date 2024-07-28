@@ -18,7 +18,7 @@ class CustomListTile extends StatelessWidget {
   final bool isDisabled;
 
   const CustomListTile({
-    Key? key,
+    super.key,
     required this.title,
     this.subtitle,
     this.leading,
@@ -35,8 +35,7 @@ class CustomListTile extends StatelessWidget {
     this.backgroundColor,
     this.isDisabled = false,
   })  : assert(height >= 0),
-        assert(descriptionIndent >= 0 && leadingIndent >= 0),
-        super(key: key);
+        assert(descriptionIndent >= 0 && leadingIndent >= 0);
 
   Widget _buildDescriptionWidget(BuildContext context) {
     return Column(

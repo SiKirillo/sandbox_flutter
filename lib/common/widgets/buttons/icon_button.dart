@@ -10,7 +10,7 @@ class CustomIconButton extends StatelessWidget {
   final Color? hoverColor, highlightColor, splashColor;
 
   const CustomIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.onCallback,
     this.size = SizeConstants.defaultIconSize,
@@ -19,8 +19,7 @@ class CustomIconButton extends StatelessWidget {
     this.highlightColor,
     this.splashColor,
   })  : assert(icon is String || icon is Icon || icon is Image),
-        assert(size >= 0),
-        super(key: key);
+        assert(size >= 0);
 
   @override
   Widget build(BuildContext context) {

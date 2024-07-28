@@ -1,7 +1,7 @@
 part of 'in_app_notification_provider.dart';
 
 class InAppNotificationBackground extends StatefulWidget {
-  const InAppNotificationBackground({Key? key}) : super(key: key);
+  const InAppNotificationBackground({super.key});
 
   @override
   State<InAppNotificationBackground> createState() => _InAppNotificationBackgroundState();
@@ -132,10 +132,10 @@ class _InAppNotificationBody extends StatelessWidget {
   final bool isShowing;
 
   const _InAppNotificationBody({
-    Key? key,
+    super.key,
     required this.notification,
     required this.isShowing,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

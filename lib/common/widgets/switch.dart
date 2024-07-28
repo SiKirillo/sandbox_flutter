@@ -8,11 +8,11 @@ class CustomSwitch extends StatelessWidget {
   final Size size;
 
   const CustomSwitch({
-    Key? key,
+    super.key,
     required this.value,
     required this.onCallback,
     this.size = const Size(41.0, 25.0),
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

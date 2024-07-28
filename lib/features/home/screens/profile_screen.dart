@@ -10,7 +10,7 @@ class ProfileScreen extends StatefulWidget {
   static const routeTabNumber = 2;
   static const routeTabName = 'Profile';
 
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();

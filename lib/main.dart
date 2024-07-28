@@ -51,14 +51,9 @@ Future<void> main() async {
   runApp(const SandboxApp());
 }
 
-class SandboxApp extends StatefulWidget {
-  const SandboxApp({Key? key}) : super(key: key);
+class SandboxApp extends StatelessWidget {
+  const SandboxApp({super.key});
 
-  @override
-  State<SandboxApp> createState() => _SandboxAppState();
-}
-
-class _SandboxAppState extends State<SandboxApp> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -132,7 +127,7 @@ class _SandboxAppState extends State<SandboxApp> {
             builder: (context, screen) {
               return MediaQuery(
                 data: MediaQuery.of(context).copyWith(
-                  textScaleFactor: 1.0,
+                  textScaler: const TextScaler.linear(1.0),
                 ),
                 child: DefaultTextStyle(
                   style: Theme.of(context).textTheme.bodyMedium!,

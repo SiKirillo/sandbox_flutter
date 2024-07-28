@@ -13,7 +13,7 @@ class CustomTabBar extends StatefulWidget {
   final EdgeInsets? padding;
 
   const CustomTabBar({
-    Key? key,
+    super.key,
     required this.tabs,
     required this.onSelect,
     this.initialIndex = 0,
@@ -25,8 +25,7 @@ class CustomTabBar extends StatefulWidget {
   })  : assert(tabs.length >= 1),
         assert(initialIndex >= 0 && initialIndex < tabs.length),
         assert(height >= 0 && tabsIntent >= 0),
-        assert(indicatorHeight >= 0 && indicatorPadding >= 0),
-        super(key: key);
+        assert(indicatorHeight >= 0 && indicatorPadding >= 0);
 
   static const animationDuration = Duration(milliseconds: 200);
 

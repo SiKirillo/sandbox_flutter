@@ -14,7 +14,7 @@ class CustomAlertDialog extends StatelessWidget {
   final bool isDisabled;
 
   const CustomAlertDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.content,
     required this.cancelText,
@@ -22,8 +22,7 @@ class CustomAlertDialog extends StatelessWidget {
     required this.onCancel,
     required this.onAction,
     this.isDisabled = false,
-  })  : assert(content is String || content is Widget),
-        super(key: key);
+  })  : assert(content is String || content is Widget);
 
   Widget _buildMaterialDialog(BuildContext context) {
     return AlertDialog(
@@ -117,10 +116,8 @@ class CustomAlertDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return !isDisabled;
-      },
+    return PopScope(
+      canPop: !isDisabled,
       child: AbsorbPointer(
         absorbing: isDisabled,
         child: Platform.isAndroid

@@ -12,7 +12,7 @@ class CustomListViewBuilder extends StatelessWidget {
   final Widget Function(BuildContext, int)? separatorBuilder;
 
   const CustomListViewBuilder({
-    Key? key,
+    super.key,
     this.controller,
     required this.itemCount,
     this.padding = EdgeInsets.zero,
@@ -22,8 +22,7 @@ class CustomListViewBuilder extends StatelessWidget {
     this.isReversed = false,
     required this.itemBuilder,
     this.separatorBuilder,
-  })  : assert(itemCount >= 1),
-        super(key: key);
+  })  : assert(itemCount >= 1);
 
   @override
   Widget build(BuildContext context) {
