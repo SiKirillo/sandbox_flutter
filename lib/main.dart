@@ -1,40 +1,22 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:sandbox_flutter/constants/colors.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
-import 'common/bloc/core_bloc.dart';
-import 'common/models/service/shared_preferences_datasource_model.dart';
-import 'common/models/service/usecase_model.dart';
-import 'common/providers/charles_provider.dart';
-import 'common/providers/network_provider.dart';
-import 'common/services/device_service.dart';
-import 'common/services/firebase_service.dart';
-import 'common/services/in_app_failures/in_app_failure_provider.dart';
+import 'common/common.dart';
+import 'common/injection_container.dart';
 import 'common/services/in_app_notifications/in_app_notification_provider.dart';
-import 'common/services/navigation_service.dart';
-import 'common/usecases/core_init.dart';
-import 'common/providers/theme_provider.dart';
-import 'common/widgets/in_app_elements/dev_build_version.dart';
-import 'constants/themes.dart';
+import 'common/services/in_app_slider/in_app_slider_provider.dart';
+import 'common/services/in_app_toast/in_app_toast_provider.dart';
 import 'features/authentication/domain/bloc/auth_bloc.dart';
-import 'features/authentication/domain/models/sign_in_model.dart';
-import 'features/authentication/screens/sign_up_email_screen.dart';
-import 'features/authentication/screens/sign_in_screen.dart';
-import 'features/authentication/screens/sign_up_personal_screen.dart';
-import 'features/home/screens/home_screen.dart';
-import 'features/home/screens/sandbox_screen.dart';
-import 'features/home/screens/profile_screen.dart';
 import 'features/screen_builder.dart';
-import 'injection_container.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    systemNavigationBarColor: ColorConstants.systemNavigationBar,
-  ));
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -43,12 +25,34 @@ Future<void> main() async {
   initLocator();
   await Future.wait([
     locator<DeviceService>().init(),
-    locator<FirebaseService>().init(),
     AbstractSharedPreferencesDatasource.init(),
   ]);
 
-  await locator<CoreInit>().call(NoParams());
-  runApp(const SandboxApp());
+  await EasyLocalization.ensureInitialized();
+  EasyLocalization.logger.enableBuildModes = [];
+
+  GoRouter.optionURLReflectsImperativeAPIs = true;
+  if (kIsWeb) {
+    usePathUrlStrategy();
+  }
+
+  await locator<SupabaseService>().init();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: ColorConstants.statusBarColor(),
+  ));
+
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [
+        Locale('en'),
+      ],
+      fallbackLocale: const Locale('en'),
+      path: 'assets/translations',
+      useOnlyLangCode: true,
+      useFallbackTranslations: true,
+      child: const SandboxApp(),
+    ),
+  );
 }
 
 class SandboxApp extends StatelessWidget {
@@ -58,107 +62,65 @@ class SandboxApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider.value(value: locator<CoreBloc>()),
         BlocProvider.value(value: locator<AuthBloc>()),
       ],
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: locator<ThemeProvider>()),
-          ChangeNotifierProvider.value(value: locator<NetworkProvider>()),
-          ChangeNotifierProvider.value(value: locator<CharlesProvider>()),
+          ChangeNotifierProvider.value(value: locator<InAppNotificationProvider>()),
+          ChangeNotifierProvider.value(value: locator<InAppSliderProvider>()),
+          ChangeNotifierProvider.value(value: locator<InAppToastProvider>()),
         ],
         builder: (context, _) {
-          return MaterialApp(
+          return MaterialApp.router(
+            title: EnvironmentConstants.appName,
             debugShowCheckedModeBanner: false,
             theme: ThemeConstants.light,
             darkTheme: ThemeConstants.dark,
             themeMode: context.watch<ThemeProvider>().mode,
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en', 'EN'),
-            ],
-            initialRoute: ScreenBuilder.routeName,
-            routes: {
-              ScreenBuilder.routeName: (context) => const ScreenBuilder(),
-            },
-            onGenerateRoute: (settings) {
-              switch (settings.name) {
-                /// Authorization
-                case SignInScreen.routeName:
-                  return NavigationService.getPageRoute(
-                    const SignInScreen(),
-                  );
-
-                case SignUpEmailScreen.routeName:
-                  return NavigationService.getPageRoute(
-                    const SignUpEmailScreen(),
-                  );
-
-                case SignUpPersonalScreen.routeName:
-                  return NavigationService.getPageRoute(
-                    SignUpPersonalScreen(
-                      signInData: settings.arguments as SignInData,
-                    ),
-                  );
-
-                /// Home
-                case HomeScreen.routeName:
-                  return NavigationService.getPageRoute(
-                    const HomeScreen(),
-                  );
-
-                case SandboxScreen.routeName:
-                  return NavigationService.getPageRoute(
-                    const SandboxScreen(),
-                  );
-
-                case ProfileScreen.routeName:
-                  return NavigationService.getPageRoute(
-                    const ProfileScreen(),
-                  );
-              }
-
-              return null;
-            },
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+            routerConfig: AppRouter.configs,
             builder: (context, screen) {
-              return MediaQuery(
-                data: MediaQuery.of(context).copyWith(
-                  textScaler: const TextScaler.linear(1.0),
+              return AnnotatedRegion<SystemUiOverlayStyle>(
+                value: const SystemUiOverlayStyle(
+                  statusBarBrightness: Brightness.light,
                 ),
-                child: DefaultTextStyle(
-                  style: Theme.of(context).textTheme.bodyMedium!,
-                  child: GestureDetector(
-                    onTap: () {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    },
-                    child: Stack(
-                      children: <Widget>[
-                        Positioned.fill(
-                          child: Container(
-                            color: Theme.of(context).scaffoldBackgroundColor,
-                          ),
-                        ),
-                        if (screen != null)
+                child: MediaQuery(
+                  data: MediaQuery.of(context).copyWith(
+                    textScaler: const TextScaler.linear(1.0),
+                  ),
+                  child: DefaultTextStyle(
+                    style: Theme.of(context).textTheme.bodyMedium!,
+                    child: GestureDetector(
+                      onTap: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                      child: Stack(
+                        children: <Widget>[
                           Positioned.fill(
-                            child: screen,
+                            child: Container(
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                            ),
                           ),
-                        const SafeArea(
-                          child: InAppNotificationBackground(),
-                        ),
-                        const Positioned.fill(
-                          child: InAppFailureBackground(),
-                        ),
-                        if (locator<DeviceService>().currentBuildMode() != BuildMode.prod)
-                          const Positioned(
-                            bottom: 0.0,
-                            right: 0.0,
-                            child: DevBuildVersionBackground(),
+                          if (screen != null)
+                            Positioned.fill(
+                              child: ScreenBuilder(
+                                child: screen,
+                              ),
+                            ),
+                          const SafeArea(
+                            child: InAppNotificationBackground(),
                           ),
-                      ],
+                          if (locator<DeviceService>().getBuildModeFromArgs() != BuildMode.prod)
+                            const Positioned(
+                              bottom: 0.0,
+                              right: 0.0,
+                              child: DevBuildVersionBackground(),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

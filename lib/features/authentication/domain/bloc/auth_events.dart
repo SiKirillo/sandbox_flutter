@@ -4,28 +4,12 @@ abstract class AuthBlocEvent {
   const AuthBlocEvent([List props = const []]) : super();
 }
 
-class SignInEvent extends AuthBlocEvent {
-  final UserData userData;
+class UpdateAuthStateEvent extends AuthBlocEvent {
+  final AuthStateType stateEvent;
 
-  SignInEvent({
-    required this.userData,
-  }) : super([userData]);
-}
-
-class UpdateAuthStatusEvent extends AuthBlocEvent {
-  final AuthStatusType authType;
-
-  UpdateAuthStatusEvent({
-    required this.authType,
-  }) : super([authType]);
-}
-
-class UpdateTokensDataEvent extends AuthBlocEvent {
-  final TokensAuthData tokensData;
-
-  UpdateTokensDataEvent({
-    required this.tokensData,
-  }) : super([tokensData]);
+  UpdateAuthStateEvent({
+    required this.stateEvent,
+  }) : super([stateEvent]);
 }
 
 class SignOutAuthEvent extends AuthBlocEvent {

@@ -1,38 +1,37 @@
 part of 'auth_bloc.dart';
 
-enum AuthStatusType {
-  unauthenticated,
-  authenticated,
+enum AuthStateType {
+  initialSession,
+  welcome,
+  signedIn,
+  signedOut,
+  passwordRecovery,
 }
 
 class AuthState {
-  final UserData? userData;
-  final TokensAuthData? tokensData;
-  final AuthStatusType authStatusType;
+  final AuthStateType stateEvent;
 
   const AuthState({
-    required this.userData,
-    required this.tokensData,
-    required this.authStatusType,
+    required this.stateEvent,
   });
 
   factory AuthState.initial() {
     return const AuthState(
-      userData: null,
-      tokensData: null,
-      authStatusType: AuthStatusType.unauthenticated,
+      stateEvent: AuthStateType.initialSession,
+    );
+  }
+
+  factory AuthState.signOut() {
+    return const AuthState(
+      stateEvent: AuthStateType.welcome,
     );
   }
 
   AuthState copyWith({
-    UserData? userData,
-    TokensAuthData? tokensData,
-    AuthStatusType? authStatusType,
+    AuthStateType? stateEvent,
   }) {
     return AuthState(
-      userData: userData ?? this.userData,
-      tokensData: tokensData ?? this.tokensData,
-      authStatusType: authStatusType ?? this.authStatusType,
+      stateEvent: stateEvent ?? this.stateEvent,
     );
   }
 }

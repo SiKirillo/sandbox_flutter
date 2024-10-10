@@ -1,10 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:swipeable_page_route/swipeable_page_route.dart';
+// ignore_for_file: deprecated_member_use
 
-import '../../constants/sizes.dart';
-import 'texts.dart';
-import 'wrappers/opacity_wrapper.dart';
-import 'wrappers/scrollable_wrapper.dart';
+part of '../common.dart';
 
 /// This is custom implementation of basic [AppBar] with morphing animation
 /// Based on [MorphingAppBar] widget, to learn more visit https://pub.dev/packages/swipeable_page_route
@@ -30,8 +26,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
     this.heroTag,
     this.preferredSize = const Size.fromHeight(SizeConstants.defaultAppBarSize),
-    this.appBarPadding = const EdgeInsets.symmetric(horizontal: 16.0),
-    this.contentPadding = const EdgeInsets.symmetric(horizontal: 16.0),
+    this.appBarPadding = const EdgeInsets.only(left: 12.0, right: 8.0),
+    this.contentPadding = const EdgeInsets.symmetric(horizontal: 8.0),
     this.bottomContent,
     this.withBackButton = true,
     this.withElevation = true,
@@ -39,6 +35,33 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.isDisabled = false,
     this.onBackCallback,
   })  : assert(content is String || content is Widget || content == null);
+
+  static CustomAppBar? fromScaffold(
+    CustomAppBar? appBar, {
+    required BuildContext context,
+    bool isCanPop = true,
+  }) {
+    if (appBar == null) {
+      return null;
+    }
+
+    return CustomAppBar(
+      key: appBar.key,
+      content: appBar.content,
+      leading: appBar.leading,
+      actions: appBar.actions,
+      heroTag: appBar.heroTag,
+      preferredSize: appBar.preferredSize,
+      appBarPadding: appBar.appBarPadding,
+      contentPadding: appBar.contentPadding,
+      bottomContent: appBar.bottomContent,
+      withBackButton: appBar.withBackButton,
+      withElevation: appBar.withElevation,
+      withShape: appBar.withShape,
+      isDisabled: appBar.isDisabled,
+      onBackCallback: isCanPop ? appBar.onBackCallback : () {},
+    );
+  }
 
   static Widget? buildContentWidget(dynamic content, BuildContext context) {
     assert(content is String || content is Widget || content == null);
@@ -51,7 +74,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         text: content,
         style: Theme.of(context).appBarTheme.titleTextStyle,
         maxLines: 2,
-        textAlign: TextAlign.center,
         isVerticalCentered: false,
       );
     }
@@ -70,15 +92,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
 
     if (withBackButton) {
-      return GestureDetector(
-        onTap: onBackCallback ?? () => Navigator.of(context).pop(),
-        child: const SizedBox.square(
-          dimension: 40.0,
-          child: Icon(
-            Icons.arrow_back_outlined,
-            size: 28.0,
-          ),
+      return CustomIconButton(
+        icon: SvgPicture.asset(
+          ImageConstants.icBack,
         ),
+        onCallback: onBackCallback ?? () => Navigator.of(context).pop(),
       );
     }
 
@@ -87,6 +105,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final leadingWidget = CustomAppBar.buildLeadingWidget(
+      leading,
+      context,
+      withBackButton: withBackButton,
+      onBackCallback: onBackCallback,
+    );
+
     return PreferredSize(
       preferredSize: preferredSize,
       child: OpacityWrapper(
@@ -101,42 +126,43 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           toolbarHeight: preferredSize.height,
           titleSpacing: 0.0,
           title: Padding(
-            padding: appBarPadding,
+            padding: EdgeInsets.only(
+              top: appBarPadding.top,
+              bottom: appBarPadding.bottom,
+              left: appBarPadding.left + ResponsiveWrapper.responsivePadding(context),
+            ),
             child: Row(
               children: [
-                Flexible(
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: CustomAppBar.buildLeadingWidget(
-                      leading,
-                      context,
-                      withBackButton: withBackButton,
-                      onBackCallback: onBackCallback,
-                    ) ?? const SizedBox(),
+                if (leadingWidget != null) ...[
+                  leadingWidget,
+                  const SizedBox(
+                    width: 8.0,
                   ),
-                ),
+                ],
                 if (content != null)
-                  Flexible(
-                    flex: 4,
-                    child: Center(
-                      child: Padding(
-                        padding: contentPadding,
-                        child: CustomAppBar.buildContentWidget(
-                          content,
-                          context,
-                        ),
+                  Expanded(
+                    child: Padding(
+                      padding: contentPadding,
+                      child: CustomAppBar.buildContentWidget(
+                        content,
+                        context,
                       ),
                     ),
                   ),
-                Flexible(
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: actions ?? const SizedBox(),
-                  ),
-                ),
               ],
             ),
           ),
+          actions: [
+            if (actions != null)
+              Padding(
+                padding: EdgeInsets.only(
+                  top: appBarPadding.top,
+                  bottom: appBarPadding.bottom,
+                  right: appBarPadding.right + ResponsiveWrapper.responsivePadding(context),
+                ),
+                child: actions,
+              ),
+          ],
           bottom: bottomContent != null
               ? PreferredSize(
                   preferredSize: Size.zero,
@@ -188,8 +214,8 @@ class CustomSliverAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.actions,
     this.heroTag,
     this.preferredSize = const Size.fromHeight(SizeConstants.defaultAppBarSize),
-    this.appBarPadding = const EdgeInsets.symmetric(horizontal: 16.0),
-    this.contentPadding = const EdgeInsets.symmetric(horizontal: 16.0),
+    this.appBarPadding = const EdgeInsets.only(left: 12.0, right: 8.0),
+    this.contentPadding = const EdgeInsets.symmetric(horizontal: 8.0),
     this.flexibleContent,
     this.flexibleSize,
     this.flexibleContentKey,
@@ -252,6 +278,13 @@ class _CustomSliverAppBarState extends State<CustomSliverAppBar> with WidgetsBin
 
   @override
   Widget build(BuildContext context) {
+    final leadingWidget = CustomAppBar.buildLeadingWidget(
+      widget.leading,
+      context,
+      withBackButton: widget.withBackButton,
+      onBackCallback: widget.onBackCallback,
+    );
+
     return PreferredSize(
       preferredSize: widget.preferredSize,
       child: MorphingSliverAppBar(
@@ -268,43 +301,44 @@ class _CustomSliverAppBarState extends State<CustomSliverAppBar> with WidgetsBin
         expandedHeight: widget.preferredSize.height + (widget.flexibleSize ?? _flexibleSize),
         title: Container(
           height: widget.preferredSize.height,
-          padding: widget.appBarPadding,
+          padding: EdgeInsets.only(
+            top:  widget.appBarPadding.top,
+            bottom: widget.appBarPadding.bottom,
+            left: widget.appBarPadding.left,
+          ),
           color: Theme.of(context).appBarTheme.backgroundColor,
           child: Row(
             children: [
-              Flexible(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: CustomAppBar.buildLeadingWidget(
-                    widget.leading,
-                    context,
-                    withBackButton: widget.withBackButton,
-                    onBackCallback: widget.onBackCallback,
-                  ) ?? const SizedBox(),
+              if (leadingWidget != null) ...[
+                leadingWidget,
+                const SizedBox(
+                  width: 8.0,
                 ),
-              ),
+              ],
               if (widget.content != null)
-                Flexible(
-                  flex: 4,
-                  child: Center(
-                    child: Padding(
-                      padding: widget.contentPadding,
-                      child: CustomAppBar.buildContentWidget(
-                        widget.content,
-                        context,
-                      ),
+                Expanded(
+                  child: Padding(
+                    padding: widget.contentPadding,
+                    child: CustomAppBar.buildContentWidget(
+                      widget.content,
+                      context,
                     ),
                   ),
                 ),
-              Flexible(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: widget.actions ?? const SizedBox(),
-                ),
-              ),
             ],
           ),
         ),
+        actions: [
+          if (widget.actions != null)
+            Padding(
+              padding: EdgeInsets.only(
+                top: widget.appBarPadding.top,
+                bottom: widget.appBarPadding.bottom,
+                right: widget.appBarPadding.right,
+              ),
+              child: widget.actions,
+            ),
+        ],
         flexibleSpace: SafeArea(
           child: widget.flexibleContent as Widget,
         ),

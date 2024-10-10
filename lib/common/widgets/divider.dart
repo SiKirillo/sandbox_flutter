@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of '../common.dart';
 
 class CustomDivider extends StatelessWidget {
   final double size, thickness, indent, endIndent;
@@ -6,8 +6,8 @@ class CustomDivider extends StatelessWidget {
 
   const CustomDivider({
     super.key,
-    this.size = 1.0,
-    this.thickness = 1.0,
+    this.size = 0.5,
+    this.thickness = 0.5,
     this.indent = 0.0,
     this.endIndent = 0.0,
     this.color,
@@ -20,7 +20,7 @@ class CustomDivider extends StatelessWidget {
       thickness: thickness,
       indent: indent,
       endIndent: endIndent,
-      color: color ?? Theme.of(context).dividerTheme.color?.withOpacity(0.5),
+      color: color ?? Theme.of(context).dividerTheme.color,
     );
   }
 }

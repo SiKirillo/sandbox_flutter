@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-
-import '../../../constants/sizes.dart';
-import '../app_bar.dart';
-import '../indicators/sliver_refresh_indicator.dart';
+part of '../../common.dart';
 
 enum ScrollableWrapperType {
   expanded, /// fills all remaining space
@@ -10,8 +6,6 @@ enum ScrollableWrapperType {
   dialog, /// in bottom sheets
 }
 
-/// You can use this widget under the basic [Scrollable] or [ListView] to have more control
-/// If you have something like animated widgets (size), call setState on the parent class after the animation is complete
 class ScrollableWrapper extends StatefulWidget {
   final ScrollController? controller;
   final Widget child;
@@ -24,6 +18,7 @@ class ScrollableWrapper extends StatefulWidget {
   final EdgeInsets padding;
   final bool isScrollEnabled;
   final bool isAlwaysScrollable;
+  final bool isScrollbarVisible;
 
   const ScrollableWrapper({
     super.key,
@@ -38,6 +33,7 @@ class ScrollableWrapper extends StatefulWidget {
     this.padding = ScrollableWrapper.defaultPadding,
     this.isScrollEnabled = true,
     this.isAlwaysScrollable = false,
+    this.isScrollbarVisible = false,
   });
 
   static const defaultPadding = EdgeInsets.symmetric(
@@ -90,7 +86,7 @@ class _ScrollableWrapperState extends State<ScrollableWrapper> with WidgetsBindi
       return;
     }
 
-    final isNotEnoughSpace = contentContext.size!.height + sliverAppBarHeight > scrollerContext.size!.height;
+    final isNotEnoughSpace = (contentContext.size?.height ?? 0.0) + sliverAppBarHeight > (scrollerContext.size?.height ?? 0.0);
     if (mounted && _isScrollEnabled != isNotEnoughSpace) {
       setState(() {
         _isScrollEnabled = isNotEnoughSpace;
@@ -148,14 +144,19 @@ class _ScrollableWrapperState extends State<ScrollableWrapper> with WidgetsBindi
     final isScrollListenerEnabled = isScrollEnabled && widget.sliverRefreshIndicator != null;
 
     if (widget.type == ScrollableWrapperType.dialog) {
-      return SingleChildScrollView(
-        key: _wrapperKey,
-        controller: _scrollController,
-        scrollDirection: widget.direction,
-        physics: isScrollEnabled
-            ? const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics())
-            : const NeverScrollableScrollPhysics(),
-        child: _buildContentWidget(),
+      return ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(
+          scrollbars: widget.isScrollbarVisible,
+        ),
+        child: SingleChildScrollView(
+          key: _wrapperKey,
+          controller: _scrollController,
+          scrollDirection: widget.direction,
+          physics: isScrollEnabled
+              ? const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics())
+              : const NeverScrollableScrollPhysics(),
+          child: _buildContentWidget(),
+        ),
       );
     }
 
@@ -163,25 +164,30 @@ class _ScrollableWrapperState extends State<ScrollableWrapper> with WidgetsBindi
       onPointerDown: isScrollListenerEnabled
           ? _onListenScrollToRefreshHandler
           : null,
-      child: CustomScrollView(
-        key: _wrapperKey,
-        controller: _scrollController,
-        scrollDirection: widget.direction,
-        physics: isScrollEnabled
-            ? const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics())
-            : const NeverScrollableScrollPhysics(),
-        slivers: [
-          if (widget.sliverAppBar != null) widget.sliverAppBar!,
-          if (widget.sliverRefreshIndicator != null && _isScrollToRefreshEnabled) widget.sliverRefreshIndicator!,
-          widget.type == ScrollableWrapperType.expanded
-              ? SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: _buildContentWidget(),
-                )
-              : SliverToBoxAdapter(
-                  child: _buildContentWidget(),
-                ),
-        ],
+      child: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(
+          scrollbars: widget.isScrollbarVisible,
+        ),
+        child: CustomScrollView(
+          key: _wrapperKey,
+          controller: _scrollController,
+          scrollDirection: widget.direction,
+          physics: isScrollEnabled
+              ? const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics())
+              : const NeverScrollableScrollPhysics(),
+          slivers: [
+            if (widget.sliverAppBar != null) widget.sliverAppBar!,
+            if (widget.sliverRefreshIndicator != null && _isScrollToRefreshEnabled) widget.sliverRefreshIndicator!,
+            widget.type == ScrollableWrapperType.expanded
+                ? SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: _buildContentWidget(),
+                  )
+                : SliverToBoxAdapter(
+                    child: _buildContentWidget(),
+                  ),
+          ],
+        ),
       ),
     );
   }

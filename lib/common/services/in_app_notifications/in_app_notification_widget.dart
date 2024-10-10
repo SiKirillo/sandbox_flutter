@@ -24,7 +24,7 @@ class _InAppNotificationBackgroundState extends State<InAppNotificationBackgroun
 
   @override
   void dispose() {
-    _inAppNotificationProvider.addListener(_onProviderListener);
+    _inAppNotificationProvider.removeListener(_onProviderListener);
     super.dispose();
   }
 
@@ -132,7 +132,6 @@ class _InAppNotificationBody extends StatelessWidget {
   final bool isShowing;
 
   const _InAppNotificationBody({
-    super.key,
     required this.notification,
     required this.isShowing,
   });
@@ -144,6 +143,9 @@ class _InAppNotificationBody extends StatelessWidget {
       opacity: isShowing ? 1.0 : 0.0,
       child: AnimatedContainer(
         duration: StyleConstants.defaultAnimationDuration,
+        constraints: const BoxConstraints(
+          minHeight: 40.0,
+        ),
         padding: const EdgeInsets.symmetric(
           vertical: 7.0,
           horizontal: 12.0,
@@ -153,32 +155,28 @@ class _InAppNotificationBody extends StatelessWidget {
           left: 40.0,
           right: 40.0,
         ),
-        decoration: const BoxDecoration(
-          color: ColorConstants.transparent,
+        decoration: BoxDecoration(
+          color: ColorConstants.attentionColor().withOpacity(0.8),
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
         child: notification?.message != null
             ? Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox.square(
-                    dimension: SizeConstants.defaultIconSize,
-                    child: Image.asset(ImageConstants.icClose),
-                  ),
-                  const SizedBox(
-                    width: 8.0,
-                  ),
                   Flexible(
                     child: CustomText(
                       text: notification?.message ?? '',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w700,
+                        color: ColorConstants.textWhite(),
                       ),
+                      overflow: TextOverflow.clip,
                       maxLines: 3,
+                      textWidthBasis: TextWidthBasis.longestLine,
                     ),
                   ),
-                ],
-              )
+              ],
+            )
             : const SizedBox(),
       ),
     );

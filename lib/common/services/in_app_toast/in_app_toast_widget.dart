@@ -1,12 +1,7 @@
 part of 'in_app_toast_provider.dart';
 
 class InAppToastBackground extends StatefulWidget {
-  final double margin;
-
-  const InAppToastBackground({
-    required super.key,
-    this.margin = 16.0,
-  });
+  const InAppToastBackground({required super.key});
 
   @override
   State<InAppToastBackground> createState() => _InAppToastBackgroundState();
@@ -27,13 +22,13 @@ class _InAppToastBackgroundState extends State<InAppToastBackground> {
 
   @override
   void dispose() {
-    _inAppToastProvider.addListener(_onProviderListener);
+    _inAppToastProvider.removeListener(_onProviderListener);
     super.dispose();
   }
 
   Future<void> _onProviderListener() async {
     final nextToast = _inAppToastProvider.toast;
-    if (widget.key != nextToast?.key) {
+    if (widget.key != nextToast?.key && nextToast != null) {
       return;
     }
 
@@ -117,25 +112,21 @@ class _InAppToastBackgroundState extends State<InAppToastBackground> {
       onTap: _inAppToast != null
           ? () => _onRemoveToastHandler(_inAppToast!)
           : null,
-      child: InAppToastBody(
+      child: _InAppToastBody(
         toast: _inAppToast,
         isShowing: _isShowing,
-        margin: widget.margin,
       ),
     );
   }
 }
 
-class InAppToastBody extends StatelessWidget {
+class _InAppToastBody extends StatelessWidget {
   final dynamic toast;
   final bool isShowing;
-  final double margin;
 
-  const InAppToastBody({
-    super.key,
+  const _InAppToastBody({
     required this.toast,
     required this.isShowing,
-    this.margin = 16.0,
   })  : assert(toast is InAppToastData || toast is String || toast == null);
 
   Widget _buildInfoBody(BuildContext context) {
@@ -144,9 +135,9 @@ class InAppToastBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomText(
-            text: toast?.message ?? '',
+            text: toast?.comment ?? '',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: ColorConstants.transparent,
+              color: ColorConstants.attentionColor(),
               height: 16.0 / 14.0,
             ),
             maxLines: 3,
@@ -162,7 +153,7 @@ class InAppToastBody extends StatelessWidget {
           CustomText(
             text: toast,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: ColorConstants.transparent,
+              color: ColorConstants.attentionColor(),
               height: 16.0 / 14.0,
             ),
             maxLines: 3,
@@ -186,11 +177,11 @@ class InAppToastBody extends StatelessWidget {
           horizontal: 12.0,
         ),
         margin: EdgeInsets.only(
-          top: isShowing ? margin : 0.0,
+          top: isShowing ? 16.0 : 0.0,
         ),
-        decoration: const BoxDecoration(
-          color: ColorConstants.transparent,
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        decoration: BoxDecoration(
+          color: ColorConstants.attentionColor().withOpacity(0.2),
+          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
         ),
         child: AnimatedAlign(
           duration: StyleConstants.defaultAnimationDuration,

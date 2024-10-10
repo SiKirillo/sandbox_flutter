@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-
-import '../../../injection_container.dart';
-import '../../services/device_service.dart';
+part of '../../common.dart';
 
 class DevBuildVersionBackground extends StatelessWidget {
   const DevBuildVersionBackground({super.key});
@@ -10,7 +7,7 @@ class DevBuildVersionBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: BannerPainter(
-        message: locator<DeviceService>().currentBuildBanner(),
+        message: locator<DeviceService>().getBuildBanner(),
         textDirection: Directionality.of(context),
         layoutDirection: Directionality.of(context),
         location: BannerLocation.bottomEnd,

@@ -1,16 +1,7 @@
-// ignore_for_file: unused_element
+// ignore_for_file: unused_element, unused_field
 
-import 'dart:async';
-import 'dart:math' as math;
+part of '../../common.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show clampDouble;
-
-import 'progress_indicator.dart';
-
-/// This is custom implementation of pull to refresh progress indicator
-/// You must place this widget into some scrollable widget
-/// Based on Android [RefreshIndicator] widget
 class CustomPullToRefreshIndicator extends StatelessWidget {
   final Future<void> Function() onRefresh;
   final double size;
@@ -416,7 +407,7 @@ class _FootprintRefreshIndicatorState extends State<_FootprintRefreshIndicator> 
                     builder: (context, child) {
                       return Opacity(
                         opacity: _valueOpacity.value,
-                        child: CustomProgressIndicator(size: widget.size),
+                        child: const CustomProgressIndicator(),
                       );
                     },
                   ),

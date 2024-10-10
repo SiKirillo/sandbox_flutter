@@ -1,13 +1,5 @@
-import 'dart:async';
-import 'dart:ui';
-import 'package:http/http.dart' as http;
+part of '../common.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
-/// This service provides flexible handling of GIF-s
-/// You can place GIF-s from asset, bytes or network
-/// If you don't need to control it - just use Image.assets or something else
 class GifsBuilderService extends StatefulWidget {
   final GifController? controller;
   final ImageProvider provider;

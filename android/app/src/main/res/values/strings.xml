@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Sandbox Flutter</string>
+    <string name="app_name" translatable="false">Sandbox Flutter</string>
 </resources>

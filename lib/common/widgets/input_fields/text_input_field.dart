@@ -1,40 +1,39 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:sandbox_flutter/common/widgets/indicators/progress_indicator.dart';
+// ignore_for_file: deprecated_member_use
 
-import '../../../constants/colors.dart';
-import '../../../constants/images.dart';
-import '../../../constants/sizes.dart';
-import '../buttons/icon_button.dart';
-import '../texts.dart';
+part of '../../common.dart';
+
+enum CustomTextInputFieldType {
+  scaffold,
+  dialog,
+}
 
 class CustomTextInputField extends StatefulWidget {
   final TextEditingController controller;
+  final FocusNode? focusNode, nextFocusNode;
   final String? labelText, hintText, errorText, helperText;
   final Widget? prefixIcon, suffixIcon;
   final bool isEnabled, isAutofocused, isValidField, isOnError, isProcessing;
   final bool isOptionalField, isProtectedField;
-  final bool withClearButton;
-  final bool allowSpaces;
-  final FocusNode? focusNode;
   final TextInputType keyboardType;
   final TextInputAction inputAction;
+  final CustomInputFieldOptions options;
+  final CustomTextInputFieldType type;
   final Iterable<String>? autofillHints;
   final List<TextInputFormatter>? formatters;
   final FormFieldValidator<String>? validator;
   final AutovalidateMode autovalidateMode;
-  final MaxLengthEnforcement? maxLengthEnforcement;
-  final int maxLength, maxLines;
-  final TextInputFieldOptions? options;
   final Function(String)? onChanged;
   final VoidCallback? onEditingComplete;
   final VoidCallback? onTap;
+  final Function(String)? onFieldSubmitted;
   final Function(bool)? onFocusChange;
   final VoidCallback? onClear;
 
   const CustomTextInputField({
     super.key,
     required this.controller,
+    this.focusNode,
+    this.nextFocusNode,
     this.labelText,
     this.hintText,
     this.errorText,
@@ -48,26 +47,21 @@ class CustomTextInputField extends StatefulWidget {
     this.isProcessing = false,
     this.isOptionalField = false,
     this.isProtectedField = false,
-    this.withClearButton = true,
-    this.allowSpaces = true,
-    this.focusNode,
     this.keyboardType = TextInputType.visiblePassword,
     this.inputAction = TextInputAction.done,
+    this.options = const CustomInputFieldOptions(),
+    this.type = CustomTextInputFieldType.scaffold,
     this.autofillHints,
     this.formatters,
     this.validator,
     this.autovalidateMode = AutovalidateMode.disabled,
-    this.maxLengthEnforcement,
-    this.maxLength = 64,
-    this.maxLines = 1,
-    this.options,
     this.onChanged,
     this.onEditingComplete,
     this.onTap,
+    this.onFieldSubmitted,
     this.onFocusChange,
     this.onClear,
-  })  : assert(maxLength >= 0),
-        assert(maxLines >= 1);
+  });
 
   @override
   State<CustomTextInputField> createState() => _CustomTextInputFieldState();
@@ -78,7 +72,7 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
   final _prefixIconKey = GlobalKey();
   final _suffixIconKey = GlobalKey();
 
-  final _defaultFocusNode = FocusNode();
+  late final FocusNode _focusNode;
 
   double _textFieldSize = 0.0;
   double _prefixIconSize = 0.0;
@@ -95,13 +89,17 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
   @override
   void initState() {
     super.initState();
+    _focusNode = widget.focusNode ?? FocusNode();
+
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _handleWidgetSize();
-      Future.delayed(const Duration(milliseconds: 100)).then((_) {
-        setState(() {
-          _isInit = true;
-        });
+      Future.delayed(StyleConstants.defaultUsecaseDelayDuration).then((_) {
+        if (mounted) {
+          setState(() {
+            _isInit = true;
+          });
+        }
       });
     });
 
@@ -152,8 +150,7 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
       });
     }
 
-    if (_prefixIconSize != prefixRenderSize &&
-        (prefixRenderSize > 0.0 || widget.prefixIcon == null)) {
+    if (_prefixIconSize != prefixRenderSize && (prefixRenderSize > 0.0 || widget.prefixIcon == null)) {
       setState(() {
         _prefixIconSize = prefixRenderSize;
       });
@@ -204,93 +201,117 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
     }
   }
 
-  Color? _getInputFieldBackgroundColor() {
-    /// On disabled
-    if (!widget.isEnabled) {
-      return null;
+  KeyEventResult _onKeyEventHandler(FocusNode focus, KeyEvent event) {
+    if (event is KeyUpEvent) {
+      return KeyEventResult.handled;
     }
 
-    /// On focused
-    if (_isFocused) {
-      return ColorConstants.transparent;
+    final isShiftEnterPressed = HardwareKeyboard.instance.isShiftPressed && event.logicalKey == LogicalKeyboardKey.enter;
+    final isTabPressed = event.logicalKey == LogicalKeyboardKey.tab;
+
+    if (isTabPressed && widget.nextFocusNode != null) {}
+
+    if (isShiftEnterPressed || isTabPressed) {
+      if (event is KeyRepeatEvent) {
+        return KeyEventResult.handled;
+      }
+
+      if (isTabPressed && widget.nextFocusNode != null) {
+        FocusScope.of(context).requestFocus(widget.nextFocusNode);
+      }
+
+      return KeyEventResult.handled;
     }
 
-    return null;
+    return KeyEventResult.ignored;
   }
 
   TextStyle _getLabelTextStyle() {
-    final defaultTextStyle = Theme.of(context).inputDecorationTheme.labelStyle!.copyWith(
+    final defaultTextStyle = Theme.of(context).inputDecorationTheme.labelStyle!.merge(widget.options.textStyle).copyWith(
       decorationThickness: 0.0,
     );
 
     /// On disabled
     if (!widget.isEnabled) {
-      return defaultTextStyle;
+      return defaultTextStyle.copyWith(
+        color: defaultTextStyle.color?.withOpacity(0.5),
+      );
     }
 
     return defaultTextStyle;
   }
 
-  TextStyle _getBackgroundTextStyle() {
-    final defaultTextStyle = Theme.of(context).inputDecorationTheme.hintStyle!;
+  TextStyle _getHintTextStyle() {
+    final defaultTextStyle = Theme.of(context).inputDecorationTheme.hintStyle!.copyWith(
+      decorationThickness: 0.0,
+    );
 
     /// On disabled
     if (!widget.isEnabled) {
-      return defaultTextStyle;
+      return defaultTextStyle.copyWith(
+        color: defaultTextStyle.color?.withOpacity(0.5),
+      );
     }
 
     return defaultTextStyle;
   }
 
   TextStyle _getAnimatedLabelTextStyle() {
-    final isLabelShown = _isFocused || widget.controller.text.isNotEmpty;
+    final isLabelShown = widget.controller.text.isNotEmpty;
     final defaultTextStyle = Theme.of(context).inputDecorationTheme.hintStyle!.copyWith(
-      fontSize: 11.0,
+      fontSize: 12.0,
       fontWeight: FontWeight.w400,
       height: 1.0,
+      decorationThickness: 0.0,
     );
 
-    /// On error
-    if (isLabelShown && widget.errorText != null) {
+    /// On disabled
+    if (!widget.isEnabled) {
       return defaultTextStyle.copyWith(
-        color: Theme.of(context).inputDecorationTheme.errorStyle?.color,
+        color: defaultTextStyle.color?.withOpacity(0.5),
+      );
+    }
+
+    /// On error
+    if ((isLabelShown || _isFocused) && widget.errorText != null) {
+      return defaultTextStyle.copyWith(
+        color: widget.isEnabled
+            ? Theme.of(context).inputDecorationTheme.errorStyle?.color
+            : defaultTextStyle.color?.withOpacity(0.5),
       );
     }
 
     /// On focused
-    if (isLabelShown && _isFocused) {
+    if (isLabelShown || _isFocused) {
       return defaultTextStyle.copyWith(
-        color: ColorConstants.transparent,
+        color: _isFocused
+            ? ColorConstants.textFieldFocusedBorderColor()
+            : defaultTextStyle.color,
       );
     }
 
-    /// On disabled
-    if (!widget.isEnabled) {
-      return defaultTextStyle;
-    }
-
     /// On unfocused
-    return defaultTextStyle;
+    return Theme.of(context).inputDecorationTheme.hintStyle!;
   }
 
-  Color? _getServiceIconColor({bool isProtectedIcon = false}) {
+  Color _getIconColor({bool isProtectedIcon = false}) {
     /// On disabled
     if (!widget.isEnabled) {
-      return Theme.of(context).inputDecorationTheme.disabledBorder?.borderSide.color;
+      return ColorConstants.textFieldIconDisableColor();
     }
 
     /// On disabled protected
     if (_isProtected && isProtectedIcon) {
-      return Theme.of(context).inputDecorationTheme.iconColor;
+      return ColorConstants.textFieldIconColor();
     }
 
     /// On error
     if (widget.errorText != null) {
-      return Theme.of(context).inputDecorationTheme.errorStyle?.color;
+      return ColorConstants.textFieldErrorColor();
     }
 
     /// On focused
-    return Theme.of(context).inputDecorationTheme.border?.borderSide.color;
+    return ColorConstants.textFieldIconFocusedColor();
   }
 
   Widget _buildErrorWidget() {
@@ -304,14 +325,14 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
       decoration: BoxDecoration(
         color: _isFocused
             ? null
-            : ColorConstants.transparent,
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+            : Theme.of(context).inputDecorationTheme.errorStyle?.color?.withOpacity(0.2),
+        borderRadius: const BorderRadius.all(Radius.circular(6.0)),
       ),
       child: AnimatedDefaultTextStyle(
         duration: _defaultInfoSectionDuration,
         style: Theme.of(context).inputDecorationTheme.errorStyle!.copyWith(
-          fontSize: _isFocused ? null : 14.0,
-          height: _isFocused ? null : 16.0 / 14.0,
+          fontSize: _isFocused ? null : 12.0,
+          height: _isFocused ? null : 16.0 / 12.0,
         ),
         child: CustomText(
           isVerticalCentered: false,
@@ -343,122 +364,133 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
           children: [
             Focus(
               onFocusChange: _onFocusChangeHandler,
+              onKeyEvent: _onKeyEventHandler,
               child: Opacity(
                 opacity: widget.isEnabled ? 1.0 : 0.5,
-                child: TextFormField(
-                  key: _textFieldKey,
-                  controller: widget.controller,
-                  enabled: widget.isEnabled,
-                  obscureText: _isProtected,
-                  autofocus: widget.isAutofocused,
-                  focusNode: widget.focusNode ?? _defaultFocusNode,
-                  keyboardType: widget.keyboardType,
-                  textInputAction: widget.inputAction,
-                  style: _getLabelTextStyle(),
-                  decoration: InputDecoration(
-                    isDense: widget.options?.isDense,
-                    prefixIcon: widget.prefixIcon != null
-                        ? SizedBox(
-                            key: _prefixIconKey,
-                            child: widget.prefixIcon,
-                          )
-                        : null,
-                    suffixIcon: Padding(
-                      key: _suffixIconKey,
-                      padding: EdgeInsets.only(
-                        bottom: (widget.maxLines - 1) * suffixIconBottomPadding,
-                        right: 12.0,
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          if (widget.withClearButton && !_isFieldEmpty && _isFocused) ...[
-                            CustomIconButton(
-                              icon: Image.asset(ImageConstants.icClose),
-                              onCallback: _onClearFieldHandler,
-                            ),
-                            const SizedBox(
-                              width: 4.0,
-                            ),
-                          ],
-                          if (widget.isProtectedField)
-                            CustomIconButton(
-                              icon: Image.asset(
-                                ImageConstants.icClose,
-                                color: _getServiceIconColor(isProtectedIcon: true),
+                child: Center(
+                  child: TextFormField(
+                    key: _textFieldKey,
+                    controller: widget.controller,
+                    enabled: widget.isEnabled,
+                    obscureText: _isProtected,
+                    autofocus: widget.isAutofocused,
+                    focusNode: _focusNode,
+                    keyboardType: widget.keyboardType,
+                    textInputAction: widget.inputAction,
+                    style: _getLabelTextStyle(),
+                    decoration: InputDecoration(
+                      isDense: widget.options.isDense,
+                      prefixIcon: widget.prefixIcon != null
+                          ? Padding(
+                              key: _prefixIconKey,
+                              padding: EdgeInsets.only(
+                                left: SizeConstants.defaultTextInputPadding.left,
                               ),
-                              onCallback: _onToggleObscureHandler,
-                            ),
-                          if (widget.isValidField) ...[
-                            const SizedBox(
-                              width: 4.0,
-                            ),
-                            CustomIconButton(
-                              icon: Image.asset(
-                                ImageConstants.icClose,
-                                color: _getServiceIconColor(),
+                              child: widget.prefixIcon,
+                            )
+                          : null,
+                      suffixIcon: Padding(
+                        key: _suffixIconKey,
+                        padding: EdgeInsets.only(
+                          bottom: (widget.options.maxLines - 1) * suffixIconBottomPadding,
+                          left: SizeConstants.defaultTextInputPadding.right,
+                          right: SizeConstants.defaultTextInputPadding.right,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            if (widget.options.withClearButton && !_isFieldEmpty && _isFocused) ...[
+                              CustomIconButton(
+                                icon: SvgPicture.asset(
+                                  ImageConstants.icClose,
+                                ),
+                                onCallback: _onClearFieldHandler,
                               ),
-                              onCallback: () {},
-                            ),
+                              const SizedBox(
+                                width: 4.0,
+                              ),
+                            ],
+                            if (widget.isProtectedField)
+                              CustomIconButton(
+                                icon: SvgPicture.asset(
+                                  ImageConstants.icTextfieldEye,
+                                  color: _getIconColor(isProtectedIcon: true),
+                                ),
+                                onCallback: _onToggleObscureHandler,
+                              ),
+                            if (widget.isValidField) ...[
+                              const SizedBox(
+                                width: 4.0,
+                              ),
+                              CustomIconButton(
+                                icon: SvgPicture.asset(
+                                  ImageConstants.icTextfieldOk,
+                                  color: _getIconColor(),
+                                ),
+                                onCallback: () {},
+                              ),
+                            ],
+                            if (widget.isProcessing) ...[
+                              const SizedBox(
+                                width: 4.0,
+                              ),
+                              CustomProgressIndicator.simple(
+                                size: 16.0,
+                                color: _getIconColor(),
+                              ),
+                            ],
+                            if (widget.suffixIcon != null) widget.suffixIcon!,
                           ],
-                          if (widget.isProcessing) ...[
-                            const SizedBox(
-                              width: 4.0,
-                            ),
-                            CustomProgressIndicator(
-                              color: _getServiceIconColor(),
-                            ),
-                          ],
-                          if (widget.suffixIcon != null) widget.suffixIcon!,
-                        ],
+                        ),
                       ),
-                    ),
-                    prefixIconConstraints: const BoxConstraints(
-                      minHeight: SizeConstants.defaultIconSize,
-                    ),
-                    suffixIconConstraints: const BoxConstraints(
-                      minHeight: SizeConstants.defaultIconSize,
-                    ),
-                    border: !widget.isEnabled
-                        ? null
-                        : Theme.of(context).inputDecorationTheme.border?.copyWith(
-                            borderSide: Theme.of(context).inputDecorationTheme.border?.borderSide.copyWith(
-                              color: ColorConstants.transparent,
-                            ),
-                          ),
-                    enabledBorder: widget.errorText != null || widget.isOnError
-                        ? Theme.of(context).inputDecorationTheme.errorBorder
-                        : null,
-                    focusedBorder: widget.errorText != null || widget.isOnError
-                        ? Theme.of(context).inputDecorationTheme.errorBorder
-                        : null,
-                    disabledBorder: Theme.of(context).inputDecorationTheme.disabledBorder?.copyWith(
-                      borderSide: Theme.of(context).inputDecorationTheme.disabledBorder?.borderSide.copyWith(
-                        color: ColorConstants.transparent,
+                      prefixIconConstraints: const BoxConstraints(
+                        minHeight: SizeConstants.defaultIconSize,
                       ),
+                      suffixIconConstraints: const BoxConstraints(
+                        minHeight: SizeConstants.defaultIconSize,
+                      ),
+                      border: Theme.of(context).inputDecorationTheme.border?.copyWith(
+                        borderSide: Theme.of(context).inputDecorationTheme.border?.borderSide.copyWith(
+                          color: widget.isEnabled ? null : ColorConstants.textFieldBorderColor(),
+                        ),
+                      ),
+                      enabledBorder: widget.errorText != null || widget.isOnError
+                          ? Theme.of(context).inputDecorationTheme.errorBorder
+                          : null,
+                      focusedBorder: widget.errorText != null || widget.isOnError
+                          ? Theme.of(context).inputDecorationTheme.errorBorder
+                          : null,
+                      disabledBorder: Theme.of(context).inputDecorationTheme.disabledBorder?.copyWith(
+                        borderSide: Theme.of(context).inputDecorationTheme.disabledBorder?.borderSide.copyWith(
+                          color: ColorConstants.textFieldBorderColor(),
+                        ),
+                      ),
+                      contentPadding: widget.options.contentPadding,
                     ),
-                    fillColor: _getInputFieldBackgroundColor(),
-                    contentPadding: widget.options?.contentPadding,
+                    inputFormatters: [
+                      ...widget.formatters ?? [],
+                      if (!widget.options.allowSpaces)
+                        FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                      if (!widget.options.allowUncommonSymbols)
+                        UncommonSymbolsInputFormatter(),
+                      LengthLimitingTextInputFormatter(widget.options.maxLength),
+                    ],
+                    cursorColor: widget.errorText == null
+                        ? Theme.of(context).inputDecorationTheme.focusedBorder?.borderSide.color
+                        : Theme.of(context).inputDecorationTheme.errorBorder?.borderSide.color,
+                    cursorWidth: 1.0,
+                    cursorOpacityAnimates: !kIsWeb,
+                    validator: widget.validator,
+                    autovalidateMode: widget.autovalidateMode,
+                    maxLengthEnforcement: widget.options.maxLengthEnforcement,
+                    maxLines: widget.options.maxLines,
+                    autofillHints: widget.autofillHints,
+                    onChanged: _onChangedHandler,
+                    onEditingComplete: widget.onEditingComplete,
+                    onFieldSubmitted: widget.onFieldSubmitted,
+                    onTap: widget.onTap,
                   ),
-                  inputFormatters: [
-                    ...widget.formatters ?? [],
-                    if (!widget.allowSpaces)
-                      FilteringTextInputFormatter.deny(RegExp(r'[\r\n\t\f\v ]')),
-                    LengthLimitingTextInputFormatter(widget.maxLength),
-                  ],
-                  cursorColor: widget.errorText == null
-                      ? Theme.of(context).inputDecorationTheme.enabledBorder?.borderSide.color
-                      : Theme.of(context).inputDecorationTheme.errorBorder?.borderSide.color,
-                  cursorWidth: 1.0,
-                  validator: widget.validator,
-                  autovalidateMode: widget.autovalidateMode,
-                  maxLengthEnforcement: widget.maxLengthEnforcement,
-                  maxLines: widget.maxLines,
-                  autofillHints: widget.autofillHints,
-                  onChanged: _onChangedHandler,
-                  onEditingComplete: widget.onEditingComplete,
-                  onTap: widget.onTap,
                 ),
               ),
             ),
@@ -477,7 +509,7 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
           ],
         ),
         if (widget.hintText != null && widget.labelText == null)
-          _InputFieldBackgroundText(
+          _InputFieldHintText(
             hintText: widget.hintText!,
             isOptionalField: widget.isOptionalField,
             isFieldEmpty: _isFieldEmpty,
@@ -486,9 +518,9 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
             suffixIconSize: _suffixIconSize,
             options: widget.options,
             duration: _defaultLabelDuration,
-            textStyle: _getBackgroundTextStyle(),
+            textStyle: _getHintTextStyle(),
             onTap: () {
-              (widget.focusNode ?? _defaultFocusNode).requestFocus();
+              _focusNode.requestFocus();
             },
           ),
         if (widget.labelText != null) ...[
@@ -503,10 +535,11 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
             suffixIconSize: _suffixIconSize,
             duration: _defaultLabelDuration,
             textStyle: _getAnimatedLabelTextStyle(),
-            onTap: () {
-              (widget.focusNode ?? _defaultFocusNode).requestFocus();
-            },
+            type: widget.type,
             isOnTopPosition: true,
+            onTap: () {
+              _focusNode.requestFocus();
+            },
           ),
           _InputFieldLabelText(
             labelText: widget.labelText!,
@@ -519,10 +552,11 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
             suffixIconSize: _suffixIconSize,
             duration: _defaultLabelDuration,
             textStyle: _getAnimatedLabelTextStyle(),
-            onTap: () {
-              (widget.focusNode ?? _defaultFocusNode).requestFocus();
-            },
+            type: widget.type,
             isOnTopPosition: false,
+            onTap: () {
+              _focusNode.requestFocus();
+            },
           ),
         ],
       ],
@@ -536,11 +570,11 @@ class _InputFieldLabelText extends StatefulWidget {
   final double textFieldSize, prefixIconSize, suffixIconSize;
   final Duration duration;
   final TextStyle textStyle;
-  final VoidCallback onTap;
+  final CustomTextInputFieldType type;
   final bool isOnTopPosition;
+  final VoidCallback onTap;
 
   const _InputFieldLabelText({
-    super.key,
     required this.labelText,
     required this.isLabelShownOnTop,
     required this.isOptionalField,
@@ -551,8 +585,9 @@ class _InputFieldLabelText extends StatefulWidget {
     required this.suffixIconSize,
     required this.duration,
     required this.textStyle,
-    required this.onTap,
+    this.type = CustomTextInputFieldType.scaffold,
     required this.isOnTopPosition,
+    required this.onTap,
   });
 
   @override
@@ -564,15 +599,15 @@ class _InputFieldLabelTextState extends State<_InputFieldLabelText> {
     final labelCollapsedPainter = TextPainter(
       text: TextSpan(
         text: widget.labelText + (widget.isOptionalField ? '*' : ''),
-        style: Theme.of(context).inputDecorationTheme.hintStyle?.copyWith(
-          fontSize: 11.0,
+        style: Theme.of(context).inputDecorationTheme.labelStyle?.copyWith(
+          fontSize: 12.0,
           fontWeight: FontWeight.w400,
           height: 1.0,
         ),
       ),
       maxLines: 1,
       textDirection: TextDirection.ltr,
-    )..layout(minWidth: 0.0, maxWidth: double.maxFinite);
+    )..layout(maxWidth: double.maxFinite);
 
     return labelCollapsedPainter.size.width;
   }
@@ -581,21 +616,31 @@ class _InputFieldLabelTextState extends State<_InputFieldLabelText> {
     final labelExpandedPainter = TextPainter(
       text: TextSpan(
         text: widget.labelText + (widget.isOptionalField ? '*' : ''),
-        style: Theme.of(context).inputDecorationTheme.hintStyle,
+        style: Theme.of(context).inputDecorationTheme.labelStyle,
       ),
       maxLines: 1,
       textDirection: TextDirection.ltr,
-    )..layout(minWidth: 0.0, maxWidth: double.maxFinite);
+    )..layout(maxWidth: double.maxFinite);
 
     return labelExpandedPainter.size.width;
   }
 
+  Color? _getBackgroundColor(BuildContext context) {
+    switch (widget.type) {
+      case CustomTextInputFieldType.scaffold:
+        return Theme.of(context).scaffoldBackgroundColor;
+
+      case CustomTextInputFieldType.dialog:
+        return Theme.of(context).dialogTheme.backgroundColor;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final defaultBorderSize = Theme.of(context).inputDecorationTheme.border?.borderSide.width ?? 1.0;
-    final defaultTopPosition = SizeConstants.defaultPadding - defaultBorderSize;
-    final defaultLeftPosition = widget.prefixIconSize > 0.0 ? widget.prefixIconSize : 16.0;
-    final defaultRightPosition = widget.suffixIconSize > 0.0 ? widget.suffixIconSize + 8.0 : 16.0;
+    final borderWidth = Theme.of(context).inputDecorationTheme.border?.borderSide.width ?? 1.0;
+    final defaultTopPosition = SizeConstants.defaultTextInputPadding.top - borderWidth;
+    final defaultLeftPosition = widget.prefixIconSize > 0.0 ? widget.prefixIconSize : SizeConstants.defaultTextInputPadding.left;
+    final defaultRightPosition = widget.suffixIconSize > 0.0 ? widget.suffixIconSize + 8.0 : SizeConstants.defaultTextInputPadding.right;
     final maxLabelWidth = widget.textFieldSize - defaultLeftPosition - defaultRightPosition;
 
     if (widget.isOnTopPosition) {
@@ -617,7 +662,7 @@ class _InputFieldLabelTextState extends State<_InputFieldLabelText> {
                   bottomLeft: Radius.circular(4.0),
                   bottomRight: Radius.circular(4.0),
                 ),
-                color: Theme.of(context).scaffoldBackgroundColor,
+                color: _getBackgroundColor(context),
               ),
             ),
           ),
@@ -634,8 +679,8 @@ class _InputFieldLabelTextState extends State<_InputFieldLabelText> {
 
     return AnimatedPositioned(
       duration: widget.isInit ? widget.duration : Duration.zero,
-      top: widget.isLabelShownOnTop ? -3.0 : defaultTopPosition,
-      left: widget.isLabelShownOnTop ? 16.0 : defaultLeftPosition,
+      top: widget.isLabelShownOnTop ? -4.0 : defaultTopPosition,
+      left: widget.isLabelShownOnTop ? SizeConstants.defaultTextInputPadding.left : defaultLeftPosition,
       width: labelWidth > 0 ? labelWidth : null,
       child: GestureDetector(
         onTap: widget.onTap,
@@ -652,7 +697,7 @@ class _InputFieldLabelTextState extends State<_InputFieldLabelText> {
                     style: TextStyle(
                       height: 1.0,
                       color: widget.isEnabled
-                          ? Theme.of(context).inputDecorationTheme.errorStyle?.color?.withOpacity(widget.isLabelShownOnTop ? 1.0 : 0.5)
+                          ? ColorConstants.attentionColor().withOpacity(widget.isLabelShownOnTop ? 1.0 : 0.5)
                           : widget.textStyle.color,
                     ),
                   ),
@@ -666,17 +711,16 @@ class _InputFieldLabelTextState extends State<_InputFieldLabelText> {
   }
 }
 
-class _InputFieldBackgroundText extends StatefulWidget {
+class _InputFieldHintText extends StatefulWidget {
   final String hintText;
   final bool isOptionalField, isFieldEmpty;
   final double textFieldSize, prefixIconSize, suffixIconSize;
-  final TextInputFieldOptions? options;
+  final CustomInputFieldOptions? options;
   final Duration duration;
   final TextStyle textStyle;
   final VoidCallback onTap;
 
-  const _InputFieldBackgroundText({
-    super.key,
+  const _InputFieldHintText({
     required this.hintText,
     required this.isOptionalField,
     required this.isFieldEmpty,
@@ -690,33 +734,36 @@ class _InputFieldBackgroundText extends StatefulWidget {
   });
 
   @override
-  State<_InputFieldBackgroundText> createState() => _InputFieldBackgroundTextState();
+  State<_InputFieldHintText> createState() => _InputFieldHintTextState();
 }
 
-class _InputFieldBackgroundTextState extends State<_InputFieldBackgroundText> {
+class _InputFieldHintTextState extends State<_InputFieldHintText> {
   double _getHintTextSize() {
     final labelCollapsedPainter = TextPainter(
       text: TextSpan(
         text: widget.hintText + (widget.isOptionalField ? '*' : ''),
-        style: Theme.of(context).inputDecorationTheme.hintStyle,
+        style: widget.textStyle,
       ),
       maxLines: 1,
       textDirection: TextDirection.ltr,
-    )..layout(minWidth: 0.0, maxWidth: double.maxFinite);
+    )..layout(maxWidth: double.maxFinite);
 
     return labelCollapsedPainter.size.width;
   }
 
   @override
   Widget build(BuildContext context) {
-    final defaultLeftPosition = widget.prefixIconSize > 0.0 ? widget.prefixIconSize : 16.0;
-    final defaultRightPosition = widget.suffixIconSize > 0.0 ? widget.suffixIconSize + 8.0 : 16.0;
+    final borderWidth = Theme.of(context).inputDecorationTheme.border?.borderSide.width ?? 1.0;
+    final defaultTopPosition = SizeConstants.defaultTextInputPadding.top + borderWidth;
+    final defaultLeftPosition = widget.prefixIconSize > 0.0 ? widget.prefixIconSize : SizeConstants.defaultTextInputPadding.left;
+    final defaultRightPosition = widget.suffixIconSize > 0.0 ? widget.suffixIconSize + 8.0 : SizeConstants.defaultTextInputPadding.right;
 
     final maxHintWidth = widget.textFieldSize - defaultLeftPosition - defaultRightPosition;
-    final hintWidth = _getHintTextSize() > maxHintWidth ? maxHintWidth : _getHintTextSize();
+    final currentHintWidth = _getHintTextSize() + 2.0;
+    final hintWidth = currentHintWidth > maxHintWidth ? maxHintWidth : currentHintWidth;
 
     return Positioned(
-      top: SizeConstants.defaultPadding,
+      top: defaultTopPosition,
       left: defaultLeftPosition,
       width: hintWidth > 0 ? hintWidth : null,
       child: GestureDetector(
@@ -729,11 +776,11 @@ class _InputFieldBackgroundTextState extends State<_InputFieldBackgroundText> {
               text: widget.hintText,
               children: [
                 if (widget.isOptionalField)
-                  const TextSpan(
+                  TextSpan(
                     text: '*',
                     style: TextStyle(
                       height: 1.0,
-                      color: ColorConstants.transparent,
+                      color: ColorConstants.attentionColor(),
                     ),
                   ),
               ],
@@ -747,12 +794,25 @@ class _InputFieldBackgroundTextState extends State<_InputFieldBackgroundText> {
   }
 }
 
-class TextInputFieldOptions {
+class CustomInputFieldOptions {
   final EdgeInsetsGeometry? contentPadding;
+  final TextStyle? textStyle;
   final bool? isDense;
+  final bool allowSpaces, allowUncommonSymbols;
+  final bool withClearButton;
+  final MaxLengthEnforcement? maxLengthEnforcement;
+  final int maxLength, maxLines;
 
-  const TextInputFieldOptions({
+  const CustomInputFieldOptions({
     this.contentPadding,
+    this.textStyle,
     this.isDense,
-  });
+    this.allowSpaces = true,
+    this.allowUncommonSymbols = false,
+    this.withClearButton = true,
+    this.maxLengthEnforcement,
+    this.maxLength = 64,
+    this.maxLines = 1,
+  })  : assert(maxLength >= 0),
+        assert(maxLines >= 1);
 }

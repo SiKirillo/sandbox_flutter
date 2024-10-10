@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-
-import '../../constants/colors.dart';
-import 'indicators/progress_indicator.dart';
+part of '../common.dart';
 
 class CustomCheckBox extends StatelessWidget {
   final bool isChecked;

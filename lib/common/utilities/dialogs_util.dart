@@ -1,19 +1,13 @@
-import 'package:flutter/material.dart';
+part of '../common.dart';
 
-import '../../constants/colors.dart';
-import '../../features/screen_builder.dart';
-
-/// This utility gives you more control than basic [showBottomSheet] and [showDialog] methods
-/// (you don't have to search all showDialog calls if you want to change something)
 class DialogsUtil {
   static Future<T?> showBottomSheetCustom<T>(
     Widget dialog, {
-    BuildContext? context,
+    required BuildContext? context,
     bool withBarrierColor = true,
     bool withBackgroundColor = true,
   }) async {
-    final dialogContext = context ?? ScreenBuilder.globalKey.currentContext;
-    if (dialogContext == null) {
+    if (context == null) {
       return null;
     }
 
@@ -24,15 +18,57 @@ class DialogsUtil {
         ),
       ),
       barrierColor: withBarrierColor ? null : ColorConstants.transparent,
-      backgroundColor: withBackgroundColor ? null : ColorConstants.transparent,
+      backgroundColor: ColorConstants.transparent,
       isScrollControlled: true,
       enableDrag: true,
-      context: dialogContext,
+      context: context,
       builder: (_) {
-        return ConstrainedBox(
+        return Container(
           constraints: BoxConstraints(
-            maxHeight: MediaQuery.of(dialogContext).size.height -
-                MediaQuery.of(dialogContext).viewPadding.vertical,
+            maxHeight: MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.vertical,
+          ),
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewPadding.bottom,
+          ),
+          decoration: BoxDecoration(
+            color: withBackgroundColor
+                ? Theme.of(context).bottomSheetTheme.backgroundColor
+                : ColorConstants.transparent,
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(12.0),
+            ),
+          ),
+          child: dialog,
+        );
+      },
+    );
+  }
+
+  static Future<T?> showBottomSheetSettingsCustom<T>(
+    Widget dialog, {
+    required BuildContext? context,
+    bool withBarrierColor = true,
+  }) async {
+    if (context == null) {
+      return null;
+    }
+
+    return await showModalBottomSheet<T>(
+      barrierColor: withBarrierColor ? null : ColorConstants.transparent,
+      backgroundColor: ColorConstants.transparent,
+      isScrollControlled: true,
+      enableDrag: true,
+      context: context,
+      builder: (_) {
+        return Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.vertical,
+          ),
+          padding: EdgeInsets.only(
+            top: 12.0,
+            bottom: 12.0 + MediaQuery.of(context).viewPadding.bottom,
+            left: 12.0,
+            right: 12.0,
           ),
           child: dialog,
         );
@@ -42,17 +78,16 @@ class DialogsUtil {
 
   static Future<T?> showDialogCustom<T>(
     Widget dialog, {
-    BuildContext? context,
+    required BuildContext? context,
     bool withBarrierColor = true,
   }) async {
-    final dialogContext = context ?? ScreenBuilder.globalKey.currentContext;
-    if (dialogContext == null) {
+    if (context == null) {
       return null;
     }
 
     return await showDialog<T>(
       barrierColor: withBarrierColor ? null : ColorConstants.transparent,
-      context: dialogContext,
+      context: context,
       builder: (_) => dialog,
     );
   }

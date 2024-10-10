@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../constants/colors.dart';
-import '../../../constants/images.dart';
-import '../../../constants/sizes.dart';
-import '../../../constants/style.dart';
-import '../../../injection_container.dart';
-import '../../widgets/texts.dart';
-import '../logger_service.dart';
+import '../../common.dart';
+import '../../injection_container.dart';
 
 part 'in_app_notification_data.dart';
 part 'in_app_notification_widget.dart';
@@ -17,7 +12,7 @@ class InAppNotificationProvider with ChangeNotifier {
   InAppNotificationData? get notification => _inAppNotifications.isNotEmpty ? _inAppNotifications[0] : null;
 
   void addNotification(InAppNotificationData notification) {
-    LoggerService.logDebug('InAppNotificationProvider -> addNotification()');
+    LoggerService.logTrace('InAppNotificationProvider -> addNotification()');
     bool isNeedNotify = _inAppNotifications.isEmpty;
 
     if (notification.isImportant) {
@@ -32,20 +27,20 @@ class InAppNotificationProvider with ChangeNotifier {
   }
 
   void addManyNotification(List<InAppNotificationData> notifications) {
-    LoggerService.logDebug('InAppNotificationProvider -> addManyNotification()');
+    LoggerService.logTrace('InAppNotificationProvider -> addManyNotification()');
     for (final notification in notifications) {
       addNotification(notification);
     }
   }
 
   void removeNotification(InAppNotificationData notification) {
-    LoggerService.logDebug('InAppNotificationProvider -> removeNotification()');
+    LoggerService.logTrace('InAppNotificationProvider -> removeNotification()');
     _inAppNotifications.remove(notification);
     notifyListeners();
   }
 
   void clear() {
-    LoggerService.logDebug('InAppNotificationProvider -> clear()');
+    LoggerService.logTrace('InAppNotificationProvider -> clear()');
     _inAppNotifications.clear();
     notifyListeners();
   }

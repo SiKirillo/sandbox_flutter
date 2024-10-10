@@ -1,61 +1,52 @@
-import 'dart:math' as math;
+part of '../../common.dart';
 
-import 'package:flutter/material.dart';
-
-import '../../../constants/images.dart';
-
-/// This is custom implementation of basic progress indicator
-/// You can replace [CircularProgressIndicator] with another widget
-class CustomProgressIndicator extends StatefulWidget {
-  final double size;
-  final double? progressValue;
-  final Color? color;
+class CustomProgressIndicator extends StatelessWidget {
+  final double iconSize;
+  final double indicatorSize;
+  final Color? iconColor;
+  final Color? indicatorColor;
+  final bool withShadow;
 
   const CustomProgressIndicator({
     super.key,
-    this.size = 20.0,
-    this.progressValue,
-    this.color,
-  })  : assert(size >= 0),
-        assert(progressValue == null || progressValue >= 0);
+    this.iconSize = 40.0,
+    this.indicatorSize = 16.0,
+    this.iconColor,
+    this.indicatorColor,
+    this.withShadow = true,
+  }) : assert(iconSize >= 0.0 && indicatorSize >= 0.0);
 
-  @override
-  State<CustomProgressIndicator> createState() => _CustomProgressIndicatorState();
-}
-
-class _CustomProgressIndicatorState extends State<CustomProgressIndicator> with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  static Widget simple({double? size, Color? color}) {
+    return SizedBox.square(
+      dimension: size ?? 16.0,
+      child: CircularProgressIndicator(
+        color: color ?? ColorConstants.progressIndicatorColor(),
+        strokeWidth: 2.0,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (_, child) {
-        return Transform.rotate(
-          angle: (widget.progressValue ?? _controller.value) * 2 * math.pi,
-          child: child,
-        );
-      },
-      child: SizedBox.square(
-        dimension: widget.size,
-        child: Image.asset(
-          ImageConstants.icProgress,
-          color: widget.color ?? Theme.of(context).indicatorColor,
+    return Container(
+      height: iconSize,
+      width: iconSize,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: iconColor ?? ColorConstants.progressIndicatorBG(),
+        boxShadow: [
+          if (withShadow)
+            BoxShadow(
+              offset: Offset(0.0, iconSize * 0.25),
+              blurRadius: iconSize * 0.5,
+              color: ColorConstants.progressIndicatorShadowColor(),
+            ),
+        ],
+      ),
+      child: Center(
+        child: CustomProgressIndicator.simple(
+          size: indicatorSize,
+          color: indicatorColor,
         ),
       ),
     );

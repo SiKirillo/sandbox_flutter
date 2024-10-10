@@ -1,7 +1,4 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import '../../../injection_container.dart';
-import '../../services/device_service.dart';
+part of '../../common.dart';
 
 /// Abstract model of secure storage
 /// To separate all other implementations we use personal id and build mode name
@@ -28,6 +25,6 @@ class AbstractSecureDatasource {
   }
   
   String _getStorageID(String key) {
-    return '$id.secure_storage.${locator<DeviceService>().currentBuildMode().toBuildSuffix()}.$key';
+    return '$id.secure_storage.${locator<DeviceService>().getBuildModeFromFlavor().toBuildSuffix()}.$key';
   }
 }

@@ -1,53 +1,65 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// ignore_for_file: deprecated_member_use, unused_element
 
-import '../../constants/colors.dart';
-import '../../constants/sizes.dart';
-import '../providers/theme_provider.dart';
-import 'texts.dart';
+part of '../common.dart';
 
 class NavigationBarData {
   final String label;
   final dynamic icon;
-  final int index;
 
   const NavigationBarData({
     required this.label,
     required this.icon,
-    required this.index,
-  })  : assert(icon is String || icon is Icon || icon is Image),
-        assert(index >= 0);
+  }) : assert(icon is String || icon is Icon || icon is Image);
 }
 
 class CustomNavigationBar extends StatelessWidget {
   final List<NavigationBarData> items;
   final Function(int) onSelect;
-  final int selected;
+  final int currentIndex;
 
   const CustomNavigationBar({
     super.key,
     required this.items,
     required this.onSelect,
-    this.selected = 0,
+    this.currentIndex = 0,
   })  : assert(items.length >= 1),
-        assert(selected >= 0);
+        assert(currentIndex >= 0);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConstants.defaultNavigationBarSize,
-      decoration: BoxDecoration(
-        color: Theme.of(context).navigationBarTheme.backgroundColor,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: items.map((item) {
-          return _NavigationBarItem(
-            item: item,
-            onSelect: () => onSelect(item.index),
-            isSelected: selected == item.index,
-          );
-        }).toList(),
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: Container(
+        height: SizeConstants.defaultNavigationBarSize + MediaQuery.of(context).viewPadding.bottom,
+        margin: const EdgeInsets.only(
+          bottom: 20.0,
+          left: 12.0,
+          right: 12.0,
+        ),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewPadding.bottom,
+        ),
+        decoration: BoxDecoration(
+          color: Theme.of(context).navigationBarTheme.backgroundColor,
+          borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+          boxShadow: [
+            BoxShadow(
+              color: ColorConstants.navigationBarShadowColor(),
+              offset: const Offset(0.0, 10.0),
+              blurRadius: 10.0,
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: items.indexed.map((item) {
+            return _NavigationBarItem(
+              item: item.$2,
+              onSelect: () => onSelect(item.$1),
+              isSelected: currentIndex == item.$1,
+            );
+          }).toList(),
+        ),
       ),
     );
   }
@@ -59,7 +71,6 @@ class _NavigationBarItem extends StatefulWidget {
   final bool isSelected;
 
   const _NavigationBarItem({
-    super.key,
     required this.item,
     required this.onSelect,
     required this.isSelected,
@@ -117,39 +128,37 @@ class _NavigationBarItemState extends State<_NavigationBarItem> with SingleTicke
             margin: const EdgeInsets.symmetric(
               horizontal: 16.0,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _NavigationBarIcon(
-                  animation: ColorTween(
-                    begin: context.watch<ThemeProvider>().isDark
-                        ? ColorConstants.transparent
-                        : ColorConstants.transparent,
-                    end: ColorConstants.transparent,
-                  ).animate(_animationController),
-                  item: widget.item,
-                  size: 24.0 + (_animationController.value * 4.0),
-                ),
-                _NavigationBarLabel(
-                  animation: TextStyleTween(
-                    begin: TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w400,
-                      height: 14.0 / 12.0,
-                      color: context.watch<ThemeProvider>().isDark
-                          ? ColorConstants.transparent
-                          : ColorConstants.transparent,
-                    ),
-                    end: const TextStyle(
-                      fontSize: 13.0,
-                      fontWeight: FontWeight.w500,
-                      height: 14.0 / 13.0,
-                      color: ColorConstants.transparent,
-                    ),
-                  ).animate(_animationController),
-                  item: widget.item,
-                ),
-              ],
+            child: Container(
+              color: ColorConstants.transparent,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _NavigationBarIcon(
+                    animation: ColorTween(
+                      begin: ColorConstants.navigationBarDisableColor(),
+                      end: ColorConstants.navigationBarActiveColor(),
+                    ).animate(_animationController),
+                    item: widget.item,
+                  ),
+                  _NavigationBarLabel(
+                    animation: TextStyleTween(
+                      begin: TextStyle(
+                        fontSize: 11.0,
+                        fontWeight: FontWeight.w400,
+                        height: 16.0 / 11.0,
+                        color: ColorConstants.navigationBarDisableColor(),
+                      ),
+                      end: TextStyle(
+                        fontSize: 11.0,
+                        fontWeight: FontWeight.w400,
+                        height: 16.0 / 11.0,
+                        color: ColorConstants.navigationBarActiveColor(),
+                      ),
+                    ).animate(_animationController),
+                    item: widget.item,
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -164,10 +173,9 @@ class _NavigationBarIcon extends AnimatedWidget {
   final double size;
 
   const _NavigationBarIcon({
-    super.key,
     required this.animation,
     required this.item,
-    required this.size,
+    this.size = 24.0,
   }) : super(listenable: animation);
 
   Animation get _animation => listenable as Animation<Color?>;
@@ -176,8 +184,6 @@ class _NavigationBarIcon extends AnimatedWidget {
     if (item.icon is Image) {
       return Image(
         image: (item.icon as Image).image,
-        height: size,
-        width: size,
         color: _animation.value,
       );
     }
@@ -185,15 +191,26 @@ class _NavigationBarIcon extends AnimatedWidget {
     if (item.icon is Icon) {
       return Icon(
         (item.icon as Icon).icon,
-        size: size,
         color: _animation.value,
       );
     }
 
+    if (item.icon is String) {
+      if ((item.icon as String).contains(ImageConstants.svgPrefix)) {
+        return SvgPicture.asset(
+          item.icon,
+          color: _animation.value,
+        );
+      } else {
+        return Image.asset(
+          item.icon,
+          color: _animation.value,
+        );
+      }
+    }
+
     return Image.asset(
       item.icon,
-      height: size,
-      width: size,
       color: _animation.value,
     );
   }
@@ -201,7 +218,7 @@ class _NavigationBarIcon extends AnimatedWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox.square(
-      dimension: 28.0,
+      dimension: size,
       child: _buildIconWidget(),
     );
   }
@@ -212,7 +229,6 @@ class _NavigationBarLabel extends AnimatedWidget {
   final NavigationBarData item;
 
   const _NavigationBarLabel({
-    super.key,
     required this.animation,
     required this.item,
   }) : super(listenable: animation);
@@ -224,7 +240,6 @@ class _NavigationBarLabel extends AnimatedWidget {
     return CustomText(
       text: item.label,
       style: _animation.value,
-      isVerticalCentered: false,
     );
   }
 }

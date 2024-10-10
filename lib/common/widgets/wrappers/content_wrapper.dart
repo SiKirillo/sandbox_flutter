@@ -1,9 +1,5 @@
-import 'package:flutter/material.dart';
-import '../../../constants/sizes.dart';
-import 'dialog_wrapper.dart';
+part of '../../common.dart';
 
-/// You can wrap all your screens in this widget to control padding
-/// If you want to use bottom sheets try [DialogWrapper]
 class ContentWrapper extends StatelessWidget {
   final Widget child;
   final EdgeInsets padding;
@@ -13,12 +9,10 @@ class ContentWrapper extends StatelessWidget {
   const ContentWrapper({
     super.key,
     required this.child,
-    this.padding = ContentWrapper.defaultPadding,
+    this.padding = EdgeInsets.zero,
     this.withSafeAreaResize = true,
     this.withKeyboardResize = true,
   });
-
-  static const defaultPadding = EdgeInsets.all(SizeConstants.defaultPadding);
 
   @override
   Widget build(BuildContext context) {

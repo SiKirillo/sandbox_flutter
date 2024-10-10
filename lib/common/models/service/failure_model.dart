@@ -1,38 +1,49 @@
-import '../../../constants/failures.dart';
+part of '../../common.dart';
 
-/// This model is used to describe and separate in app errors (bad http response or app error)
 abstract class Failure {
   final String message;
+  final String? comment;
 
-  const Failure(this.message) : super();
+  const Failure({
+    required this.message,
+    this.comment,
+  }) : super();
 }
 
 class CommonFailure extends Failure {
   const CommonFailure({
-    required String message,
-  }) : super(message);
+    required super.message,
+  }) : super(comment: null);
 }
 
-class AuthFailure extends Failure {
-  final AuthErrorType type;
-
-  const AuthFailure({
-    required String message,
-    this.type = AuthErrorType.none,
-  }) : super(message);
+class HttpFailure extends Failure {
+  const HttpFailure({
+    required super.message,
+    super.comment,
+  });
 }
 
 class NetworkFailure extends Failure {
-  const NetworkFailure() : super('No Internet connection');
+  NetworkFailure() : super(
+    message: 'errors.other.no_internet'.tr(),
+    comment: null,
+  );
 }
 
-class HTTPFailure extends Failure {
-  final String? comment;
-  final HttpErrorType type;
+class AuthFailure extends Failure {
+  final AuthFailureType type;
 
-  const HTTPFailure({
-    required String message,
-    this.comment,
-    this.type = HttpErrorType.none,
-  }) : super(message);
+  const AuthFailure({
+    required super.message,
+    required this.type,
+  }) : super(comment: null);
+}
+
+class BiometricFailure extends Failure {
+  final BiometricFailureType type;
+
+  const BiometricFailure({
+    required super.message,
+    required this.type,
+  }) : super(comment: null);
 }

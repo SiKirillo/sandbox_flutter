@@ -1,108 +1,55 @@
-import '../common/models/service/failure_model.dart';
+part of '../common/common.dart';
 
-enum AuthErrorType {
-  userNoFound,
-  userDisabled,
-  emailAlreadyInUse,
-  badCredentials,
+enum AuthFailureType {
   none,
 }
 
-extension AuthErrorExtension on AuthErrorType {
-  static AuthFailure getErrorByCode(String code) {
-    switch (code) {
-      case 'user-not-found': {
-        return const AuthFailure(
-          message: 'No user found for that email',
-          type: AuthErrorType.userDisabled,
+extension AuthFailureExtension<T> on AuthFailureType {
+  AuthFailure get() {
+    switch (this) {
+      default:
+        return AuthFailure(
+          message: 'errors.other.error'.tr(),
+          type: AuthFailureType.none,
         );
-      }
-
-      case 'user-disabled': {
-        return const AuthFailure(
-          message: 'Account disabled for that email',
-          type: AuthErrorType.userDisabled,
-        );
-      }
-
-      case 'email-already-in-use': {
-        return const AuthFailure(
-          message: 'Account already exists for that email',
-          type: AuthErrorType.emailAlreadyInUse,
-        );
-      }
-
-      case 'invalid-email': {
-        return const AuthFailure(
-          message: 'Wrong credentials',
-          type: AuthErrorType.badCredentials,
-        );
-      }
-
-      case 'wrong-password': {
-        return const AuthFailure(
-          message: 'Wrong credentials',
-          type: AuthErrorType.badCredentials,
-        );
-      }
-
-      default: {
-        return const AuthFailure(
-          message: 'Unknown failure',
-          type: AuthErrorType.none,
-        );
-      }
     }
   }
 }
 
-enum HttpErrorType {
+enum HttpFailureType {
   none,
-  badAuthTokens,
 }
 
-extension HttpErrorExtension on HttpErrorType {
-  static HTTPFailure getErrorByCode(int? code, String? comment) {
+extension HttpFailureExtension<T> on HttpFailureType {
+  static HttpFailure get(int? code) {
     switch (code) {
-      case 400: {
-        return HTTPFailure(
-          message: 'Auth failure',
-          comment: comment,
-          type: HttpErrorType.none,
+      default:
+        return HttpFailure(
+          message: 'errors.other.error'.tr(),
+          comment: 'comment',
         );
-      }
+    }
+  }
+}
 
-      case 401: {
-        return HTTPFailure(
-          message: 'Auth failure',
-          comment: comment,
-          type: HttpErrorType.none,
-        );
-      }
+enum BiometricFailureType {
+  biometricToManyAttempts,
+  biometricToManyAttemptsDelay,
+  biometricCanceled,
+  biometricIncorrect,
+  biometricUnsupported,
+  biometricBlocked,
+  none,
+}
 
-      case 409: {
-        return HTTPFailure(
-          message: 'Conflict failure',
-          comment: comment,
-          type: HttpErrorType.none,
+extension BiometricFailureExtension<T> on BiometricFailureType {
+  BiometricFailure get() {
+    switch (this) {
+      default:
+        return BiometricFailure(
+          message: 'errors.other.error'.tr(),
+          type: BiometricFailureType.none,
         );
-      }
-
-      case 422: {
-        return HTTPFailure(
-          message: 'Validation failure',
-          comment: comment,
-          type: HttpErrorType.none,
-        );
-      }
-
-      default: {
-        return HTTPFailure(
-          message: 'Unknown failure',
-          comment: comment,
-          type: HttpErrorType.none,
-        );
-      }
     }
   }
 }

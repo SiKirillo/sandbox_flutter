@@ -1,15 +1,15 @@
-import 'package:flutter/material.dart';
+part of '../common.dart';
 
-class CustomListViewBuilder extends StatelessWidget {
+class CustomListViewBuilder<T> extends StatelessWidget {
   final ScrollController? controller;
   final int itemCount;
   final EdgeInsets padding;
   final Axis scrollDirection;
   final bool shrinkWrap;
-  final bool isDisabled;
+  final bool isScrollEnabled;
   final bool isReversed;
-  final Widget Function(BuildContext, int) itemBuilder;
   final Widget Function(BuildContext, int)? separatorBuilder;
+  final Widget Function(BuildContext, int) itemBuilder;
 
   const CustomListViewBuilder({
     super.key,
@@ -18,18 +18,18 @@ class CustomListViewBuilder extends StatelessWidget {
     this.padding = EdgeInsets.zero,
     this.scrollDirection = Axis.vertical,
     this.shrinkWrap = false,
-    this.isDisabled = false,
+    this.isScrollEnabled = true,
     this.isReversed = false,
-    required this.itemBuilder,
     this.separatorBuilder,
-  })  : assert(itemCount >= 1);
+    required this.itemBuilder,
+  })  : assert(itemCount >= 0);
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       controller: controller,
       itemCount: itemCount,
-      physics: !isDisabled
+      physics: isScrollEnabled
           ? const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics())
           : const NeverScrollableScrollPhysics(),
       scrollDirection: scrollDirection,

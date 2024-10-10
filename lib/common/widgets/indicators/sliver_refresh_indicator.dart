@@ -1,13 +1,5 @@
-// ignore_for_file: prefer_const_declarations
+part of '../../common.dart';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart' show clampDouble;
-
-import 'progress_indicator.dart';
-
-/// This is custom implementation of basic progress indicator in scrollable widgets
-/// Based on [CustomProgressIndicator] widget
-/// To enable pull to refresh in [ScrollableWrapper] use this widget and select isAlwaysScrollable = true
 class SliverRefreshIndicator extends StatelessWidget {
   final Future<void> Function() onRefresh;
   final double size;
@@ -22,12 +14,12 @@ class SliverRefreshIndicator extends StatelessWidget {
   final _kActivityIndicatorMargin = 16.0;
 
   Widget _buildIndicatorForRefreshState(
-    RefreshIndicatorMode refreshState,
+    cupertino.RefreshIndicatorMode refreshState,
     double radius,
     double percentageComplete,
   ) {
     switch (refreshState) {
-      case RefreshIndicatorMode.drag: {
+      case cupertino.RefreshIndicatorMode.drag: {
         const scaleCurve = Interval(0.1, 0.5, curve: Curves.linear);
         const opacityCurve = Interval(0.2, 0.6, curve: Curves.linear);
 
@@ -35,17 +27,17 @@ class SliverRefreshIndicator extends StatelessWidget {
           scale: scaleCurve.transform(percentageComplete),
           child: Opacity(
             opacity: opacityCurve.transform(percentageComplete),
-            child: CustomProgressIndicator(size: size),
+            child: const CustomProgressIndicator(),
           ),
         );
       }
 
-      case RefreshIndicatorMode.armed:
-      case RefreshIndicatorMode.refresh: {
-        return CustomProgressIndicator(size: size);
+      case cupertino.RefreshIndicatorMode.armed:
+      case cupertino.RefreshIndicatorMode.refresh: {
+        return const CustomProgressIndicator();
       }
 
-      case RefreshIndicatorMode.done: {
+      case cupertino.RefreshIndicatorMode.done: {
         const scaleCurve = Interval(0.3, 0.7, curve: Curves.linear);
         const opacityCurve = Interval(0.3, 0.7, curve: Curves.linear);
 
@@ -53,12 +45,12 @@ class SliverRefreshIndicator extends StatelessWidget {
           scale: scaleCurve.transform(percentageComplete),
           child: Opacity(
             opacity: opacityCurve.transform(percentageComplete),
-            child: CustomProgressIndicator(size: size),
+            child: const CustomProgressIndicator(),
           ),
         );
       }
 
-      case RefreshIndicatorMode.inactive: {
+      case cupertino.RefreshIndicatorMode.inactive: {
         return Container();
       }
     }
@@ -66,7 +58,7 @@ class SliverRefreshIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoSliverRefreshControl(
+    return cupertino.CupertinoSliverRefreshControl(
       onRefresh: onRefresh,
       builder: (_, refreshState, pulledExtent, refreshTriggerPullDistance, refreshIndicatorExtent) {
         final percentageComplete = clampDouble(pulledExtent / refreshTriggerPullDistance, 0.0, 1.0);

@@ -1,9 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:sandbox_flutter/common/extensions/iterables.dart';
+part of '../common.dart';
 
-import 'texts.dart';
-
-/// You can only use string or widget in [CustomTabBar].
 class CustomTabBar extends StatefulWidget {
   final List<dynamic> tabs;
   final Function(int) onSelect;

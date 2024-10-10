@@ -1,7 +1,12 @@
-import 'dart:async';
-import 'package:flutter/material.dart';
+part of '../../common.dart';
 
 class CustomAutoScroll extends StatefulWidget {
+  final Widget child;
+  final Velocity velocity;
+  final Duration? delayBefore;
+  final Duration? pauseBetween;
+  final Duration? pauseOnBounce;
+
   const CustomAutoScroll({
     super.key,
     required this.child,
@@ -13,27 +18,6 @@ class CustomAutoScroll extends StatefulWidget {
 
   static const defaultVelocity = Velocity(pixelsPerSecond: Offset(20, 0));
   static const defaultPauseDuration = Duration(milliseconds: 1000);
-
-  /// The widget, that would be scrolled.
-  /// In case widget does fit into allocated space, it wouldn't be scrolled
-  /// and would be shown as is.
-  final Widget child;
-
-  /// Allows to customize animation speed.
-  /// Default is `Velocity(pixelsPerSecond: Offset(20, 0))`
-  final Velocity velocity;
-
-  /// Delay before first animation round.
-  /// Default is [Duration.zero].
-  final Duration? delayBefore;
-
-  /// Determines pause interval between animation rounds.
-  /// Default is [Duration.zero].
-  final Duration? pauseBetween;
-
-  /// Determines pause interval before changing direction on a bounce.
-  /// Default is [Duration.zero].
-  final Duration? pauseOnBounce;
 
   @override
   State<CustomAutoScroll> createState() => _CustomAutoScrollState();
@@ -100,12 +84,8 @@ class _CustomAutoScrollState extends State<CustomAutoScroll> {
     }
   }
 
-  /// Sets [_timer] for animation
   void _setTimer() {
-    /// Cancel previous timer if it exists
     _timer?.cancel();
-
-    /// Reset [_running] to allow for updates on changed velocity
     _running = false;
 
     _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
@@ -162,8 +142,9 @@ class _CustomAutoScrollState extends State<CustomAutoScroll> {
   }
 
   Duration _getDuration(double extent) {
-    /// No movement when velocity offset dx equals 0
-    if (widget.velocity.pixelsPerSecond.dx == 0) return Duration.zero;
+    if (widget.velocity.pixelsPerSecond.dx == 0) {
+      return Duration.zero;
+    }
 
     final milliseconds = (extent * 1000 / widget.velocity.pixelsPerSecond.dx).round();
     return Duration(milliseconds: milliseconds);

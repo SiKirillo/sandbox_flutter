@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
+part of '../common.dart';
 
-/// Extensions that apply to all iterables.
 extension IterableExtension<T> on Iterable<T> {
-  T? firstWhereOrNull(bool Function(T element) test, {T? orElse}) {
+  T? firstWhereOrNull(bool Function(T element) value, {T? orElse}) {
     for (var element in this) {
-      if (test(element)) return element;
+      if (value(element)) return element;
     }
 
     if (orElse != null) return orElse;

@@ -1,43 +1,64 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of '../../common.dart';
 
-import '../../services/in_app_failures/in_app_failure_provider.dart';
-import '../app_bar.dart';
-
-/// You can use this widget under the basic [Scaffold] to have more control
 class ScaffoldWrapper extends StatelessWidget {
-  final Widget child;
   final CustomAppBar? appBar;
   final Widget? navigationBar;
-  final bool withSafeArea;
-  final bool isDisabled;
+  final Function(bool, dynamic)? onPopInvoked;
+  final ScaffoldWrapperOptions options;
+  final Widget child;
 
   const ScaffoldWrapper({
     super.key,
-    required this.child,
     this.appBar,
     this.navigationBar,
-    this.withSafeArea = false,
-    this.isDisabled = false,
+    this.onPopInvoked,
+    this.options = const ScaffoldWrapperOptions(),
+    required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: isDisabled || context.watch<InAppFailureProvider>().isShowing ? false : true,
+      canPop: options.isCanPop,
+      onPopInvokedWithResult: onPopInvoked,
       child: AbsorbPointer(
-        absorbing: isDisabled,
+        absorbing: options.isDisabled,
         child: Scaffold(
-          appBar: appBar,
-          bottomNavigationBar: navigationBar,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          appBar: CustomAppBar.fromScaffold(
+            appBar,
+            context: context,
+            isCanPop: options.isCanPop,
+          ),
+          bottomNavigationBar: navigationBar != null
+              ? SafeArea(
+                  bottom: options.withSafeArea,
+                  child: navigationBar!,
+                )
+              : null,
+          backgroundColor: options.backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
           body: SafeArea(
-            top: withSafeArea,
+            top: options.withSafeArea,
             child: child,
           ),
-          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomInset: options.resizeToAvoidBottomInset,
         ),
       ),
     );
   }
+}
+
+class ScaffoldWrapperOptions {
+  final bool withSafeArea;
+  final bool isCanPop;
+  final bool isDisabled;
+  final bool resizeToAvoidBottomInset;
+  final Color? backgroundColor;
+
+  const ScaffoldWrapperOptions({
+    this.withSafeArea = false,
+    this.isCanPop = true,
+    this.isDisabled = false,
+    this.resizeToAvoidBottomInset = false,
+    this.backgroundColor,
+  });
 }

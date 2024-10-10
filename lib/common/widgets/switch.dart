@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
-
-import '../../constants/colors.dart';
+part of '../common.dart';
 
 class CustomSwitch extends StatelessWidget {
   final bool value;
@@ -20,7 +18,7 @@ class CustomSwitch extends StatelessWidget {
       size: size,
       child: FittedBox(
         fit: BoxFit.cover,
-        child: CupertinoSwitch(
+        child: cupertino.CupertinoSwitch(
           activeColor: ColorConstants.transparent,
           trackColor: ColorConstants.transparent,
           thumbColor: ColorConstants.transparent,

@@ -1,26 +1,23 @@
-import 'package:flutter/material.dart';
-
-import '../common/services/gifs_builder_service.dart';
+part of '../common/common.dart';
 
 class ImageConstants {
+  static const svgPrefix = '.svg';
+  static bool get _isLightTheme => locator<ThemeProvider>().isLight;
+
   static void precacheAssets(BuildContext context) {
-    precacheImage(Image.asset(ImageConstants.imPartyCat).image, context);
-    GifsBuilderService.precacheGIF(Image.asset(ImageConstants.igPartyCat).image, frameRate: 10);
+    final svgLoaders = <SvgAssetLoader>[
+      // const SvgAssetLoader(icLogo),
+    ];
+
+    for (final loader in svgLoaders) {
+      svg.cache.putIfAbsent(loader.cacheKey(null), () => loader.loadBytes(null));
+    }
   }
 
-  /// Service icons
-  static const icClose = 'assets/icons/ic_close.png';
-  static const icProgress = 'assets/icons/ic_progress.png';
-  static const icWeather = 'assets/icons/ic_weather.png';
-
-  /// Custom images
-  static const imFunnyCat = 'assets/images/im_funny_cat.png';
-  static const imPartyCat = 'assets/images/im_party_cat.png';
-  static const imLoveCat = 'assets/images/im_love_cat.png';
-
-  /// Custom GIF-s
-  static const igLunchCat = 'assets/gifs/ig_lunch_cat.gif';
-  static const igPartyCat = 'assets/gifs/ig_party_cat.gif';
-  static const igRandomCat = 'assets/gifs/ig_random_cat.gif';
-  static const igSleepCat = 'assets/gifs/ig_sleep_cat.gif';
+  /// Service
+  static const icBack = 'assets/icons/ic_back.svg';
+  static const icClose = 'assets/icons/ic_close.svg';
+  static const icMore = 'assets/icons/ic_more.svg';
+  static const icTextfieldEye = 'assets/icons/ic_textfield_eye.svg';
+  static const icTextfieldOk = 'assets/icons/ic_textfield_ok.svg';
 }

@@ -1,349 +1,217 @@
-import 'dart:io';
-
-import 'package:flutter/material.dart';
-
-import 'colors.dart';
+part of '../common/common.dart';
 
 class ThemeConstants {
-  static ThemeData get light => ThemeData.lerp(ThemeData.light(), _lightTheme, 1.0);
-  static ThemeData get dark => ThemeData.lerp(ThemeData.dark(), _darkTheme, 1.0);
+  static ThemeData get light => ThemeData.lerp(ThemeData.light(), _lightTheme, 1.0).copyWith(
+    /// You need to disable the ripple effect during the transition animation
+    /// from one screen to another (Material3 bug)
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: <TargetPlatform, PageTransitionsBuilder>{
+        TargetPlatform.android: ZoomPageTransitionsBuilder(
+          allowEnterRouteSnapshotting: false,
+        ),
+      },
+    ),
+  );
+
+  static ThemeData get dark => ThemeData.lerp(ThemeData.dark(), _darkTheme, 1.0).copyWith(
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: <TargetPlatform, PageTransitionsBuilder>{
+        TargetPlatform.android: ZoomPageTransitionsBuilder(
+          allowEnterRouteSnapshotting: false,
+        ),
+      },
+    ),
+  );
 
   static final _lightTheme = ThemeData(
-    fontFamily: Platform.isAndroid ? 'Roboto' : 'OpenSans',
+    fontFamily: kIsWeb || Platform.isAndroid ? 'Roboto' : 'OpenSans',
     brightness: Brightness.light,
-    scaffoldBackgroundColor: ColorConstants.light.bgScaffold,
-    canvasColor: ColorConstants.light.bgScaffold,
+    scaffoldBackgroundColor: ColorConstants.light.scaffoldBG,
+    canvasColor: ColorConstants.light.scaffoldBG,
     appBarTheme: AppBarTheme(
-      backgroundColor: ColorConstants.light.bgScaffold,
-      shadowColor: ColorConstants.light.bgScaffold.withOpacity(0.6),
+      backgroundColor: ColorConstants.light.appBarBG,
+      shadowColor: ColorConstants.light.appBarShadow,
+      surfaceTintColor: ColorConstants.transparent,
       elevation: 0.0,
       titleTextStyle: TextStyle(
-        fontSize: 16.0,
-        fontWeight: FontWeight.w400,
-        height: 18.0 / 16.0,
-        color: ColorConstants.light.bgScaffold,
+        fontSize: 18.0,
+        fontWeight: FontWeight.w500,
+        height: 21.0 / 18.0,
+        color: ColorConstants.light.appBarText,
       ),
     ),
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: ColorConstants.light.bgScaffold,
-    ),
-    tabBarTheme: TabBarTheme(
-      indicatorColor: ColorConstants.light.bgScaffold,
-      labelStyle: TextStyle(
-        color: ColorConstants.light.bgScaffold,
-        fontSize: 14.0,
-        fontWeight: FontWeight.w400,
-        height: 21.0 / 14.0,
-      ),
-      unselectedLabelStyle: TextStyle(
-        color: ColorConstants.light.bgScaffold.withOpacity(0.6),
-        fontSize: 14.0,
-        fontWeight: FontWeight.w400,
-        height: 21.0 / 14.0,
-      ),
+      backgroundColor: ColorConstants.light.navigationBarBG,
+      shadowColor: ColorConstants.light.navigationBarShadow,
     ),
     bottomSheetTheme: BottomSheetThemeData(
-      backgroundColor: ColorConstants.light.bgScaffold,
+      backgroundColor: ColorConstants.light.dialogsBG,
+      surfaceTintColor: ColorConstants.transparent,
     ),
     dialogTheme: DialogTheme(
-      backgroundColor: ColorConstants.light.bgScaffold,
+      backgroundColor: ColorConstants.light.dialogsBG,
+      surfaceTintColor: ColorConstants.transparent,
       titleTextStyle: TextStyle(
         fontSize: 24.0,
-        fontWeight: FontWeight.w700,
-        height: 28.0 / 24.0,
-        color: ColorConstants.light.bgScaffold,
+        fontWeight: FontWeight.w400,
+        height: 32.0 / 24.0,
+        color: ColorConstants.light.textBlack,
       ),
     ),
     textTheme: _getTextThemeByType(ThemeMode.light),
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      errorMaxLines: 3,
-      helperMaxLines: 3,
-      contentPadding: const EdgeInsets.all(16.0),
-      iconColor: ColorConstants.light.bgScaffold,
-      fillColor: ColorConstants.light.bgScaffold,
-      labelStyle: TextStyle(
-        fontSize: 16.0,
-        fontWeight: FontWeight.w400,
-        height: 21.0 / 16.0,
-        color: ColorConstants.light.bgScaffold,
-      ),
-      hintStyle: TextStyle(
-        fontSize: 16.0,
-        fontWeight: FontWeight.w400,
-        height: 21.0 / 16.0,
-        color: ColorConstants.light.bgScaffold.withOpacity(0.5),
-      ),
-      errorStyle: TextStyle(
-        fontSize: 14.0,
-        fontWeight: FontWeight.w400,
-        height: 21.0 / 14.0,
-        color: ColorConstants.light.bgScaffold,
-      ),
-      helperStyle: TextStyle(
-        fontSize: 13.0,
-        height: 21.0 / 13.0,
-        fontWeight: FontWeight.w400,
-        color: ColorConstants.light.bgScaffold.withOpacity(0.6),
-      ),
-      border: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        borderSide: BorderSide(
-          width: 1.0,
-          color: ColorConstants.light.bgScaffold,
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        borderSide: BorderSide(
-          width: 1.0,
-          color: ColorConstants.light.bgScaffold,
-        ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        borderSide: BorderSide(
-          width: 1.0,
-          color: ColorConstants.light.bgScaffold,
-        ),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        borderSide: BorderSide(
-          width: 1.0,
-          color: ColorConstants.light.bgScaffold,
-        ),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        borderSide: BorderSide(
-          width: 1.0,
-          color: ColorConstants.light.bgScaffold,
-        ),
-      ),
-      disabledBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        borderSide: BorderSide(
-          width: 1.0,
-          color: ColorConstants.light.bgScaffold.withOpacity(0.6),
-        ),
-      ),
-    ),
+    inputDecorationTheme: _getInputFieldThemeByType(ThemeMode.light),
     iconTheme: IconThemeData(
-      color: ColorConstants.light.bgScaffold,
+      color: ColorConstants.light.textFieldIcon,
     ),
     dividerTheme: DividerThemeData(
-      color: ColorConstants.light.bgScaffold,
+      color: ColorConstants.light.divider,
     ),
-    indicatorColor: ColorConstants.light.bgScaffold,
     listTileTheme: ListTileThemeData(
-      tileColor: ColorConstants.light.bgScaffold,
+      tileColor: ColorConstants.light.listTileBG,
     ),
   );
 
-  static final _darkTheme = ThemeData(
-    fontFamily: Platform.isAndroid ? 'Roboto' : 'OpenSans',
-    brightness: Brightness.dark,
-    scaffoldBackgroundColor: ColorConstants.dark.bgScaffold,
-    canvasColor: ColorConstants.dark.bgScaffold,
-    appBarTheme: AppBarTheme(
-      backgroundColor: ColorConstants.dark.bgScaffold,
-      shadowColor: ColorConstants.dark.bgScaffold.withOpacity(0.6),
-      elevation: 0.0,
-      titleTextStyle: TextStyle(
-        fontSize: 16.0,
-        fontWeight: FontWeight.w400,
-        height: 18.0 / 16.0,
-        color: ColorConstants.dark.bgScaffold,
-      ),
-    ),
-    navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: ColorConstants.dark.bgScaffold,
-    ),
-    tabBarTheme: TabBarTheme(
-      indicatorColor: ColorConstants.dark.bgScaffold,
-      labelStyle: TextStyle(
-        color: ColorConstants.dark.bgScaffold,
-        fontSize: 14.0,
-        fontWeight: FontWeight.w400,
-        height: 21.0 / 14.0,
-      ),
-      unselectedLabelStyle: TextStyle(
-        color: ColorConstants.dark.bgScaffold.withOpacity(0.6),
-        fontSize: 14.0,
-        fontWeight: FontWeight.w400,
-        height: 21.0 / 14.0,
-      ),
-    ),
-    bottomSheetTheme: BottomSheetThemeData(
-      backgroundColor: ColorConstants.dark.bgScaffold,
-    ),
-    dialogTheme: DialogTheme(
-      backgroundColor: ColorConstants.dark.bgScaffold,
-      titleTextStyle: TextStyle(
-        fontSize: 24.0,
-        fontWeight: FontWeight.w700,
-        height: 28.0 / 24.0,
-        color: ColorConstants.dark.bgScaffold,
-      ),
-    ),
-    textTheme: _getTextThemeByType(ThemeMode.dark),
-    inputDecorationTheme: InputDecorationTheme(
-      filled: true,
-      errorMaxLines: 3,
-      helperMaxLines: 3,
-      contentPadding: const EdgeInsets.all(16.0),
-      iconColor: ColorConstants.dark.bgScaffold,
-      fillColor: ColorConstants.dark.bgScaffold,
-      labelStyle: TextStyle(
-        fontSize: 16.0,
-        fontWeight: FontWeight.w400,
-        height: 21.0 / 16.0,
-        color: ColorConstants.dark.bgScaffold,
-      ),
-      hintStyle: TextStyle(
-        fontSize: 16.0,
-        fontWeight: FontWeight.w400,
-        height: 21.0 / 16.0,
-        color: ColorConstants.dark.bgScaffold.withOpacity(0.5),
-      ),
-      errorStyle: TextStyle(
-        fontSize: 14.0,
-        fontWeight: FontWeight.w400,
-        height: 21.0 / 14.0,
-        color: ColorConstants.dark.bgScaffold,
-      ),
-      helperStyle: TextStyle(
-        fontSize: 13.0,
-        height: 21.0 / 13.0,
-        fontWeight: FontWeight.w400,
-        color: ColorConstants.dark.bgScaffold.withOpacity(0.6),
-      ),
-      border: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        borderSide: BorderSide(
-          width: 1.0,
-          color: ColorConstants.dark.bgScaffold,
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        borderSide: BorderSide(
-          width: 1.0,
-          color: ColorConstants.dark.bgScaffold,
-        ),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        borderSide: BorderSide(
-          width: 1.0,
-          color: ColorConstants.dark.bgScaffold,
-        ),
-      ),
-      errorBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        borderSide: BorderSide(
-          width: 1.0,
-          color: ColorConstants.dark.bgScaffold,
-        ),
-      ),
-      focusedErrorBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        borderSide: BorderSide(
-          width: 1.0,
-          color: ColorConstants.dark.bgScaffold,
-        ),
-      ),
-      disabledBorder: OutlineInputBorder(
-        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
-        borderSide: BorderSide(
-          width: 1.0,
-          color: ColorConstants.dark.bgScaffold.withOpacity(0.6),
-        ),
-      ),
-    ),
-    iconTheme: IconThemeData(
-      color: ColorConstants.dark.bgScaffold,
-    ),
-    dividerTheme: DividerThemeData(
-      color: ColorConstants.dark.bgScaffold,
-    ),
-    indicatorColor: ColorConstants.dark.bgScaffold,
-    listTileTheme: ListTileThemeData(
-      tileColor: ColorConstants.dark.bgScaffold,
-    ),
-  );
+  static final _darkTheme = _lightTheme;
 
   static TextTheme _getTextThemeByType(ThemeMode mode) {
     return TextTheme(
       /// Only for headline labels
-      headlineLarge: TextStyle(
-        fontSize: 28.0,
-        fontWeight: FontWeight.w700,
-        height: 33.0 / 28.0,
-        color: mode == ThemeMode.light
-            ? ColorConstants.light.bgScaffold
-            : ColorConstants.dark.bgScaffold,
-      ),
       headlineMedium: TextStyle(
         fontSize: 21.0,
         fontWeight: FontWeight.w700,
         height: 25.0 / 21.0,
         color: mode == ThemeMode.light
-            ? ColorConstants.light.bgScaffold
-            : ColorConstants.dark.bgScaffold,
-      ),
-      headlineSmall: TextStyle(
-        fontSize: 18.0,
-        fontWeight: FontWeight.w700,
-        height: 21.0 / 18.0,
-        color: mode == ThemeMode.light
-            ? ColorConstants.light.bgScaffold
-            : ColorConstants.dark.bgScaffold,
+            ? ColorConstants.light.textBlack
+            : ColorConstants.light.textBlack,
       ),
 
       /// Default texts
-      bodyLarge: TextStyle(
-        fontSize: 16.0,
-        fontWeight: FontWeight.w400,
-        height: 21.0 / 16.0,
-        color: mode == ThemeMode.light
-            ? ColorConstants.light.bgScaffold
-            : ColorConstants.dark.bgScaffold,
-      ),
       bodyMedium: TextStyle(
+        fontSize: 13.0,
+        fontWeight: FontWeight.w400,
+        height: 15.0 / 13.0,
+        color: mode == ThemeMode.light
+            ? ColorConstants.light.textBlack
+            : ColorConstants.light.textBlack,
+      ),
+      bodySmall: TextStyle(
+        fontSize: 10.0,
+        fontWeight: FontWeight.w400,
+        height: 12.0 / 10.0,
+        color: mode == ThemeMode.light
+            ? ColorConstants.light.textBlack
+            : ColorConstants.light.textBlack,
+      ),
+
+      /// Service (button) texts
+      displayMedium: TextStyle(
+        fontSize: 14.0,
+        fontWeight: FontWeight.w500,
+        height: 16.0 / 14.0,
+        color: mode == ThemeMode.light
+            ? ColorConstants.light.textWhite
+            : ColorConstants.light.textWhite,
+      ),
+    );
+  }
+
+  static InputDecorationTheme _getInputFieldThemeByType(ThemeMode mode) {
+    return InputDecorationTheme(
+      filled: true,
+      errorMaxLines: 3,
+      helperMaxLines: 3,
+      contentPadding: SizeConstants.defaultTextInputPadding,
+      iconColor: mode == ThemeMode.light
+          ? ColorConstants.light.textFieldIcon
+          : ColorConstants.light.textFieldIcon,
+      fillColor: mode == ThemeMode.light
+          ? ColorConstants.light.textFieldBG
+          : ColorConstants.light.textFieldBG,
+      labelStyle: TextStyle(
         fontSize: 14.0,
         fontWeight: FontWeight.w400,
         height: 21.0 / 14.0,
         color: mode == ThemeMode.light
-            ? ColorConstants.light.bgScaffold
-            : ColorConstants.dark.bgScaffold,
+            ? ColorConstants.light.textFieldText
+            : ColorConstants.light.textFieldText,
       ),
-      bodySmall: TextStyle(
-        fontSize: 13.0,
+      hintStyle: TextStyle(
+        fontSize: 14.0,
         fontWeight: FontWeight.w400,
-        height: 21.0 / 13.0,
+        height: 21.0 / 14.0,
         color: mode == ThemeMode.light
-            ? ColorConstants.light.bgScaffold
-            : ColorConstants.dark.bgScaffold,
+            ? ColorConstants.light.textFieldTextHint
+            : ColorConstants.light.textFieldTextHint,
       ),
-
-      /// Service texts
-      displayMedium: TextStyle(
-        fontSize: 16.0,
-        fontWeight: FontWeight.w500,
-        height: 18.0 / 16.0,
-        color: mode == ThemeMode.light
-            ? ColorConstants.light.bgScaffold
-            : ColorConstants.dark.bgScaffold,
-      ),
-      displaySmall: TextStyle(
-        fontSize: 13.0,
+      errorStyle: TextStyle(
+        fontSize: 12.0,
         fontWeight: FontWeight.w400,
-        height: 18.0 / 13.0,
+        height: 21.0 / 12.0,
         color: mode == ThemeMode.light
-            ? ColorConstants.light.bgScaffold
-            : ColorConstants.dark.bgScaffold,
+            ? ColorConstants.light.textFieldError
+            : ColorConstants.light.textFieldError,
+      ),
+      helperStyle: TextStyle(
+        fontSize: 12.0,
+        height: 21.0 / 12.0,
+        fontWeight: FontWeight.w400,
+        color: mode == ThemeMode.light
+            ? ColorConstants.light.textFieldText
+            : ColorConstants.light.textFieldText,
+      ),
+      border: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(
+          width: 1.0,
+          color: mode == ThemeMode.light
+              ? ColorConstants.light.textFieldBorder
+              : ColorConstants.light.textFieldBorder,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(
+          width: 1.0,
+          color: mode == ThemeMode.light
+              ? ColorConstants.light.textFieldFocusedBorder
+              : ColorConstants.light.textFieldFocusedBorder,
+        ),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(
+          width: 1.0,
+          color: mode == ThemeMode.light
+              ? ColorConstants.light.textFieldBorder
+              : ColorConstants.light.textFieldBorder,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(
+          width: 1.0,
+          color: mode == ThemeMode.light
+              ? ColorConstants.light.textFieldError
+              : ColorConstants.light.textFieldError,
+        ),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(
+          width: 1.0,
+          color: mode == ThemeMode.light
+              ? ColorConstants.light.textFieldError
+              : ColorConstants.light.textFieldError,
+        ),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        borderSide: BorderSide(
+          width: 1.0,
+          color: mode == ThemeMode.light
+              ? ColorConstants.light.textFieldBorder
+              : ColorConstants.light.textFieldBorder,
+        ),
       ),
     );
   }

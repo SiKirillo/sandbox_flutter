@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
+part of '../common.dart';
 
-/// It works as usual [Text] widget, but it's more controllable
-/// (you don't have to search all Text-s if you want to change something)
 class CustomText extends StatelessWidget {
   final String text;
   final TextStyle? style;
@@ -10,9 +8,10 @@ class CustomText extends StatelessWidget {
   final TextOverflow overflow;
   final int? maxLines;
   final double? textScaleFactor;
+  final TextWidthBasis? textWidthBasis;
 
   /// Flutter engine does not support text vertical alignment.
-  /// This is custom solution for this
+  /// This is custom solution for that
   final bool isVerticalCentered;
 
   const CustomText({
@@ -24,6 +23,7 @@ class CustomText extends StatelessWidget {
     this.overflow = TextOverflow.ellipsis,
     this.maxLines,
     this.textScaleFactor,
+    this.textWidthBasis,
     this.isVerticalCentered = true,
   })  : assert(maxLines == null || maxLines >= 0),
         assert(textScaleFactor == null || textScaleFactor >= 0);
@@ -39,14 +39,15 @@ class CustomText extends StatelessWidget {
         softWrap: softWrap,
         overflow: overflow,
         textScaler: textScaleFactor != null ? TextScaler.linear(textScaleFactor!) : MediaQuery.textScalerOf(context),
+        textWidthBasis: textWidthBasis,
         maxLines: maxLines,
       );
     }
 
-    final height = style?.height ?? Theme.of(context).textTheme.bodyLarge?.height ?? 1.0;
-    final textSize = style?.fontSize ?? Theme.of(context).textTheme.bodyLarge?.fontSize ?? 14.0;
-    final bottomPadding = (height * textSize - textSize) / 2.0;
-    final baseline = height * textSize - height * textSize / 4.0;
+    final height = style?.height ?? 1.0;
+    final fontSize = style?.fontSize ?? 14.0;
+    final bottomPadding = (height * fontSize - fontSize) / 2.0;
+    final baseline = (height * fontSize) - height * fontSize / 4.0;
 
     return Padding(
       padding: EdgeInsets.only(bottom: bottomPadding),
@@ -61,6 +62,7 @@ class CustomText extends StatelessWidget {
           softWrap: softWrap,
           overflow: overflow,
           textScaler: textScaleFactor != null ? TextScaler.linear(textScaleFactor!) : MediaQuery.textScalerOf(context),
+          textWidthBasis: textWidthBasis,
           maxLines: maxLines,
         ),
       ),
@@ -75,6 +77,7 @@ class CustomRichText extends StatelessWidget {
   final TextOverflow overflow;
   final int? maxLines;
   final double? textScaleFactor;
+  final TextWidthBasis? textWidthBasis;
 
   const CustomRichText({
     super.key,
@@ -84,18 +87,20 @@ class CustomRichText extends StatelessWidget {
     this.overflow = TextOverflow.ellipsis,
     this.maxLines,
     this.textScaleFactor,
+    this.textWidthBasis,
   })  : assert(maxLines == null || maxLines >= 0),
         assert(textScaleFactor == null || textScaleFactor >= 0);
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: span,
+    return Text.rich(
+      span,
       key: key,
       textAlign: textAlign,
       softWrap: softWrap,
       overflow: overflow,
       textScaler: textScaleFactor != null ? TextScaler.linear(textScaleFactor!) : TextScaler.noScaling,
+      textWidthBasis: textWidthBasis,
       maxLines: maxLines,
     );
   }

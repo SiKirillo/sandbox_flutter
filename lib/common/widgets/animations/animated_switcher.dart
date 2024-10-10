@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+part of '../../common.dart';
 
 class CustomAnimatedSwitcher extends StatelessWidget {
   final ValueKey<dynamic> valueKey;

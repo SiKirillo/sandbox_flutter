@@ -1,7 +1,4 @@
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../injection_container.dart';
-import '../../services/device_service.dart';
+part of '../../common.dart';
 
 /// Abstract model of shared preferences
 /// To separate all other implementations we use personal id and build mode name
@@ -52,6 +49,6 @@ class AbstractSharedPreferencesDatasource {
   }
 
   String _getStorageID(String key) {
-    return '$id.shared_preferences.${locator<DeviceService>().currentBuildMode().toBuildSuffix()}.$key';
+    return '$id.shared_preferences.${locator<DeviceService>().getBuildModeFromFlavor().toBuildSuffix()}.$key';
   }
 }

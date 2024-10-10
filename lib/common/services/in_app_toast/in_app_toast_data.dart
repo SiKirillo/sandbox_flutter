@@ -9,24 +9,24 @@ class InAppToastData {
   final int id;
   final ValueKey<String> key;
   final InAppToastType type;
-  final String message;
+  final String comment;
 
   const InAppToastData({
     required this.id,
     required this.key,
     required this.type,
-    required this.message,
+    required this.comment,
   });
 
-  factory InAppToastData.create({
+  factory InAppToastData.message({
     required ValueKey<String> key,
-    required String message,
+    required String comment,
   }) {
     return InAppToastData(
       id: DateTime.now().hashCode,
       key: key,
       type: InAppToastType.warning,
-      message: message,
+      comment: comment,
     );
   }
 
@@ -39,7 +39,7 @@ class InAppToastData {
         id: DateTime.now().hashCode,
         key: key,
         type: InAppToastType.network,
-        message: failure.message,
+        comment: failure.message,
       );
     }
 
@@ -47,11 +47,11 @@ class InAppToastData {
       id: DateTime.now().hashCode,
       key: key,
       type: InAppToastType.warning,
-      message: failure.message,
+      comment: failure.message,
     );
   }
 
   bool isSameToast(InAppToastData? compare) {
-    return id == compare?.id && key == compare?.key && type == compare?.type && message == compare?.message;
+    return id == compare?.id && key == compare?.key && type == compare?.type && comment == compare?.comment;
   }
 }

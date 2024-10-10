@@ -1,8 +1,4 @@
-import 'dart:math' as math;
-
-import 'package:flutter/material.dart';
-
-import '../../constants/colors.dart';
+part of '../common.dart';
 
 class CustomProgressBar extends StatefulWidget {
   final double ratio;
@@ -21,47 +17,44 @@ class CustomProgressBar extends StatefulWidget {
 class _CustomProgressBarState extends State<CustomProgressBar> {
   double get _ratio => math.min(widget.ratio, 1.0);
 
-  List<double> _getGradientStops() {
-    if (_ratio < 0.5) {
-      return [0.1, 0.9];
-    } else if (_ratio < 1.0) {
-      return [0.1, (0.5 / _ratio) - 0.1, 0.9];
-    } else {
-      return [0.1, 0.5, 0.9];
-    }
-  }
+  // List<double> _getGradientStops() {
+  //   if (_ratio < 0.5) {
+  //     return [0.1, 0.9];
+  //   } else if (_ratio < 1.0) {
+  //     return [0.1, (0.5 / _ratio) - 0.1, 0.9];
+  //   } else {
+  //     return [0.1, 0.5, 0.9];
+  //   }
+  // }
 
-  List<Color> _getGradientColors() {
-    if (_ratio < 0.5) {
-      return [
-        ColorConstants.progressBarGradient()[0],
-        Color.lerp(ColorConstants.progressBarGradient()[0], ColorConstants.progressBarGradient()[1], _ratio + 0.5) ?? ColorConstants.transparent,
-      ];
-    } else if (_ratio < 1.0) {
-      return [
-        ColorConstants.progressBarGradient()[0],
-        ColorConstants.progressBarGradient()[1],
-        Color.lerp(ColorConstants.progressBarGradient()[1], ColorConstants.progressBarGradient()[2], _ratio) ?? ColorConstants.transparent,
-      ];
-    } else {
-      return ColorConstants.progressBarGradient();
-    }
-  }
+  // List<Color> _getGradientColors() {
+  //   if (_ratio < 0.5) {
+  //     return [
+  //       ColorConstants.progressBarGradient()[0],
+  //       Color.lerp(ColorConstants.progressBarGradient()[0], ColorConstants.progressBarGradient()[1], _ratio + 0.5) ?? ColorConstants.transparent,
+  //     ];
+  //   } else if (_ratio < 1.0) {
+  //     return [
+  //       ColorConstants.progressBarGradient()[0],
+  //       ColorConstants.progressBarGradient()[1],
+  //       Color.lerp(ColorConstants.progressBarGradient()[1], ColorConstants.progressBarGradient()[2], _ratio) ?? ColorConstants.transparent,
+  //     ];
+  //   } else {
+  //     return ColorConstants.progressBarGradient();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 4.0,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(4.0)),
-        color: ColorConstants.transparent,
+        color: ColorConstants.progressBarDisableColor(),
       ),
       child: LayoutBuilder(
         builder: (_, constraints) {
           final progressWidth = constraints.maxWidth * _ratio;
-          final progressGradientColors = widget.withCustomGradient
-              ? _getGradientColors()
-              : ColorConstants.progressBarGradient();
           final isHaveMinSize = progressWidth > 4.0;
 
           return Row(
@@ -70,18 +63,18 @@ class _CustomProgressBarState extends State<CustomProgressBar> {
                 width: isHaveMinSize ? progressWidth : 4.0,
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                  color: isHaveMinSize ? null : progressGradientColors.first,
-                  gradient: isHaveMinSize
-                      ? LinearGradient(
-                          colors: progressGradientColors,
-                          stops: widget.withCustomGradient
-                              ? _getGradientStops()
-                              : null,
-                        )
-                      : null,
+                  color: isHaveMinSize ? null : ColorConstants.progressBarActiveColor(),
+                  // gradient: isHaveMinSize
+                  //     ? LinearGradient(
+                  //         colors: progressGradientColors,
+                  //         stops: widget.withCustomGradient
+                  //             ? _getGradientStops()
+                  //             : null,
+                  //       )
+                  //     : null,
                   boxShadow: [
                     BoxShadow(
-                      color: ColorConstants.transparent.withOpacity(0.2),
+                      color: ColorConstants.progressBarActiveColor().withOpacity(0.2),
                       offset: const Offset(0.0, 2.0),
                       blurRadius: 4.0,
                       spreadRadius: 0.0,

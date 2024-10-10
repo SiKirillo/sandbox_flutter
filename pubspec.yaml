@@ -1,72 +1,78 @@
 name: sandbox_flutter
-description: A new Flutter project.
+description: "A new Flutter project."
 publish_to: 'none'
 
-# Version number: MMAAPP (major - M, minor - A, patch - P)
-version: 0.0.1+000001
+# Flutter version: 3.24.3
+# Build version format: MM.AA.PP (major - M, minor - A, patch - P)
+# Build name format: +MMAAPPVVV (major - M, minor - A, patch - P, version - V)
+version: 0.0.1+000001001
 
-# Flutter version: 3.16.2
 environment:
-  sdk: '>=3.2.2 <4.0.0'
-  flutter: ">=1.17.0"
+  sdk: '>=3.5.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
   # Style
-  swipeable_page_route: ^0.4.0
-  animated_size_and_fade: ^3.0.1
-
-  # State
-  flutter_bloc: ^8.1.3
-  provider: ^6.1.1
-  flutter_secure_storage: ^9.0.0
-  shared_preferences: ^2.2.2
-
-  # HTTP & Web view
-  dio: ^5.4.0
-  http: any
-  webview_flutter: ^4.4.2
-  connectivity_plus: ^5.0.2
+  swipeable_page_route: ^0.4.4
+  carousel_slider: ^5.0.0
 
   # Firebase
-  firebase_core: ^2.24.1
-  firebase_auth: ^4.15.1
-  cloud_firestore: ^4.13.4
-  firebase_analytics: ^10.7.3
-  firebase_crashlytics: ^3.4.7
+  firebase_core: ^3.6.0
+  firebase_analytics: ^11.3.3
+  firebase_crashlytics: ^4.1.3
+  firebase_messaging: ^15.1.3
 
-  # Global - Services
-  get_it: ^7.6.4
-  package_info_plus: ^5.0.1
-  device_info_plus: ^9.1.1
+  # Supabase
+  supabase_flutter: ^2.7.0
+
+  # State
+  flutter_bloc: ^8.1.6
+  provider: ^6.1.2
+  flutter_secure_storage: ^9.2.2
+  shared_preferences: ^2.3.2
+
+  # HTTP & Web view & Network connection
+  http: any
+  web: any
+  dio: ^5.7.0
+  connectivity_plus: ^6.0.5
+
+  # Global services
+  get_it: ^8.0.0
+  package_info_plus: ^8.0.2
+  device_info_plus: ^10.1.2
+  easy_localization: ^3.0.7
+  permission_handler: ^11.3.1
+  go_router: ^14.2.8
+  flutter_local_notifications: ^17.2.2
+  local_auth: ^2.3.0
 
   # Other
   dartz: ^0.10.1
-  email_validator: ^2.1.17
+  email_validator: ^3.0.0
+  flutter_svg: ^2.0.10+1
+  logger: ^2.4.0
+  crypto: ^3.0.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  build_runner: ^2.4.7
-  flutter_lints: ^3.0.1
-  flutter_localization: ^0.1.14
+  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true
 
   assets:
+    - assets/
     - assets/icons/
-    - assets/images/
-    - assets/gifs/
+    - assets/translations/
 
   fonts:
     - family: Roboto
       fonts:
-        - asset: assets/fonts/Roboto/Roboto-Thin.ttf
-          weight: 100
         - asset: assets/fonts/Roboto/Roboto-Light.ttf
           weight: 300
         - asset: assets/fonts/Roboto/Roboto-Regular.ttf
@@ -75,8 +81,6 @@ flutter:
           weight: 500
         - asset: assets/fonts/Roboto/Roboto-Bold.ttf
           weight: 700
-        - asset: assets/fonts/Roboto/Roboto-Black.ttf
-          weight: 900
 
     - family: OpenSans
       fonts:
@@ -86,9 +90,5 @@ flutter:
           weight: 400
         - asset: assets/fonts/OpenSans/OpenSans-Medium.ttf
           weight: 500
-        - asset: assets/fonts/OpenSans/OpenSans-SemiBold.ttf
-          weight: 600
         - asset: assets/fonts/OpenSans/OpenSans-Bold.ttf
           weight: 700
-        - asset: assets/fonts/OpenSans/OpenSans-ExtraBold.ttf
-          weight: 800
