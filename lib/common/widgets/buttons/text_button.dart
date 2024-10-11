@@ -1,29 +1,21 @@
 part of '../../common.dart';
 
-enum CustomButtonType {
-  primary,
-  attention,
-  chats,
-}
-
 class CustomTextButton extends StatelessWidget {
   final dynamic content;
-  final VoidCallback onCallback;
+  final VoidCallback onTap;
   final bool isSlim;
   final bool isBlocked;
   final bool isProcessing;
   final CustomTextButtonOptions options;
-  final CustomButtonType type;
 
   const CustomTextButton({
     super.key,
     required this.content,
-    required this.onCallback,
+    required this.onTap,
     this.isSlim = false,
     this.isBlocked = false,
     this.isProcessing = false,
     this.options = const CustomTextButtonOptions(),
-    this.type = CustomButtonType.primary,
   })  : assert(content is Widget || content is String);
 
   static TextStyle? getTextButtonStyle({
@@ -40,9 +32,6 @@ class CustomTextButton extends StatelessWidget {
             : textStyle?.color ?? ColorConstants.buttonTextPrimaryColor();
 
       case CustomButtonType.attention:
-        color = textStyle?.color ?? ColorConstants.buttonTextPrimaryColor();
-
-      case CustomButtonType.chats:
         color = textStyle?.color ?? ColorConstants.buttonTextPrimaryColor();
     }
 
@@ -70,12 +59,6 @@ class CustomTextButton extends StatelessWidget {
       case CustomButtonType.attention:
         color = ColorConstants.buttonAttentionColor();
         borderRadius = 19.0;
-
-      case CustomButtonType.chats:
-        color = isBlocked
-            ? ColorConstants.buttonDisableColor()
-            : ColorConstants.buttonColor();
-        borderRadius = 19.0;
     }
 
     return (buttonStyle ?? const BoxDecoration()).copyWith(
@@ -96,9 +79,6 @@ class CustomTextButton extends StatelessWidget {
 
       case CustomButtonType.attention:
         return splashColor ?? ColorConstants.buttonSplashPrimaryColor();
-
-      case CustomButtonType.chats:
-        return splashColor ?? ColorConstants.buttonSplashPrimaryColor();
     }
   }
 
@@ -107,7 +87,7 @@ class CustomTextButton extends StatelessWidget {
       text: content,
       maxLines: 1,
       style: CustomTextButton.getTextButtonStyle(
-        type: type,
+        type: options.type,
         context: context,
         textStyle: options.textStyle,
         isBlocked: isBlocked,
@@ -119,21 +99,21 @@ class CustomTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final customTextStyle = CustomTextButton.getTextButtonStyle(
-      type: type,
+      type: options.type,
       context: context,
       textStyle: options.textStyle,
       isBlocked: isBlocked,
     );
 
     final customButtonDecoration = CustomTextButton.getButtonDecoration(
-      type: type,
+      type: options.type,
       context: context,
       buttonStyle: options.buttonStyle,
       isBlocked: isBlocked,
     );
 
     final customSplashColor = CustomTextButton.getButtonSplashColor(
-      type: type,
+      type: options.type,
       context: context,
       splashColor: options.splashColor,
       isBlocked: isBlocked,
@@ -148,7 +128,7 @@ class CustomTextButton extends StatelessWidget {
         child: ClipRRect(
           borderRadius: customButtonDecoration?.borderRadius ?? BorderRadius.zero,
           child: TextButton(
-            onPressed: onCallback,
+            onPressed: onTap,
             style: TextButton.styleFrom(
               padding: options.padding,
               foregroundColor: customSplashColor,
@@ -186,6 +166,11 @@ class CustomTextButton extends StatelessWidget {
   }
 }
 
+enum CustomButtonType {
+  primary,
+  attention,
+}
+
 class CustomTextButtonOptions {
   final double height;
   final double? width;
@@ -193,6 +178,7 @@ class CustomTextButtonOptions {
   final BoxDecoration? buttonStyle;
   final TextStyle? textStyle;
   final Color? splashColor;
+  final CustomButtonType type;
 
   const CustomTextButtonOptions({
     this.height = SizeConstants.defaultButtonHeight,
@@ -204,5 +190,7 @@ class CustomTextButtonOptions {
     this.buttonStyle,
     this.textStyle,
     this.splashColor,
-  });
+    this.type = CustomButtonType.primary,
+  }) :  assert(height >= 0),
+        assert(width == null || width >= 0);
 }

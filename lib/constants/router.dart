@@ -48,82 +48,82 @@ class AppRouter {
           const WelcomeScreen(),
         ),
       ),
-      StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) => HomeBuilder(
-          navigationShell: navigationShell,
-        ),
-        branches: <StatefulShellBranch>[
-          // StatefulShellBranch(
-          //   routes: [
-          //     GoRoute(
-          //       path: ContactsScreen.routePath,
-          //       name: ContactsScreen.routePath,
-          //       pageBuilder: (context, state) => _defaultSwipeablePageBuilder(
-          //         state.pageKey,
-          //         const ContactsScreen(),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // StatefulShellBranch(
-          //   routes: [
-          //     GoRoute(
-          //       path: ChatsScreen.routePath,
-          //       name: ChatsScreen.routePath,
-          //       pageBuilder: (context, state) => _defaultSwipeablePageBuilder(
-          //         state.pageKey,
-          //         const ChatsScreen(),
-          //       ),
-          //       routes: [
-          //         GoRoute(
-          //           path: ChatDetailsScreen.routePath,
-          //           name: ChatDetailsScreen.routePath,
-          //           parentNavigatorKey: _rootRouterKey,
-          //           pageBuilder: (context, state) => _defaultSwipeablePageBuilder(
-          //             state.pageKey,
-          //             ChatDetailsScreen(
-          //               chatID: state.pathParameters['chatID'],
-          //             ),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ],
-          // ),
-          // StatefulShellBranch(
-          //   routes: [
-          //     GoRoute(
-          //       path: SettingsScreen.routePath,
-          //       name: SettingsScreen.routePath,
-          //       pageBuilder: (context, state) => _defaultSwipeablePageBuilder(
-          //         state.pageKey,
-          //         const SettingsScreen(),
-          //       ),
-          //       routes: [
-          //         GoRoute(
-          //           path: SettingsAccountScreen.routePath,
-          //           name: SettingsAccountScreen.routePath,
-          //           parentNavigatorKey: _rootRouterKey,
-          //           pageBuilder: (context, state) => _defaultSwipeablePageBuilder(
-          //             state.pageKey,
-          //             const SettingsAccountScreen(),
-          //           ),
-          //         ),
-          //         GoRoute(
-          //           path: SettingsProfileScreen.routePath,
-          //           name: SettingsProfileScreen.routePath,
-          //           parentNavigatorKey: _rootRouterKey,
-          //           pageBuilder: (context, state) => _defaultSwipeablePageBuilder(
-          //             state.pageKey,
-          //             const SettingsProfileScreen(),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ],
-          // ),
-        ],
-      ),
+      // StatefulShellRoute.indexedStack(
+      //   builder: (context, state, navigationShell) => HomeBuilder(
+      //     navigationShell: navigationShell,
+      //   ),
+      //   branches: <StatefulShellBranch>[
+      //     StatefulShellBranch(
+      //       routes: [
+      //         GoRoute(
+      //           path: ContactsScreen.routePath,
+      //           name: ContactsScreen.routePath,
+      //           pageBuilder: (context, state) => _defaultSwipeablePageBuilder(
+      //             state.pageKey,
+      //             const ContactsScreen(),
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //     StatefulShellBranch(
+      //       routes: [
+      //         GoRoute(
+      //           path: ChatsScreen.routePath,
+      //           name: ChatsScreen.routePath,
+      //           pageBuilder: (context, state) => _defaultSwipeablePageBuilder(
+      //             state.pageKey,
+      //             const ChatsScreen(),
+      //           ),
+      //           routes: [
+      //             GoRoute(
+      //               path: ChatDetailsScreen.routePath,
+      //               name: ChatDetailsScreen.routePath,
+      //               parentNavigatorKey: _rootRouterKey,
+      //               pageBuilder: (context, state) => _defaultSwipeablePageBuilder(
+      //                 state.pageKey,
+      //                 ChatDetailsScreen(
+      //                   chatID: state.pathParameters['chatID'],
+      //                 ),
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //       ],
+      //     ),
+      //     StatefulShellBranch(
+      //       routes: [
+      //         GoRoute(
+      //           path: SettingsScreen.routePath,
+      //           name: SettingsScreen.routePath,
+      //           pageBuilder: (context, state) => _defaultSwipeablePageBuilder(
+      //             state.pageKey,
+      //             const SettingsScreen(),
+      //           ),
+      //           routes: [
+      //             GoRoute(
+      //               path: SettingsAccountScreen.routePath,
+      //               name: SettingsAccountScreen.routePath,
+      //               parentNavigatorKey: _rootRouterKey,
+      //               pageBuilder: (context, state) => _defaultSwipeablePageBuilder(
+      //                 state.pageKey,
+      //                 const SettingsAccountScreen(),
+      //               ),
+      //             ),
+      //             GoRoute(
+      //               path: SettingsProfileScreen.routePath,
+      //               name: SettingsProfileScreen.routePath,
+      //               parentNavigatorKey: _rootRouterKey,
+      //               pageBuilder: (context, state) => _defaultSwipeablePageBuilder(
+      //                 state.pageKey,
+      //                 const SettingsProfileScreen(),
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //       ],
+      //     ),
+      //   ],
+      // ),
     ],
   );
 

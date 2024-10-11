@@ -2,13 +2,13 @@ part of '../../common.dart';
 
 class CustomIconButton extends StatelessWidget {
   final dynamic icon;
-  final VoidCallback onCallback;
+  final VoidCallback onTap;
   final CustomIconButtonOptions options;
 
   const CustomIconButton({
     super.key,
     required this.icon,
-    required this.onCallback,
+    required this.onTap,
     this.options = const CustomIconButtonOptions(),
   }) : assert(icon is String || icon is Icon || icon is Image || icon is SvgPicture || icon is Widget);
 
@@ -23,7 +23,7 @@ class CustomIconButton extends StatelessWidget {
         highlightColor: options.highlightColor,
         splashColor: options.splashColor,
         splashRadius: options.size,
-        onPressed: onCallback,
+        onPressed: onTap,
       ),
     );
   }

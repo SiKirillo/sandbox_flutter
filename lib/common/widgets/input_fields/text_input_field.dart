@@ -2,11 +2,6 @@
 
 part of '../../common.dart';
 
-enum CustomTextInputFieldType {
-  scaffold,
-  dialog,
-}
-
 class CustomTextInputField extends StatefulWidget {
   final TextEditingController controller;
   final FocusNode? focusNode, nextFocusNode;
@@ -17,7 +12,6 @@ class CustomTextInputField extends StatefulWidget {
   final TextInputType keyboardType;
   final TextInputAction inputAction;
   final CustomInputFieldOptions options;
-  final CustomTextInputFieldType type;
   final Iterable<String>? autofillHints;
   final List<TextInputFormatter>? formatters;
   final FormFieldValidator<String>? validator;
@@ -50,7 +44,6 @@ class CustomTextInputField extends StatefulWidget {
     this.keyboardType = TextInputType.visiblePassword,
     this.inputAction = TextInputAction.done,
     this.options = const CustomInputFieldOptions(),
-    this.type = CustomTextInputFieldType.scaffold,
     this.autofillHints,
     this.formatters,
     this.validator,
@@ -405,7 +398,7 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
                                 icon: SvgPicture.asset(
                                   ImageConstants.icClose,
                                 ),
-                                onCallback: _onClearFieldHandler,
+                                onTap: _onClearFieldHandler,
                               ),
                               const SizedBox(
                                 width: 4.0,
@@ -417,7 +410,7 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
                                   ImageConstants.icTextfieldEye,
                                   color: _getIconColor(isProtectedIcon: true),
                                 ),
-                                onCallback: _onToggleObscureHandler,
+                                onTap: _onToggleObscureHandler,
                               ),
                             if (widget.isValidField) ...[
                               const SizedBox(
@@ -428,7 +421,7 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
                                   ImageConstants.icTextfieldOk,
                                   color: _getIconColor(),
                                 ),
-                                onCallback: () {},
+                                onTap: () {},
                               ),
                             ],
                             if (widget.isProcessing) ...[
@@ -535,7 +528,7 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
             suffixIconSize: _suffixIconSize,
             duration: _defaultLabelDuration,
             textStyle: _getAnimatedLabelTextStyle(),
-            type: widget.type,
+            type: widget.options.type,
             isOnTopPosition: true,
             onTap: () {
               _focusNode.requestFocus();
@@ -552,7 +545,7 @@ class _CustomTextInputFieldState extends State<CustomTextInputField> with Widget
             suffixIconSize: _suffixIconSize,
             duration: _defaultLabelDuration,
             textStyle: _getAnimatedLabelTextStyle(),
-            type: widget.type,
+            type: widget.options.type,
             isOnTopPosition: false,
             onTap: () {
               _focusNode.requestFocus();
@@ -794,7 +787,13 @@ class _InputFieldHintTextState extends State<_InputFieldHintText> {
   }
 }
 
+enum CustomTextInputFieldType {
+  scaffold,
+  dialog,
+}
+
 class CustomInputFieldOptions {
+  final CustomTextInputFieldType type;
   final EdgeInsetsGeometry? contentPadding;
   final TextStyle? textStyle;
   final bool? isDense;
@@ -804,6 +803,7 @@ class CustomInputFieldOptions {
   final int maxLength, maxLines;
 
   const CustomInputFieldOptions({
+    this.type = CustomTextInputFieldType.scaffold,
     this.contentPadding,
     this.textStyle,
     this.isDense,

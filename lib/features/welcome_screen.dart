@@ -1,7 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../common/common.dart';
 import 'authentication/domain/bloc/auth_bloc.dart';
@@ -51,8 +50,8 @@ class _SplashScreen extends StatelessWidget {
           children: [
             SizedBox(
               height: 95.0,
-              child: SvgPicture.asset(
-                'ImageConstants.icLogo',
+              child: Image.asset(
+                ImageConstants.icLogo,
               ),
             ),
             const SizedBox(
@@ -86,7 +85,7 @@ class _AuthMethodsScreenState extends State<_AuthMethodsScreen> {
       children: [
         CustomTextButton(
           content: 'button.sign_in'.tr(),
-          onCallback: _onSignInHandler,
+          onTap: _onSignInHandler,
         ),
         const SizedBox(
           height: 32.0,
@@ -118,8 +117,8 @@ class _AuthMethodsScreenState extends State<_AuthMethodsScreen> {
           ),
           SizedBox(
             height: 95.0,
-            child: SvgPicture.asset(
-              'ImageConstants.icLogo',
+            child: Image.asset(
+              ImageConstants.icLogo,
             ),
           ),
           const Spacer(),
@@ -133,8 +132,8 @@ class _AuthMethodsScreenState extends State<_AuthMethodsScreen> {
         children: [
           SizedBox(
             height: 95.0,
-            child: SvgPicture.asset(
-              'ImageConstants.icLogo',
+            child: Image.asset(
+              ImageConstants.icLogo,
             ),
           ),
           const SizedBox(

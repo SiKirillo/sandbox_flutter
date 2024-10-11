@@ -84,9 +84,9 @@ class ColorConstants {
   /// Gradients
   static List<Color> scaffoldGradientOpacity() => _isLightTheme ? light.scaffoldGradientOpacity : light.scaffoldGradientOpacity;
 
-  /// Dash navigator
-  static Color dashActiveColor({bool? isLight}) => isLight ?? _isLightTheme ? light.dashActive : light.dashActive;
-  static Color dashDisableColor({bool? isLight}) => isLight ?? _isLightTheme ? light.dashDisable : light.dashDisable;
+  /// Page indicator
+  static Color pageIndicatorActiveColor({bool? isLight}) => isLight ?? _isLightTheme ? light.pageIndicatorActive : light.pageIndicatorActive;
+  static Color pageIndicatorDisableColor({bool? isLight}) => isLight ?? _isLightTheme ? light.pageIndicatorDisable : light.pageIndicatorDisable;
 
   /// Progress bar
   static Color progressBarActiveColor({bool? isLight}) => isLight ?? _isLightTheme ? light.progressBarActive : light.progressBarActive;
@@ -184,12 +184,12 @@ class _LightColorTheme {
     const Color(0xFFF2F7F4),
   ];
 
-  /// Dash navigator
-  final dashActive = const Color(0xFF06913E);
-  final dashDisable = const Color(0xFFCDE7D9);
+  /// Page indicator
+  final pageIndicatorActive = const Color(0xFF5773FB);
+  final pageIndicatorDisable = const Color(0xFFCDE7D9);
 
   /// Progress bar
-  final progressBarActive = const Color(0xFF06913E);
+  final progressBarActive = const Color(0xFF5773FB);
   final progressBarDisable = const Color(0xFFCDE7D9);
 
   /// Additional

@@ -8,7 +8,7 @@ class SliverRefreshIndicator extends StatelessWidget {
     super.key,
     required this.onRefresh,
     this.size = 30.0,
-  })  : assert(size >= 0);
+  }) : assert(size >= 0);
 
   final _kActivityIndicatorRadius = 14.0;
   final _kActivityIndicatorMargin = 16.0;

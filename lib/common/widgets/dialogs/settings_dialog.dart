@@ -7,8 +7,8 @@ class CustomSettingsDialog extends StatefulWidget {
   final VoidCallback? onCancel;
   final VoidCallback onAction;
   final Function(bool, dynamic)? onPopInvoked;
-  final bool isImportant;
   final bool isCanPop;
+  final bool isImportant;
   final bool isDisabled;
   final bool isHidden;
 
@@ -21,8 +21,8 @@ class CustomSettingsDialog extends StatefulWidget {
     this.onCancel,
     required this.onAction,
     this.onPopInvoked,
-    this.isImportant = false,
     this.isCanPop = true,
+    this.isImportant = false,
     this.isDisabled = false,
     this.isHidden = false,
   });

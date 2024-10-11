@@ -196,9 +196,9 @@ class _HowToUseSliderState extends State<InAppSlider> {
             ),
           ),
         ),
-        DashNavigator(
-          number: _selectedPage,
-          total: widget.data.length,
+        CustomPageIndicator(
+          activeIndex: _selectedPage,
+          count: widget.data.length,
         ),
       ],
     );

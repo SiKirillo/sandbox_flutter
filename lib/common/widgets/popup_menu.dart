@@ -21,7 +21,7 @@ class CustomPopupMenuItem {
 
 class CustomPopupMenu extends StatefulWidget {
   final List<CustomPopupMenuItem> items;
-  final Function(CustomPopupMenuItem) onCallback;
+  final Function(CustomPopupMenuItem) onTap;
   final CustomPopupMenuType type;
   final Widget? icon;
   final TextStyle? textStyle;
@@ -30,7 +30,7 @@ class CustomPopupMenu extends StatefulWidget {
   const CustomPopupMenu({
     super.key,
     required this.items,
-    required this.onCallback,
+    required this.onTap,
     this.type = CustomPopupMenuType.card,
     this.icon,
     this.textStyle,
@@ -90,7 +90,7 @@ class _CustomPopupMenuState extends State<CustomPopupMenu> {
               );
             }).toList();
           },
-          onSelected: widget.onCallback,
+          onSelected: widget.onTap,
           color: ColorConstants.popupMenuBG(),
           shadowColor: ColorConstants.popupMenuShadowColor(),
           splashRadius: SizeConstants.defaultIconSize,

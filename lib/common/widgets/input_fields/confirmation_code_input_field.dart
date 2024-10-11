@@ -19,7 +19,7 @@ class ConfirmationCodeInputField extends StatefulWidget {
     this.isOnError = false,
     this.onChanged,
     this.onFieldSubmitted,
-  });
+  }) : assert(maxSymbols >= 0);
 
   @override
   State<ConfirmationCodeInputField> createState() => _ConfirmationCodeInputFieldState();

@@ -2,13 +2,13 @@ part of '../common.dart';
 
 class CustomSwitch extends StatelessWidget {
   final bool value;
-  final Function(bool) onCallback;
+  final Function(bool) onTap;
   final Size size;
 
   const CustomSwitch({
     super.key,
     required this.value,
-    required this.onCallback,
+    required this.onTap,
     this.size = const Size(41.0, 25.0),
   });
 
@@ -23,7 +23,7 @@ class CustomSwitch extends StatelessWidget {
           trackColor: ColorConstants.transparent,
           thumbColor: ColorConstants.transparent,
           value: value,
-          onChanged: onCallback,
+          onChanged: onTap,
         ),
       ),
     );

@@ -1,15 +1,15 @@
 part of '../common.dart';
 
 class CustomPopupCard extends StatelessWidget {
+  final CustomPopupCardOptions options;
   final Widget content;
   final Widget? actions;
-  final CustomPopupCardOptions options;
 
   const CustomPopupCard({
     super.key,
+    this.options = const CustomPopupCardOptions(),
     required this.content,
     this.actions,
-    this.options = const CustomPopupCardOptions(),
   });
 
   @override

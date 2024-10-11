@@ -7,7 +7,6 @@ class CustomWarningDialog extends StatefulWidget {
   final Function()? onButtonCallback;
   final Function(bool, dynamic)? onPopInvoked;
   final bool isCanPop;
-  final bool withDot;
 
   const CustomWarningDialog({
     super.key,
@@ -17,7 +16,6 @@ class CustomWarningDialog extends StatefulWidget {
     this.onButtonCallback,
     this.onPopInvoked,
     this.isCanPop = true,
-    this.withDot = true,
   }) : assert(content is Widget || content is String);
 
   @override
@@ -49,7 +47,7 @@ class _CustomWarningDialogState extends State<CustomWarningDialog> {
     }
 
     return CustomText(
-      text: '${widget.content}${widget.withDot ? '.' : ''}',
+      text: widget.content,
       style: Theme.of(context).textTheme.bodySmall?.copyWith(
         height: 16.0 / 12.0,
       ),

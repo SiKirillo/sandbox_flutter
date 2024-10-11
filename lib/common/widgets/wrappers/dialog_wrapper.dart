@@ -1,7 +1,6 @@
 part of '../../common.dart';
 
 class DialogWrapper extends StatelessWidget {
-  final Widget child;
   final dynamic label, description;
   final TextStyle? labelStyle, descriptionStyle;
   final Alignment contentAlignment;
@@ -12,10 +11,10 @@ class DialogWrapper extends StatelessWidget {
   final bool withPadding;
   final bool isDisabled;
   final bool isHidden;
+  final Widget child;
 
   const DialogWrapper({
     super.key,
-    required this.child,
     this.label,
     this.description,
     this.labelStyle,
@@ -39,6 +38,7 @@ class DialogWrapper extends StatelessWidget {
     this.withPadding = true,
     this.isDisabled = false,
     this.isHidden = false,
+    required this.child,
   })  : assert(label is String || label is Widget || label == null),
         assert(description is String || description is Widget || description == null);
 

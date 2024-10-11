@@ -12,7 +12,7 @@ class CustomPullToRefreshIndicator extends StatelessWidget {
     required this.onRefresh,
     this.size = 30.0,
     required this.child,
-  })  : assert(size >= 0);
+  }) : assert(size >= 0);
 
   @override
   Widget build(BuildContext context) {

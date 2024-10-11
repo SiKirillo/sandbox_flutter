@@ -2,13 +2,11 @@ part of '../common.dart';
 
 class CustomProgressBar extends StatefulWidget {
   final double ratio;
-  final bool withCustomGradient;
 
   const CustomProgressBar({
     super.key,
     required this.ratio,
-    this.withCustomGradient = false,
-  })  : assert(ratio >= 0.0);
+  }) : assert(ratio >= 0.0);
 
   @override
   State<CustomProgressBar> createState() => _CustomProgressBarState();

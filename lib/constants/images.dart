@@ -20,4 +20,7 @@ class ImageConstants {
   static const icMore = 'assets/icons/ic_more.svg';
   static const icTextfieldEye = 'assets/icons/ic_textfield_eye.svg';
   static const icTextfieldOk = 'assets/icons/ic_textfield_ok.svg';
+
+  /// Logo
+  static const icLogo = 'assets/icons/ic_logo.png';
 }

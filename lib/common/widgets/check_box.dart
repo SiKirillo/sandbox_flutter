@@ -1,22 +1,22 @@
 part of '../common.dart';
 
 class CustomCheckBox extends StatelessWidget {
-  final bool isChecked;
-  final Function(bool) onCallback;
+  final Function(bool) onTap;
+  final bool isTapped;
   final double size;
   final bool isProcessing;
 
   const CustomCheckBox({
     super.key,
-    required this.isChecked,
-    required this.onCallback,
+    required this.onTap,
+    required this.isTapped,
     this.size = 20.0,
     this.isProcessing = false,
-  })  : assert(size >= 0);
+  }) : assert(size >= 0);
 
   void _onPressedHandler() {
     if (!isProcessing) {
-      onCallback(!isChecked);
+      onTap(!isTapped);
     }
   }
 
@@ -29,7 +29,7 @@ class CustomCheckBox extends StatelessWidget {
         width: size,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4.0),
-          border: !isProcessing && isChecked
+          border: !isProcessing && isTapped
               ? null
               : Border.all(color: ColorConstants.transparent),
         ),

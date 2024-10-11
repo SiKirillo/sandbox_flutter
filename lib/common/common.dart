@@ -7,7 +7,7 @@ import 'dart:math' as math;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dartz/dartz.dart' as dartz;
@@ -36,7 +36,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:swipeable_page_route/swipeable_page_route.dart';
 
 import '../features/authentication/domain/bloc/auth_bloc.dart';
-import '../features/home_builder.dart';
 import '../features/welcome_screen.dart';
 import 'injection_container.dart';
 
@@ -109,7 +108,7 @@ part 'widgets/wrappers/scrollable_wrapper.dart';
 part 'widgets/app_bar.dart';
 part 'widgets/popup_card.dart';
 part 'widgets/check_box.dart';
-part 'widgets/dash_navigator.dart';
+part 'widgets/page_indicator.dart';
 part 'widgets/divider.dart';
 part 'widgets/list_tile.dart';
 part 'widgets/list_view_builder.dart';

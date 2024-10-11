@@ -22,7 +22,7 @@ class CustomListViewBuilder<T> extends StatelessWidget {
     this.isReversed = false,
     this.separatorBuilder,
     required this.itemBuilder,
-  })  : assert(itemCount >= 0);
+  }) : assert(itemCount >= 0);
 
   @override
   Widget build(BuildContext context) {

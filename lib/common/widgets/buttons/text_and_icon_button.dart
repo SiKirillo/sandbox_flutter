@@ -2,7 +2,7 @@ part of '../../common.dart';
 
 class CustomTextAndIconButton extends StatelessWidget {
   final Widget content;
-  final VoidCallback onCallback;
+  final VoidCallback onTap;
   final bool isSlim;
   final bool isBlocked;
   final CustomTextAndIconButtonOptions options;
@@ -10,7 +10,7 @@ class CustomTextAndIconButton extends StatelessWidget {
   const CustomTextAndIconButton({
     super.key,
     required this.content,
-    required this.onCallback,
+    required this.onTap,
     this.isSlim = false,
     this.isBlocked = false,
     this.options = const CustomTextAndIconButtonOptions(),
@@ -29,7 +29,7 @@ class CustomTextAndIconButton extends StatelessWidget {
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(8.0)),
           child: TextButton(
-            onPressed: onCallback,
+            onPressed: onTap,
             style: TextButton.styleFrom(
               padding: options.padding,
               foregroundColor: ColorConstants.buttonSplashPrimaryColor(),
@@ -54,5 +54,6 @@ class CustomTextAndIconButtonOptions {
     this.height = 40.0,
     this.width,
     this.padding = const EdgeInsets.all(4.0),
-  });
+  }) :  assert(height >= 0),
+        assert(width == null || width >= 0);
 }

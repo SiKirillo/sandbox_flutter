@@ -11,7 +11,7 @@ class CustomAnimatedSwitcher extends StatelessWidget {
     required this.previousIndex,
     required this.currentIndex,
     required this.child,
-  });
+  }) : assert(previousIndex >= 0 && currentIndex >= 0);
 
   static const animationDuration = Duration(milliseconds: 200);
 

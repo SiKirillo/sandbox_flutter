@@ -1,0 +1,39 @@
+{
+  "errors": {
+    "validators": {
+      "email": {
+        "unique_format": "Invalid email format"
+      },
+      "name": {
+        "unique_format": "Invalid name format",
+        "min_symbols": {
+          "one": "The name must contain at least {quantity} character",
+          "few": "The name must contain at least {quantity} characters",
+          "other": "The name must contain at least {quantity} characters"
+        }
+      },
+      "password": {
+        "unique_format": "Invalid password format",
+        "min_symbols": {
+          "one": "Password must contain at least {quantity} character",
+          "few": "Password must contain at least {quantity} characters",
+          "other": "Password must contain at least {quantity} characters"
+        },
+        "max_symbols": {
+          "one": "Password must contain a maximum {quantity} character",
+          "few": "Password must contain a maximum {quantity} characters",
+          "other": "Password must contain a maximum {quantity} characters"
+        },
+        "not_equal": "Passwords do not match"
+      },
+      "confirmation_code": {
+        "unique_format": "Confirmation code must contain only digits",
+        "min_symbols": {
+          "one": "Confirmation code must contain at least {quantity} digit",
+          "few": "Confirmation code must contain at least {quantity} digits",
+          "other": "Confirmation code must contain at least {quantity} digits"
+        }
+      }
+    }
+  }
+}

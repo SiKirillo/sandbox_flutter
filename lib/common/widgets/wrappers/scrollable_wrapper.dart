@@ -1,39 +1,19 @@
 part of '../../common.dart';
 
-enum ScrollableWrapperType {
-  expanded, /// fills all remaining space
-  slim, /// fills minimum
-  dialog, /// in bottom sheets
-}
-
 class ScrollableWrapper extends StatefulWidget {
   final ScrollController? controller;
-  final Widget child;
   final CustomSliverAppBar? sliverAppBar;
   final SliverRefreshIndicator? sliverRefreshIndicator;
-  final ScrollableWrapperType type;
-  final Axis direction;
-  final MainAxisAlignment mainAxisAlignment;
-  final CrossAxisAlignment crossAxisAlignment;
-  final EdgeInsets padding;
-  final bool isScrollEnabled;
-  final bool isAlwaysScrollable;
-  final bool isScrollbarVisible;
+  final ScrollableWrapperOptions options;
+  final Widget child;
 
   const ScrollableWrapper({
     super.key,
     this.controller,
-    required this.child,
     this.sliverAppBar,
     this.sliverRefreshIndicator,
-    this.type = ScrollableWrapperType.expanded,
-    this.direction = Axis.vertical,
-    this.mainAxisAlignment = MainAxisAlignment.start,
-    this.crossAxisAlignment = CrossAxisAlignment.center,
-    this.padding = ScrollableWrapper.defaultPadding,
-    this.isScrollEnabled = true,
-    this.isAlwaysScrollable = false,
-    this.isScrollbarVisible = false,
+    this.options = const ScrollableWrapperOptions(),
+    required this.child,
   });
 
   static const defaultPadding = EdgeInsets.symmetric(
@@ -114,25 +94,25 @@ class _ScrollableWrapperState extends State<ScrollableWrapper> with WidgetsBindi
   Widget _buildContentWidget() {
     return Flex(
       key: _contentKey,
-      direction: widget.direction,
+      direction: widget.options.direction,
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: widget.mainAxisAlignment,
-      crossAxisAlignment: widget.crossAxisAlignment,
+      mainAxisAlignment: widget.options.mainAxisAlignment,
+      crossAxisAlignment: widget.options.crossAxisAlignment,
       children: <Widget>[
         SizedBox.square(
-          dimension: widget.padding.top,
+          dimension: widget.options.padding.top,
         ),
         Flexible(
           child: Padding(
             padding: EdgeInsets.only(
-              left: widget.padding.left,
-              right: widget.padding.right,
+              left: widget.options.padding.left,
+              right: widget.options.padding.right,
             ),
             child: widget.child,
           ),
         ),
         SizedBox.square(
-          dimension: widget.padding.bottom,
+          dimension: widget.options.padding.bottom,
         ),
       ],
     );
@@ -140,18 +120,18 @@ class _ScrollableWrapperState extends State<ScrollableWrapper> with WidgetsBindi
 
   @override
   Widget build(BuildContext context) {
-    final isScrollEnabled = (widget.isScrollEnabled && _isScrollEnabled) || widget.isAlwaysScrollable;
+    final isScrollEnabled = (widget.options.isScrollEnabled && _isScrollEnabled) || widget.options.isAlwaysScrollable;
     final isScrollListenerEnabled = isScrollEnabled && widget.sliverRefreshIndicator != null;
 
-    if (widget.type == ScrollableWrapperType.dialog) {
+    if (widget.options.type == ScrollableWrapperType.dialog) {
       return ScrollConfiguration(
         behavior: ScrollConfiguration.of(context).copyWith(
-          scrollbars: widget.isScrollbarVisible,
+          scrollbars: widget.options.isScrollbarVisible,
         ),
         child: SingleChildScrollView(
           key: _wrapperKey,
           controller: _scrollController,
-          scrollDirection: widget.direction,
+          scrollDirection: widget.options.direction,
           physics: isScrollEnabled
               ? const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics())
               : const NeverScrollableScrollPhysics(),
@@ -166,19 +146,19 @@ class _ScrollableWrapperState extends State<ScrollableWrapper> with WidgetsBindi
           : null,
       child: ScrollConfiguration(
         behavior: ScrollConfiguration.of(context).copyWith(
-          scrollbars: widget.isScrollbarVisible,
+          scrollbars: widget.options.isScrollbarVisible,
         ),
         child: CustomScrollView(
           key: _wrapperKey,
           controller: _scrollController,
-          scrollDirection: widget.direction,
+          scrollDirection: widget.options.direction,
           physics: isScrollEnabled
               ? const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics())
               : const NeverScrollableScrollPhysics(),
           slivers: [
             if (widget.sliverAppBar != null) widget.sliverAppBar!,
             if (widget.sliverRefreshIndicator != null && _isScrollToRefreshEnabled) widget.sliverRefreshIndicator!,
-            widget.type == ScrollableWrapperType.expanded
+            widget.options.type == ScrollableWrapperType.expanded
                 ? SliverFillRemaining(
                     hasScrollBody: false,
                     child: _buildContentWidget(),
@@ -191,4 +171,32 @@ class _ScrollableWrapperState extends State<ScrollableWrapper> with WidgetsBindi
       ),
     );
   }
+}
+
+enum ScrollableWrapperType {
+  expanded, /// fills all remaining space
+  slim, /// fills minimum
+  dialog, /// in bottom sheets
+}
+
+class ScrollableWrapperOptions {
+  final ScrollableWrapperType type;
+  final Axis direction;
+  final MainAxisAlignment mainAxisAlignment;
+  final CrossAxisAlignment crossAxisAlignment;
+  final EdgeInsets padding;
+  final bool isScrollEnabled;
+  final bool isAlwaysScrollable;
+  final bool isScrollbarVisible;
+
+  const ScrollableWrapperOptions({
+    this.type = ScrollableWrapperType.expanded,
+    this.direction = Axis.vertical,
+    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.padding = ScrollableWrapper.defaultPadding,
+    this.isScrollEnabled = true,
+    this.isAlwaysScrollable = false,
+    this.isScrollbarVisible = false,
+  });
 }

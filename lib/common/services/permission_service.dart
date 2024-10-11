@@ -87,10 +87,12 @@ class PermissionService {
         horizontal: 20.0,
       ),
       child: ScrollableWrapper(
-        type: ScrollableWrapperType.dialog,
-        padding: const EdgeInsets.only(
-          top: 16.0,
-          bottom: 40.0,
+        options: ScrollableWrapperOptions(
+          type: ScrollableWrapperType.dialog,
+          padding: const EdgeInsets.only(
+            top: 16.0,
+            bottom: 40.0,
+          ),
         ),
         child: Column(
           children: [
@@ -133,10 +135,12 @@ class PermissionService {
                 Expanded(
                   child: CustomTextButton(
                     content: 'permissions.contacts.info.button_cancel'.tr(),
-                    onCallback: () {
+                    onTap: () {
                       Navigator.of(context).pop(false);
                     },
-                    type: CustomButtonType.attention,
+                    options: CustomTextButtonOptions(
+                      type: CustomButtonType.attention,
+                    ),
                   ),
                 ),
                 const SizedBox(
@@ -145,7 +149,7 @@ class PermissionService {
                 Expanded(
                   child: CustomTextButton(
                     content: 'permissions.contacts.info.button_continue'.tr(),
-                    onCallback: () {
+                    onTap: () {
                       Navigator.of(context).pop(true);
                     },
                   ),

@@ -1,17 +1,17 @@
 part of '../../common.dart';
 
 class ContentWrapper extends StatelessWidget {
-  final Widget child;
   final EdgeInsets padding;
   final bool withSafeAreaResize;
   final bool withKeyboardResize;
+  final Widget child;
 
   const ContentWrapper({
     super.key,
-    required this.child,
     this.padding = EdgeInsets.zero,
     this.withSafeAreaResize = true,
     this.withKeyboardResize = true,
+    required this.child,
   });
 
   @override
