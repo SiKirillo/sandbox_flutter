@@ -1,95 +1,121 @@
 name: sandbox_flutter
-description: "A new Flutter project."
+description: "Flutter widgets & practices sandbox"
 publish_to: 'none'
 
-# Flutter version: 3.24.3
-# Build version format: MM.AA.PP (major - M, minor - A, patch - P)
-# Build name format: +MMAAPPVVV (major - M, minor - A, patch - P, version - V)
+# Flutter version: 3.35.6
+# Build version name format: BB.MM.PP (breaking - B, minor - M, patch - P)
+# Build version code format: +BBMMPPVVV (just copy version name, version - V)
 version: 0.0.1+000001001
 
 environment:
-  sdk: '>=3.5.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
   # Style
-  swipeable_page_route: ^0.4.4
-  carousel_slider: ^5.0.0
-  smooth_page_indicator: ^1.2.0+3
+  # swipeable_page_route: ^0.4.7 you can use it after plugin fix compilation with flutter 3.35+
+  smooth_page_indicator: ^1.2.1
+  dropdown_button2: ^2.3.9
+  custom_refresh_indicator: ^4.0.1
+  skeletonizer: ^2.1.0+1
+  expandable_page_view: ^1.0.17 # for in_app_slider
 
-  # Firebase
-  firebase_core: ^3.6.0
-  firebase_analytics: ^11.3.3
-  firebase_crashlytics: ^4.1.3
-  firebase_messaging: ^15.1.3
+  # Navigation
+  go_router: ^16.3.0
 
-  # Supabase
-  supabase_flutter: ^2.7.0
-
-  # State
-  flutter_bloc: ^8.1.6
-  provider: ^6.1.2
-  flutter_secure_storage: ^9.2.2
-  shared_preferences: ^2.3.2
+  # State & Storage
+  flutter_bloc: ^9.1.1
+  provider: ^6.1.5+1
+  flutter_secure_storage: ^9.2.4
+  shared_preferences: ^2.5.3
+  flutter_cache_manager: ^3.4.1
+  bloc: any
 
   # HTTP & Web view & Network connection
   http: any
   web: any
-  dio: ^5.7.0
-  connectivity_plus: ^6.0.5
+  dio: ^5.9.0
+  connectivity_plus: ^7.0.0
+  url_launcher: ^6.3.2
+
+  # Firebase
+  firebase_core: ^4.2.0
+  firebase_messaging: ^16.0.3
+  firebase_crashlytics: ^5.0.3
+  firebase_analytics: ^12.0.3
+  firebase_remote_config: ^6.1.0
+
+  # Notifications
+  # flutter_local_notifications: ^19.5.0
+
+  # Camera & Scanner & Barcode
+  camera: ^0.11.3
+  flutter_zxing: ^2.2.1
+  barcode_widget: ^2.0.4
+
+  # Map & Location
+  # google_maps_flutter: ^2.13.1
+  location: ^8.0.1
+  # latlong2: ^0.9.1
+
+  # Settings & Permissions & Device metadata
+  app_settings: ^6.1.1
+  package_info_plus: ^9.0.0
+  device_info_plus: ^12.2.0
+  permission_handler: ^12.0.1
 
   # Global services
-  get_it: ^8.0.0
-  package_info_plus: ^8.0.2
-  device_info_plus: ^11.0.0
-  easy_localization: ^3.0.7
-  permission_handler: ^11.3.1
-  go_router: ^14.2.8
-  flutter_local_notifications: ^17.2.2
-  local_auth: ^2.3.0
+  get_it: ^8.2.0
+  easy_localization: ^3.0.8
+  local_auth: ^3.0.0
 
   # Other
   dartz: ^0.10.1
-  email_validator: ^3.0.0
-  flutter_svg: ^2.0.10+1
-  logger: ^2.4.0
-  crypto: ^3.0.5
+  reactive_forms: ^18.1.1
+  flutter_svg: ^2.2.1
+  sms_autofill: ^2.4.1
+  uuid: ^4.5.1
+  collection: any
+
+  # Logs
+  talker: ^5.0.2
+  talker_flutter: any
+  talker_dio_logger: any
+  talker_bloc_logger: any
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true
+  # default-flavor: stable
 
   assets:
     - assets/
     - assets/icons/
+    - assets/icons/_common/
     - assets/translations/
 
   fonts:
-    - family: Roboto
+    - family: Montserrat
       fonts:
-        - asset: assets/fonts/Roboto/Roboto-Light.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Montserrat/Montserrat-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Montserrat/Montserrat-Light.ttf
           weight: 300
-        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Roboto/Roboto-Medium.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Roboto/Roboto-Bold.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Montserrat/Montserrat-Bold.ttf
           weight: 700
-
-    - family: OpenSans
-      fonts:
-        - asset: assets/fonts/OpenSans/OpenSans-Light.ttf
-          weight: 300
-        - asset: assets/fonts/OpenSans/OpenSans-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/OpenSans/OpenSans-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/OpenSans/OpenSans-Bold.ttf
-          weight: 700
+        - asset: assets/fonts/Montserrat/Montserrat-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/Montserrat/Montserrat-Black.ttf
+          weight: 900

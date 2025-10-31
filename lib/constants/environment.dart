@@ -1,10 +1,5 @@
-part of '../common/common.dart';
+part of '../_common/common.dart';
 
 class EnvironmentConstants {
-  static const appName = 'Sandbox Flutter';
-  static const prodAPI = 'prodAPI';
-  static const testAPI = 'testAPI';
-
-  static const supabaseURL = 'supabaseURL';
-  static const supabaseAnonKey = 'supabaseAnonKey';
+  static const appName = 'Flutter Sandbox';
 }
